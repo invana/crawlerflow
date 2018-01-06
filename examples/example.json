@@ -1,0 +1,20 @@
+{
+  "crawler_name": "scrapinghub-1",
+  "domain": "scrapinghub.com",
+  "subdomain": "blog.scrapinghub.com",
+  "start_url": "https://blog.scrapinghub.com",
+  "start_urls": [],
+  "data_points": [
+    {
+      "id": "title",
+      "selector": "h2.entry-title",
+      "selector_type": "css",
+      "selector_attribute": "text",
+      "value_type": "string"
+    }
+  ],
+  "next_page": {
+    "selector": "div.prev-post > a",
+    "selector_type": "css"
+  }
+}
