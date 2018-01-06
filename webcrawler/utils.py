@@ -20,7 +20,7 @@ example_config = {
         },
         {
             "id": "title",
-            "selector": "h2.entry-title",
+            "selector": ".entry-title",
             "selector_type": "css",
             "selector_attribute": "text",
             "parent_selector": "blog",

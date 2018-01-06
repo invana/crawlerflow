@@ -76,26 +76,19 @@ def crawler(config=None, settings=None):
                     for el in elements:
                         datum = {}
                         for child_selector in selector.get('child_selectors', []):
-
                             if child_selector.get('selector_attribute') == 'html':
-                                selector_text = child_selector.get('selector_attribute')
-                                print(selector_text)
-
-                                _d = el.css(selector_text)
-                                print (_d)
-                            else:
-                                selector_text = "{0} ::{1}".format(child_selector.get('selector'),
-                                                                   child_selector.get('selector_attribute'))
-                                print(selector_text)
-
+                                selector_text = child_selector.get('selector')
                                 _d = el.css(selector_text).extract_first()
-
+                            else:
+                                selector_text = "{0}::{1}".format(child_selector.get('selector'),
+                                                                  child_selector.get('selector_attribute'))
+                                _d = el.css(selector_text).extract_first()
                             datum[child_selector.get('id')] = _d.strip() if _d else None
                             elements_data.append(datum)
                     data[selector.get('id')] = elements_data
 
                 else:
-                    data[selector.get('id')] = response.css("{0} ::{1}".format(
+                    data[selector.get('id')] = response.css("{0}::{1}".format(
                         selector.get('selector'), selector.get('selector_attribute'))).extract_first()
 
             yield data
