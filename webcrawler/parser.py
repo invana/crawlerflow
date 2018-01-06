@@ -82,6 +82,7 @@ def crawler(config=None, settings=None):
                                 print(selector_text)
 
                                 _d = el.css(selector_text)
+                                print (_d)
                             else:
                                 selector_text = "{0} ::{1}".format(child_selector.get('selector'),
                                                                    child_selector.get('selector_attribute'))
