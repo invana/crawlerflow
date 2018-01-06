@@ -7,6 +7,9 @@ from scrapy.crawler import CrawlerProcess
 from .exceptions import NotImplemented
 
 
+# from .pipelines import MongoDBPipeline as MongoDBPipeline_
+
+
 def validate_config(config=None):
     # TODO - help check if all the keys exist and the data types match for the crawler needs
     return True
@@ -73,12 +76,18 @@ def get_selector_element(html_element, selector, ):
 
 
 def crawler(config=None, settings=None):
+    print(settings)
     if settings is None:
         settings = {
             'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
         }
     if "USER_AGENT" not in settings.keys():
         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+    if "MONGO_CONNECTION" in settings.keys():
+        print(settings.get('MONGO_CONNECTION'))
+
+        settings['ITEM_PIPELINES'] = {'__main__.MongoDBPipeline': 1}
+
     config = process_config(config)
     process = CrawlerProcess(settings)
 

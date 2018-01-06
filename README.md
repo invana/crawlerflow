@@ -11,6 +11,17 @@ pip install git+https://github.com/invaana/web-crawler#egg=webcrawler
 
 ```
 
-## Running the 
+## Running and Usage 
+
+```python
+
+
+settings = {
+    'FEED_URI': 'result.json',
+    'ITEM_PIPELINES': {'__main__.MongoDBPipeline': 1} # custom Pipeline in the same file
+}
+
+
+``` 
 
 
