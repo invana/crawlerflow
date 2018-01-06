@@ -1,7 +1,7 @@
 from webcrawler.utils import example_config
 from webcrawler.parser import crawler
 import pymongo
-
+from datetime import datetime
 MONGO_CONNECTION = {
     'MONGODB_SERVER': '127.0.0.1',
     'MONGODB_PORT': 27017,
@@ -23,6 +23,7 @@ class MongoDBPipeline(object):
         if self.collection is None:
             raise Exception("self.connect() it not called in the Pipiline, please make the connection first")
         data = dict(item)
+        data['updated_at'] = datetime.now()
         self.collection.insert(data)
 
         items_keys = ['blogs', 'items', 'feeds']
@@ -30,7 +31,9 @@ class MongoDBPipeline(object):
             if key in data.keys():
                 blogs = data.get(key, [])
                 for blog in blogs:
-                    self.db[key].insert(dict(blog))
+                    data_ = dict(blog)
+                    data_['updated_at'] = datetime.now()
+                    self.db[key].insert()
         print("Post added to MongoDB")
         return item
 
