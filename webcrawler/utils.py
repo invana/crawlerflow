@@ -7,7 +7,7 @@ example_config = {
     "data_selectors": [
         {
             "id": "blog",
-            "selector": "post-content",
+            "selector": ".post-content",
             "selector_attribute": "element",
             "multiple": True
         },

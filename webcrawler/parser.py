@@ -14,7 +14,7 @@ def validate_config(config=None):
 def process_config(config=None):
     processed_config_dict = {}
     parent_selectors = []
-    new_config = []
+    new_config_selectors = []
     for selector in config['data_selectors']:
         if selector.get('selector_attribute') == 'element':
             parent_selectors.append(selector)
@@ -36,12 +36,12 @@ def process_config(config=None):
     """
     for selector in config['data_selectors']:
         if selector.get('parent_selector') is None and selector.get('selector_attribute') != 'element':
-            new_config.append(selector)
+            new_config_selectors.append(selector)
 
     for k, v in processed_config_dict.items():
-        new_config.append(v)
-
-    return new_config
+        new_config_selectors.append(v)
+    config['data_selectors'] = new_config_selectors
+    return config
 
 
 def get_domain(url):
@@ -55,7 +55,7 @@ def crawler(config=None, settings=None):
         }
     if "USER_AGENT" not in settings.keys():
         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-    process_config(config)
+    config = process_config(config)
     process = CrawlerProcess(settings)
 
     class InvaanaGenericSpider(scrapy.Spider):
@@ -67,8 +67,37 @@ def crawler(config=None, settings=None):
 
         def parse(self, response):
             data = {}
-            for title in response.css('h2.entry-title'):
-                yield {'title': title.css('a ::text').extract_first()}
+            for selector in config['data_selectors']:
+                if selector.get('selector_attribute') == 'element' and \
+                        len(selector.get('child_selectors', [])) > 0:
+                    # TODO - currently only support multiple elements strategy. what if multiple=False
+                    elements = response.css(selector.get('selector'))
+                    elements_data = []
+                    for el in elements:
+                        datum = {}
+                        for child_selector in selector.get('child_selectors', []):
+
+                            if child_selector.get('selector_attribute') == 'html':
+                                selector_text = child_selector.get('selector_attribute')
+                                print(selector_text)
+
+                                _d = el.css(selector_text)
+                            else:
+                                selector_text = "{0} ::{1}".format(child_selector.get('selector'),
+                                                                   child_selector.get('selector_attribute'))
+                                print(selector_text)
+
+                                _d = el.css(selector_text).extract_first()
+
+                            datum[child_selector.get('id')] = _d.strip() if _d else None
+                            elements_data.append(datum)
+                    data[selector.get('id')] = elements_data
+
+                else:
+                    data[selector.get('id')] = response.css("{0} ::{1}".format(
+                        selector.get('selector'), selector.get('selector_attribute'))).extract_first()
+
+            yield data
 
             next_selector = config.get('next_page_selector').get('selector')
             if next_selector:
