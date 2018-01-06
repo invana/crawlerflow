@@ -4,6 +4,7 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 """
 import scrapy
 from scrapy.crawler import CrawlerProcess
+from .exceptions import NotImplemented
 
 
 def validate_config(config=None):
@@ -48,6 +49,29 @@ def get_domain(url):
     pass
 
 
+def make_selector(html_element, selector, ):
+    if selector.get('selector_attribute') in ['text']:
+        if selector.get('selector_type') == 'css':
+            elems = html_element.css("{0}:{1}".format(selector.get('selector'),
+                                                      selector.get('selector_attribute')))
+            return elems if selector.get('multiple') else elems.extract_first()
+        else:
+            raise NotImplemented("selector_type not equal to css; this is not implemented")
+    elif selector.get('selector_attribute') == 'html':
+        if selector.get('selector_type') == 'css':
+            elems = html_element.css(selector.get('selector'))
+            return elems if selector.get('multiple') else elems.extract_first()
+        else:
+            raise NotImplemented("selector_type not equal to css; this is not implemented")
+    else:
+        if selector.get('selector_type') == 'css':
+            elems = html_element.css(selector.get('selector')) \
+                .xpath("@{0}".format(selector.get('selector_attribute')))
+            return elems if selector.get('multiple') else elems.extract_first()
+        else:
+            raise NotImplemented("selector_type not equal to css; this is not implemented")
+
+
 def crawler(config=None, settings=None):
     if settings is None:
         settings = {
@@ -80,9 +104,8 @@ def crawler(config=None, settings=None):
                                 selector_text = child_selector.get('selector')
                                 _d = el.css(selector_text).extract_first()
                             else:
-                                selector_text = "{0}::{1}".format(child_selector.get('selector'),
-                                                                  child_selector.get('selector_attribute'))
-                                _d = el.css(selector_text).extract_first()
+                                _d = el.css("{0}::{1}".format(child_selector.get('selector'),
+                                                         child_selector.get('selector_attribute'))).extract_first()
                             datum[child_selector.get('id')] = _d.strip() if _d else None
                             elements_data.append(datum)
                     data[selector.get('id')] = elements_data
