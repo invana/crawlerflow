@@ -2,6 +2,7 @@ import pymongo
 from webcrawler.settings import *
 from datetime import datetime
 
+
 class MongoDBPipeline(object):
     def __init__(self):
         connection = pymongo.MongoClient(
