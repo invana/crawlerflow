@@ -33,7 +33,7 @@ class MongoDBPipeline(object):
                 for blog in blogs:
                     data_ = dict(blog)
                     data_['updated_at'] = datetime.now()
-                    self.db[key].insert()
+                    self.db[key].insert(data_)
         print("Post added to MongoDB")
         return item
 

@@ -1,6 +1,6 @@
 import pymongo
 from webcrawler.settings import *
-
+from datetime import datetime
 
 class MongoDBPipeline(object):
     def __init__(self):
@@ -14,6 +14,8 @@ class MongoDBPipeline(object):
     def process_item(self, item, spider):
         if self.collection is None:
             raise Exception("self.connect() it not called in the Pipiline, please make the connection first")
-        self.collection.insert(dict(item))
+        data = dict(item)
+        data['updated_at'] = datetime.now()
+        self.collection.insert(data)
         print("Post added to MongoDB")
         return item
