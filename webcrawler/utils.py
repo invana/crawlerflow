@@ -26,14 +26,14 @@ example_config = {
             "parent_selector": "blogs",
             "multiple": False
         },
-        # {
-        #     "id": "content",
-        #     "selector": ".entry-summary",
-        #     "selector_type": "css",
-        #     "selector_attribute": "html",
-        #     "parent_selector": "blogs",
-        #     "multiple": False
-        # }
+        {
+            "id": "content",
+            "selector": ".entry-summary",
+            "selector_type": "css",
+            "selector_attribute": "html",
+            "parent_selector": "blogs",
+            "multiple": False
+        }
     ],
     "next_page_selector": {
         "selector": "div.prev-post > a",

@@ -4,14 +4,15 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 """
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from .exceptions import NotImplemented
-
-
-# from .pipelines import MongoDBPipeline as MongoDBPipeline_
+from .exceptions import NotImplemented, InvalidCrawlerConfig
 
 
 def validate_config(config=None):
-    # TODO - help check if all the keys exist and the data types match for the crawler needs
+    required_keys = ['crawler_name', 'domain', 'subdomain', 'start_url', 'data_selectors']
+    for key_ in required_keys:
+        if key_ not in config.keys():
+            InvalidCrawlerConfig("Invalid configuration: Required Key {0} not found in the configuration".format(key_))
+    # TODO - validate all the data_selectors data aswell
     return True
 
 
@@ -83,11 +84,7 @@ def crawler(config=None, settings=None):
         }
     if "USER_AGENT" not in settings.keys():
         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-    if "MONGO_CONNECTION" in settings.keys():
-        print(settings.get('MONGO_CONNECTION'))
-
-        settings['ITEM_PIPELINES'] = {'__main__.MongoDBPipeline': 1}
-
+    validate_config(config=config)
     config = process_config(config)
     process = CrawlerProcess(settings)
 
@@ -113,11 +110,9 @@ def crawler(config=None, settings=None):
                             datum[child_selector.get('id')] = _d.strip() if _d else None
                             elements_data.append(datum)
                     data[selector.get('id')] = elements_data
-
                 else:
                     _d = get_selector_element(response, selector)
                     data[selector.get('id')] = _d.strip() if _d else None
-
             yield data
 
             next_selector = config.get('next_page_selector').get('selector')
