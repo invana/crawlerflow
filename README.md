@@ -7,7 +7,7 @@ want to crawl through and even configure the type of data you want to crawl and 
 
 ```bash
 
-pip install git+https://github.com/invaana/web-crawler#egg=webcrawler
+pip install git+https://github.com/invanatech/web-crawler#egg=webcrawler
 
 ```
 
