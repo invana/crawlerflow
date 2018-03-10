@@ -1,19 +1,9 @@
 from __future__ import print_function
-import os
-import gzip
 import logging
-from six.moves import cPickle as pickle
-from time import time
-from w3lib.http import headers_raw_to_dict, headers_dict_to_raw
-from scrapy.http import Headers, Response
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
-from scrapy.utils.project import data_path
-from scrapy.utils.httpobj import urlparse_cached
 from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
 import pymongo
-import urllib.parse
-import json
 from scrapy.http.headers import Headers
 
 logger = logging.getLogger(__name__)
