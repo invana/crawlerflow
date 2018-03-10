@@ -1,2 +1,3 @@
 result.json
 *.pyc
+.scrapy/

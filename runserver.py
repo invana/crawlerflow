@@ -42,6 +42,10 @@ class MongoDBPipeline(object):
 settings = {
     'FEED_URI': 'result.json',
     'ITEM_PIPELINES': {'__main__.MongoDBPipeline': 1},
+    'HTTPCACHE_ENABLED': True,
+    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_MONGODB_DATABASE': "crawlers",
+    "HTTPCACHE_MONGODB_PORT": 27017
 
 }
 
