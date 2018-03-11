@@ -2,12 +2,10 @@ from __future__ import print_function
 import logging
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
-from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
-import pymongo
+from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
-from elasticsearch_dsl import DocType, Date, Integer, Keyword, Text, connections, Binary, Byte
-from scrapy.utils.python import to_unicode, to_native_str
-from scrapy.http import HtmlResponse, TextResponse
+from elasticsearch_dsl import DocType, Date, Integer,Text, connections
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +15,7 @@ class WebLink(DocType):
     body = Text()
     headers = Text()
     status = Integer()
+    created = Date()
 
     class Meta:
         index = 'weblinks'
@@ -97,7 +96,8 @@ class ESCacheStorage(object):
             'body': str(response.body).lstrip("b'").strip("'")
                 .replace("\\n", "")
                 .replace("\\t", "")
-                .replace("\\\\", "\\")  # .decode('utf-8', 'ignore'),
+                .replace("\\\\", "\\"),
+            'created': datetime.now()
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
         WebLink(meta={'id': response.url}, **data).save()
