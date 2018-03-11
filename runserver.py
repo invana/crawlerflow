@@ -40,16 +40,21 @@ class MongoDBPipeline(object):
 
 
 settings = {
-    # 'FEED_URI': 'result.json',
-    'ITEM_PIPELINES': {'__main__.MongoDBPipeline': 1},
+    'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
+
+    'INVANA_CRAWLER_COLLECTION': "weblinks",
+    'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+
     # 'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
     # 'HTTPCACHE_MONGODB_DATABASE': "crawlers",
+
+    'PIPELINE_MONGODB_DATABASE': "crawlers",
+    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
 
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
     'HTTPCACHE_ES_DATABASE': "crawlers",
     "HTTPCACHE_MONGODB_PORT": 27017,
-    'COMPRESSION_ENABLED': False,
 
     'LOG_LEVEL': 'INFO'
 
