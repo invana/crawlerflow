@@ -140,13 +140,13 @@ All the entries in ES as url as id.
 ```python
 
 
-from webcrawler.utils import example_config
 from webcrawler.parser import crawler
- 
+import json
+example_config = json.load(open('examples/example.json'))
+
 
 settings = {
     'FEED_URI': 'result.json',
-    'ITEM_PIPELINES': {'__main__.MongoDBPipeline': 1},
 
 }
 
