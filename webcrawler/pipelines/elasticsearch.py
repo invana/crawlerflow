@@ -1,6 +1,6 @@
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
-from settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from webcrawler.settings import EXTRACTED_DATA_COLLECTION, DATABASE
 
 
 class WebLinkExtracted(DocType):
