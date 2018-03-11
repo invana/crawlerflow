@@ -6,6 +6,7 @@ from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
+from settings import DATA_COLLECTION, DATABASE
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,8 @@ class WebLink(DocType):
     created = Date()
 
     class Meta:
-        index = "crawlers_data"
-        doc_type = "weblinks"
+        index = DATABASE
+        doc_type = DATA_COLLECTION
 
 
 class ESCacheStorage(object):

@@ -1,5 +1,6 @@
 import pymongo
 from datetime import datetime
+from settings import EXTRACTED_DATA_COLLECTION, DATABASE
 
 
 class MongoDBPipeline(object):
@@ -27,11 +28,11 @@ class MongoDBPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('PIPELINE_MONGODB_HOST', '127.0.0.1'),
-            database=crawler.settings.get('PIPELINE_MONGODB_DATABASE', 'crawler_data'),
+            database=crawler.settings.get('PIPELINE_MONGODB_DATABASE', DATABASE),
             username=crawler.settings.get('PIPELINE_MONGODB_USERNAME', ''),
             password=crawler.settings.get('PIPELINE_MONGODB_PASSWORD', ''),
             port=crawler.settings.get('PIPELINE_MONGODB_PORT', 27017),
-            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"),
+            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
     def process_item(self, item, spider):

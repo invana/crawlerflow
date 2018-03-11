@@ -5,6 +5,7 @@ from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
 import pymongo
 from scrapy.http.headers import Headers
+from settings import DATA_COLLECTION, DATABASE
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +16,10 @@ class MongoDBCacheStorage(object):
 
 
     """
-    COLLECTION_NAME = "weblinks"
+    COLLECTION_NAME = DATA_COLLECTION
 
     def __init__(self, settings):
-        self.database = settings['HTTPCACHE_MONGODB_DATABASE']
+        self.database = settings.get('HTTPCACHE_MONGODB_DATABASE', DATABASE)
         self.database_host = settings.get('HTTPCACHE_MONGODB_HOST', '127.0.0.1')
 
         self.database_port = settings.get('HTTPCACHE_MONGODB_PORT', 27017)
@@ -50,7 +51,6 @@ class MongoDBCacheStorage(object):
         status = data['status']
         headers = Headers(data['headers'])
         body = data['body']
-        print ("++++++", body)
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response

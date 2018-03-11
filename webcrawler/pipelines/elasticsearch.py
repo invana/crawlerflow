@@ -1,5 +1,6 @@
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
+from settings import EXTRACTED_DATA_COLLECTION, DATABASE
 
 
 class WebLinkExtracted(DocType):
@@ -10,8 +11,8 @@ class WebLinkExtracted(DocType):
     created = Date()
 
     class Meta:
-        index = "crawlers_data"
-        doc_type = "weblinks_extracted_data"
+        index = DATABASE
+        doc_type = EXTRACTED_DATA_COLLECTION
 
 
 class ElasticsearchPipeline(object):
