@@ -29,7 +29,7 @@ class ElasticsearchPipeline(object):
         return cls(
             host=crawler.settings.get('PIPELINE_ES_HOST', '127.0.0.1'),
             database=crawler.settings.get('PIPELINE_ES_DATABASE', 'crawler_data'),
-            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"), # TODO - not using
+            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"),  # TODO - not using
         )
 
     def _flatten_headers(self, obj):
@@ -40,7 +40,7 @@ class ElasticsearchPipeline(object):
 
     def process_item(self, item, spider):
         data = dict(item)
-        data['updated_at'] = datetime.now()
+        data['updated'] = datetime.now()
 
         # data.update(self._flatten_headers(data))  # TODO - flatten the data also for
         WebLinkExtracted(meta={'id': data['url']}, **data).save()

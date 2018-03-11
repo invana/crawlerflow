@@ -40,7 +40,7 @@ class MongoDBPipeline(object):
         if self.extracted_data_collection is None:
             raise Exception("self.connect() it not called in the Pipeline, please make the connection first")
         data = dict(item)
-        data['updated_at'] = datetime.now()
+        data['updated'] = datetime.now()
         self.extracted_data_collection.insert(data)
         print("Post added to MongoDB")
         return item

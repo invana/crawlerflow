@@ -5,6 +5,7 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from .exceptions import NotImplemented, InvalidCrawlerConfig
+from datetime import datetime
 
 
 def validate_config(config=None):
@@ -96,8 +97,6 @@ def crawler(config=None, settings=None):
         ]
 
         def parse(self, response):
-            print (response)
-            print (type(response))
             data = {}
             data['url'] = response.url
             for selector in config['data_selectors']:
@@ -116,6 +115,8 @@ def crawler(config=None, settings=None):
                 else:
                     _d = get_selector_element(response, selector)
                     data[selector.get('id')] = _d.strip() if _d else None
+
+            data['updated'] = datetime.now()
             yield data
 
             next_selector = config.get('next_page_selector').get('selector')
