@@ -14,12 +14,14 @@ class MongoDBPipeline(object):
             "username": username,
             "password": password
         }
+        if port:
+            auth.update({"port": port})
         if auth.get('username'):
             self.db_client = pymongo.MongoClient(host, **auth)
         else:
             self.db_client = pymongo.MongoClient(host, )
         self.db = self.db_client[database]
-        self.collection = self.db[collection]  # TODO - move this to settings ?
+        self.extracted_data_collection = self.db[collection]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -33,10 +35,11 @@ class MongoDBPipeline(object):
         )
 
     def process_item(self, item, spider):
-        if self.collection is None:
+
+        if self.extracted_data_collection is None:
             raise Exception("self.connect() it not called in the Pipeline, please make the connection first")
         data = dict(item)
         data['updated_at'] = datetime.now()
-        self.collection.insert(data)
+        self.extracted_data_collection.insert(data)
         print("Post added to MongoDB")
         return item
