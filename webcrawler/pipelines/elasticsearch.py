@@ -29,7 +29,7 @@ class ElasticsearchPipeline(object):
         return cls(
             host=crawler.settings.get('PIPELINE_ES_HOST', '127.0.0.1'),
             database=crawler.settings.get('PIPELINE_ES_DATABASE', 'crawler_data'),
-            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"),
+            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"), # TODO - not using
         )
 
     def _flatten_headers(self, obj):

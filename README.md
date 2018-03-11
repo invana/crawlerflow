@@ -71,6 +71,7 @@ if __name__ == '__main__':
 
 ### Using MongoDB as http cache storage
 
+
 ```python
 
 
@@ -85,9 +86,19 @@ settings = {
 
 ```
 
+### Using MongoDB to save extracted data
+
+```python
 
 
-### Using MongoDB as http cache storage
+settings = {
+    'HTTPCACHE_STORAGE': "webcrawler.pipelines.mongodb.MongoDBPipeline",
+}
+
+```
+
+
+### Using Elasticsearch as http cache storage
 
 ```python
 
@@ -95,12 +106,26 @@ settings = {
 settings = {
     'HTTPCACHE_ENABLED': True,
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
-    'HTTPCACHE_ES_DATABASE': "crawlers",
     'COMPRESSION_ENABLED': False,
 }
 
+```
+
+### Using Elasticsearch to save extracted data
+
+```python
+
+
+settings = {
+    'HTTPCACHE_STORAGE': "webcrawler.pipelines.elasticsearch.ElasticsearchPipeline",
+}
 
 ```
+
+**Note:** By default, both ES and MongoDB uses `crawlers_data` as database and `weblinks` collection/doctype
+to save the webpage data and `weblinks_extracted_data` as collection/doctype to save the extracted data.
+
+All the entries in ES as url as id.
 
 
 ### Saving data to json file
