@@ -69,19 +69,34 @@ if __name__ == '__main__':
 ``` 
 
 
-### Using MongoDB as http cache
+### Using MongoDB as http cache storage
 
-```bash
+```python
 
 
 settings = {
-    'FEED_URI': 'result.json',
-    'ITEM_PIPELINES': {'__main__.MongoDBPipeline': 1},
     'HTTPCACHE_ENABLED': True,
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
     'HTTPCACHE_MONGODB_DATABASE': "crawlers",
-    "HTTPCACHE_MONGODB_PORT": 27017
+    "HTTPCACHE_MONGODB_PORT": 27017,
+    'COMPRESSION_ENABLED': False,
+}
 
+
+```
+
+
+
+### Using MongoDB as http cache storage
+
+```python
+
+
+settings = {
+    'HTTPCACHE_ENABLED': True,
+    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_ES_DATABASE': "crawlers",
+    'COMPRESSION_ENABLED': False,
 }
 
 
