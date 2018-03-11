@@ -6,6 +6,7 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from .exceptions import NotImplemented, InvalidCrawlerConfig
 from datetime import datetime
+from webcrawler.spiders.website import InvanaWebsiteSpider
 
 
 def validate_config(config=None):
@@ -84,7 +85,7 @@ def crawler(config=None, settings=None):
             'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
         }
     if "USER_AGENT" not in settings.keys():
-        settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+        settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
     validate_config(config=config)
     config = process_config(config)
     process = CrawlerProcess(settings)
@@ -129,4 +130,11 @@ def crawler(config=None, settings=None):
                     yield response.follow(next_page, self.parse)
 
     process.crawl(InvaanaGenericSpider)
+    process.start()
+
+
+def crawl_website(url=None, settings=None):
+    process = CrawlerProcess(settings)
+
+    process.crawl(InvanaWebsiteSpider)
     process.start()
