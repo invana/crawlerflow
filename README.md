@@ -1,13 +1,9 @@
 # Web-Crawler
 
-A micro-framework to crawl the web pages. You can literally define what sites you 
-want to crawl through and even configure the type of data you want to crawl and gather.
-The scripts can cache as well as dave the data into database. 
+A micro-framework to crawl the web pages with crawlers configs. 
+It can use [MongoDB](https://www.mongodb.com/) and [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
+databases to cache and save the extracted data. 
 
-Currently Supported databases:
-
-- Elasticsearch
-- MongoDB
 
 ## Install
 
@@ -161,10 +157,5 @@ if __name__ == '__main__':
 ```
 
 
-
-
-## References
-
-- https://stackoverflow.com/a/14453186/3448851
 
 
