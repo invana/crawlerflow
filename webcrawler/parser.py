@@ -96,6 +96,8 @@ def crawler(config=None, settings=None):
         ]
 
         def parse(self, response):
+            print (response)
+            print (type(response))
             data = {}
             for selector in config['data_selectors']:
                 if selector.get('selector_attribute') == 'element' and \

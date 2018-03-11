@@ -1,91 +1,121 @@
 from __future__ import print_function
-import os
-import gzip
 import logging
-from six.moves import cPickle as pickle
-from importlib import import_module
-from time import time
-from weakref import WeakKeyDictionary
-from email.utils import mktime_tz, parsedate_tz
-from w3lib.http import headers_raw_to_dict, headers_dict_to_raw
-from scrapy.http import Headers, Response
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
-from scrapy.utils.project import data_path
-from scrapy.utils.httpobj import urlparse_cached
 from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
+import pymongo
+from scrapy.http.headers import Headers
+from elasticsearch_dsl import DocType, Date, Integer, Keyword, Text, connections, Binary, Byte
+from scrapy.utils.python import to_unicode, to_native_str
+from scrapy.http import HtmlResponse, TextResponse
 
 logger = logging.getLogger(__name__)
 
 
-class FilesystemCacheStorage(object):
+class WebLink(DocType):
+    url = Text()
+    body = Text()
+    headers = Text()
+    status = Integer()
+
+    class Meta:
+        index = 'weblinks'
+
+
+
+
+class ESCacheStorage(object):
+    """
+    should set HTTPCACHE_ES_DATABASE in the settings.py
+
+
+    """
+    COLLECTION_NAME = "weblinks"
 
     def __init__(self, settings):
-        self.cachedir = data_path(settings['HTTPCACHE_DIR'])
+        self.database = settings['HTTPCACHE_ES_DATABASE']
+        self.database_host = settings.get('HTTPCACHE_ES_HOST', '127.0.0.1')
+        connections.create_connection(hosts=['localhost'])
+        WebLink.init()
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
-        self.use_gzip = settings.getbool('HTTPCACHE_GZIP')
-        self._open = gzip.open if self.use_gzip else open
 
     def open_spider(self, spider):
-        logger.debug("Using filesystem cache storage in %(cachedir)s" % {'cachedir': self.cachedir},
+        logger.debug("Using mongodb cache storage with database name %(database)s" % {'database': self.database},
                      extra={'spider': spider})
 
     def close_spider(self, spider):
         pass
 
+    def get_headers(self, obj):
+        """
+        this will convert all the headers_Server, headers_Date
+        into "header": {
+            "Server": "",
+            "Date": ""
+        }
+
+        :param obj:
+        :return:
+        """
+        headers = {}
+        for k, v in obj.items():
+            if k.startswith("headers_"):
+                headers[k.replace("headers_", "")] = v
+
+        obj['headers'] = headers
+        return obj
+
     def retrieve_response(self, spider, request):
-        """Return response if present in cache, or None otherwise."""
-        metadata = self._read_meta(spider, request)
-        if metadata is None:
+        data = self._read_data(spider, request)
+
+        if data is None:
             return  # not cached
-        rpath = self._get_request_path(spider, request)
-        with self._open(os.path.join(rpath, 'response_body'), 'rb') as f:
-            body = f.read()
-        with self._open(os.path.join(rpath, 'response_headers'), 'rb') as f:
-            rawheaders = f.read()
-        url = metadata.get('response_url')
-        status = metadata['status']
-        headers = Headers(headers_raw_to_dict(rawheaders))
+        else:
+            data = self.get_headers(data)
+        url = data['url']
+        status = data['status']
+        headers = Headers(data['headers'])
+        print("body pre datatype is {}".format(type(data['body'])))
+
+        from ast import literal_eval
+        # body = bytes(data['body'].replace("\\\\", "\\"), 'utf-8') if data['body'] else None  # .encode('utf-8')
+        body = bytes(data['body'].replace("\\\\", "\\"), encoding="utf-8")  # .encode('ascii', 'utf-8')# if data['body'] else None  # .encode('utf-8')
+        print("body post datatype is {}".format(type(body)))
+        print("===", body)
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
 
+    def _clean_headers(self, obj):
+        cleaned_object = {}
+        for k, v in obj.items():
+            cleaned_object[k.decode('utf-8')] = v[0].decode('utf-8')
+        return cleaned_object
+
+    def _flatten_headers(self, obj):
+        flat_data = {}
+        for k, v in obj.items():
+            flat_data['headers_{}'.format(k)] = v
+        return flat_data
+
     def store_response(self, spider, request, response):
-        """Store the given response in the cache."""
-        rpath = self._get_request_path(spider, request)
-        if not os.path.exists(rpath):
-            os.makedirs(rpath)
-        metadata = {
-            'url': request.url,
-            'method': request.method,
+        print("response type is {}".format(type(response)))
+
+        # html_response = TextResponse(url=response.url, body=response.body)
+        # print(str(response.body).lstrip("b'"))
+        data = {
             'status': response.status,
-            'response_url': response.url,
-            'timestamp': time(),
+            'url': response.url,
+            'body': str(response.body).lstrip("b'").strip("'").replace("\\\\", "\\")  # .decode('utf-8', 'ignore'),
         }
-        with self._open(os.path.join(rpath, 'meta'), 'wb') as f:
-            f.write(to_bytes(repr(metadata)))
-        with self._open(os.path.join(rpath, 'pickled_meta'), 'wb') as f:
-            pickle.dump(metadata, f, protocol=2)
-        with self._open(os.path.join(rpath, 'response_headers'), 'wb') as f:
-            f.write(headers_dict_to_raw(response.headers))
-        with self._open(os.path.join(rpath, 'response_body'), 'wb') as f:
-            f.write(response.body)
-        with self._open(os.path.join(rpath, 'request_headers'), 'wb') as f:
-            f.write(headers_dict_to_raw(request.headers))
-        with self._open(os.path.join(rpath, 'request_body'), 'wb') as f:
-            f.write(request.body)
+        data.update(self._flatten_headers(self._clean_headers(response.headers)))
+        WebLink(meta={'id': response.url}, **data).save()
 
-    def _get_request_path(self, spider, request):
-        key = request_fingerprint(request)
-        return os.path.join(self.cachedir, spider.name, key[0:2], key)
+    def _read_data(self, spider, request):
+        try:
+            return WebLink.get(id=request.url).to_dict()
+        except Exception as e:
+            return None
 
-    def _read_meta(self, spider, request):
-        rpath = self._get_request_path(spider, request)
-        metapath = os.path.join(rpath, 'pickled_meta')
-        if not os.path.exists(metapath):
-            return  # not found
-        mtime = os.stat(metapath).st_mtime
-        if 0 < self.expiration_secs < time() - mtime:
-            return  # expired
-        with self._open(metapath, 'rb') as f:
-            return pickle.load(f)
+    def _request_key(self, request):
+        return to_bytes(request_fingerprint(request))

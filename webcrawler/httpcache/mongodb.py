@@ -50,6 +50,7 @@ class MongoDBCacheStorage(object):
         status = data['status']
         headers = Headers(data['headers'])
         body = data['body']
+        print ("++++++", body)
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
@@ -67,9 +68,6 @@ class MongoDBCacheStorage(object):
             'headers': self._clean_headers(response.headers),
             'body': response.body,
         }
-
-        print(data)
-
         self.db[self.COLLECTION_NAME].insert_one(data)
 
     def _read_data(self, spider, request):
