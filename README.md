@@ -1,7 +1,13 @@
-# web-scout
+# Web-Crawler
 
-A micro-framework to crawl the web pages - blogs/rss. You can literally define what sites you 
+A micro-framework to crawl the web pages. You can literally define what sites you 
 want to crawl through and even configure the type of data you want to crawl and gather.
+The scripts can cache as well as dave the data into database. 
+
+Currently Supported databases:
+
+- Elasticsearch
+- MongoDB
 
 ## Install
 
@@ -11,62 +17,68 @@ pip install git+https://github.com/invanatech/web-crawler#egg=webcrawler
 
 ```
 
-## Running and Usage 
-
-### saving the data to MongoDB
+## Usage example with MongoDB as database
 
 ```python
 
-from webcrawler.utils import example_config
 from webcrawler.parser import crawler
-from datetime import datetime
-import pymongo
+import json
 
-MONGO_CONNECTION = {
-    'MONGODB_SERVER': '127.0.0.1',
-    'MONGODB_PORT': 27017,
-    'MONGODB_DBNAME': 'test',
-    'MONGODB_COLLECTION': 'crawled_data'
+example_config = json.load(open('../example.json'))
+
+common_settings = {
+    'COMPRESSION_ENABLED': False,
+    'HTTPCACHE_ENABLED': True,
+    'INVANA_CRAWLER_COLLECTION': "weblinks",
+    'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'LOG_LEVEL': 'INFO'
 }
 
+mongodb_settings = {
+    'PIPELINE_MONGODB_DATABASE': "crawler_data",
+    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
 
-class MongoDBPipeline(object):
-    def __init__(self):
-        connection = pymongo.MongoClient(
-            MONGO_CONNECTION.get('MONGODB_SERVER'),
-            MONGO_CONNECTION.get('MONGODB_PORT')
-        )
-        self.db = connection[MONGO_CONNECTION.get('MONGODB_DBNAME')]
-        self.collection = self.db[MONGO_CONNECTION.get('MONGODB_COLLECTION')]
-
-    def process_item(self, item, spider):
-        if self.collection is None:
-            raise Exception("self.connect() it not called in the Pipiline, please make the connection first")
-        data = dict(item)
-        data['updated_at'] = datetime.now()
-        self.collection.insert(data)
-
-        items_keys = ['blogs', 'items', 'feeds']
-        for key in items_keys:
-            if key in data.keys():
-                blogs = data.get(key, [])
-                for blog in blogs:
-                    data_ = dict(blog)
-                    data_['updated_at'] = datetime.now()
-                    self.db[key].insert(data_)
-        print("Post added to MongoDB")
-        return item
-
-
-settings = {
-    'FEED_URI': 'result.json',
-
+    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_MONGODB_DATABASE': "crawler_data",
+    "HTTPCACHE_MONGODB_PORT": 27017,
 }
+
+common_settings.update(mongodb_settings)
 
 if __name__ == '__main__':
-    crawler(config=example_config, settings=settings)
+    crawler(config=example_config, settings=common_settings)
 
-``` 
+```
+
+## Usage example with Elasticsearch as database
+
+```python
+
+from webcrawler.parser import crawler
+import json
+
+example_config = json.load(open('../example.json'))
+common_settings = {
+    'COMPRESSION_ENABLED': False,
+    'HTTPCACHE_ENABLED': True,
+    'INVANA_CRAWLER_COLLECTION': "weblinks",
+    'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'LOG_LEVEL': 'INFO'
+}
+
+es_settings = {
+    'ITEM_PIPELINES': {'webcrawler.pipelines.elasticsearch.ElasticsearchPipeline': 1},
+
+    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
+}
+
+common_settings.update(es_settings)
+print(common_settings)
+
+if __name__ == '__main__':
+    crawler(config=example_config, settings=common_settings)
+
+```
 
 
 ### Using MongoDB as http cache storage

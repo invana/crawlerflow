@@ -36,7 +36,7 @@
     ],
     "next_page_selector": {
         "selector": "div.prev-post > a",
-        "selector_type": "css",
+        "selector_type": "css"
     }
 
 }

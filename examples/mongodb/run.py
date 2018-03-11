@@ -1,5 +1,11 @@
-from webcrawler.utils import example_config
+import sys
+
+sys.path.append('../../')
+
 from webcrawler.parser import crawler
+import json
+
+example_config = json.load(open('../example.json'))
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -18,16 +24,7 @@ mongodb_settings = {
     "HTTPCACHE_MONGODB_PORT": 27017,
 }
 
-es_settings = {
-    'PIPELINE_ES_DATABASE': "crawlers",
-    'ITEM_PIPELINES': {'webcrawler.pipelines.elasticsearch.ElasticsearchPipeline': 1},
-
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
-}
-
 common_settings.update(mongodb_settings)
-# common_settings.update(es_settings)
-print(common_settings)
 
 if __name__ == '__main__':
     crawler(config=example_config, settings=common_settings)
