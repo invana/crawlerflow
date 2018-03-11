@@ -72,7 +72,10 @@ class ESCacheStorage(object):
         if data is None:
             return  # not cached
         else:
-            data = self.get_headers(data)
+            if data['status'] == 200 and data['html'] is None:
+                return None
+
+        data = self.get_headers(data)
         url = data['url']
         status = data['status']
         headers = Headers(data['headers'])
@@ -105,11 +108,11 @@ class ESCacheStorage(object):
             'created': datetime.now()
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
-        WebLink(meta={'id': response.url}, **data).save()
+        WebLink(meta={'id': get_urn(response.url)}, **data).save()
 
     def _read_data(self, spider, request):
         try:
-            return WebLink.get(id=request.url).to_dict()
+            return WebLink.get(id=get_urn(request.url)).to_dict()
         except Exception as e:
             return None
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from webcrawler.settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from webcrawler.utils import get_urn
 
 
 class WebLinkExtracted(DocType):
@@ -43,6 +44,6 @@ class ElasticsearchPipeline(object):
         data['updated'] = datetime.now()
 
         # data.update(self._flatten_headers(data))  # TODO - flatten the data also for
-        WebLinkExtracted(meta={'id': data['url']}, **data).save()
+        WebLinkExtracted(meta={'id': get_urn(data['url'])}, **data).save()
 
         return item

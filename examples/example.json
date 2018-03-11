@@ -5,7 +5,7 @@
     "start_url": "https://blog.scrapinghub.com",
     "data_selectors": [
         {
-            "id": "blogs",
+            "id": "items",
             "selector": ".post-content",
             "selector_attribute": "element",
             "multiple": true
@@ -22,7 +22,7 @@
             "selector": "h2 a",
             "selector_type": "css",
             "selector_attribute": "href",
-            "parent_selector": "blogs",
+            "parent_selector": "items",
             "multiple": false
         },
         {
@@ -30,7 +30,7 @@
             "selector": "h2 a",
             "selector_type": "css",
             "selector_attribute": "text",
-            "parent_selector": "blogs",
+            "parent_selector": "items",
             "multiple": false
         },
         {
@@ -38,7 +38,7 @@
             "selector": ".entry-summary",
             "selector_type": "css",
             "selector_attribute": "html",
-            "parent_selector": "blogs",
+            "parent_selector": "items",
             "multiple": false
         }
     ],
