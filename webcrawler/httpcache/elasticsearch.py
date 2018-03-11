@@ -22,8 +22,6 @@ class WebLink(DocType):
         index = 'weblinks'
 
 
-
-
 class ESCacheStorage(object):
     """
     should set HTTPCACHE_ES_DATABASE in the settings.py
@@ -75,13 +73,7 @@ class ESCacheStorage(object):
         url = data['url']
         status = data['status']
         headers = Headers(data['headers'])
-        print("body pre datatype is {}".format(type(data['body'])))
-
-        from ast import literal_eval
-        # body = bytes(data['body'].replace("\\\\", "\\"), 'utf-8') if data['body'] else None  # .encode('utf-8')
-        body = bytes(data['body'].replace("\\\\", "\\"), encoding="utf-8")  # .encode('ascii', 'utf-8')# if data['body'] else None  # .encode('utf-8')
-        print("body post datatype is {}".format(type(body)))
-        print("===", body)
+        body = bytes(data['body'], encoding="utf-8")
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
@@ -99,14 +91,13 @@ class ESCacheStorage(object):
         return flat_data
 
     def store_response(self, spider, request, response):
-        print("response type is {}".format(type(response)))
-
-        # html_response = TextResponse(url=response.url, body=response.body)
-        # print(str(response.body).lstrip("b'"))
         data = {
             'status': response.status,
             'url': response.url,
-            'body': str(response.body).lstrip("b'").strip("'").replace("\\\\", "\\")  # .decode('utf-8', 'ignore'),
+            'body': str(response.body).lstrip("b'").strip("'")
+                .replace("\\n", "")
+                .replace("\\t", "")
+                .replace("\\\\", "\\")  # .decode('utf-8', 'ignore'),
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
         WebLink(meta={'id': response.url}, **data).save()
