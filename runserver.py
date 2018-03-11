@@ -46,11 +46,12 @@ settings = {
     'INVANA_CRAWLER_COLLECTION': "weblinks",
     'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
 
+    # 'PIPELINE_MONGODB_DATABASE': "crawlers",
+    # 'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
+
     # 'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
     # 'HTTPCACHE_MONGODB_DATABASE': "crawlers",
 
-    'PIPELINE_MONGODB_DATABASE': "crawlers",
-    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
 
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
     'HTTPCACHE_ES_DATABASE': "crawlers",
