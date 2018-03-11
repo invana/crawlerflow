@@ -99,6 +99,7 @@ def crawler(config=None, settings=None):
             print (response)
             print (type(response))
             data = {}
+            data['url'] = response.url
             for selector in config['data_selectors']:
                 if selector.get('selector_attribute') == 'element' and \
                         len(selector.get('child_selectors', [])) > 0:

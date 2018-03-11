@@ -4,7 +4,7 @@ from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
-from elasticsearch_dsl import DocType, Date, Integer,Text, connections
+from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,8 @@ class WebLink(DocType):
     created = Date()
 
     class Meta:
-        index = 'weblinks'
+        index = "crawlers_data"
+        doc_type = "weblinks"
 
 
 class ESCacheStorage(object):
@@ -32,8 +33,9 @@ class ESCacheStorage(object):
     def __init__(self, settings):
         self.database = settings['HTTPCACHE_ES_DATABASE']
         self.database_host = settings.get('HTTPCACHE_ES_HOST', '127.0.0.1')
-        connections.create_connection(hosts=['localhost'])
+        connections.create_connection(hosts=[self.database_host])
         WebLink.init()
+
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
 
     def open_spider(self, spider):
