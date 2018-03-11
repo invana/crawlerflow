@@ -7,13 +7,14 @@ from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
 from webcrawler.settings import DATA_COLLECTION, DATABASE
+from webcrawler.utils import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 
 
 class WebLink(DocType):
     url = Text()
-    body = Text()
+    html = Text()
     headers = Text()
     status = Integer()
     created = Date()
@@ -75,7 +76,7 @@ class ESCacheStorage(object):
         url = data['url']
         status = data['status']
         headers = Headers(data['headers'])
-        body = bytes(data['body'], encoding="utf-8")
+        body = bytes(data['html'], encoding="utf-8")
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
@@ -95,8 +96,9 @@ class ESCacheStorage(object):
     def store_response(self, spider, request, response):
         data = {
             'status': response.status,
+            'domain': get_domain(response.url),
             'url': response.url,
-            'body': str(response.body).lstrip("b'").strip("'")
+            'html': str(response.body).lstrip("b'").strip("'")
                 .replace("\\n", "")
                 .replace("\\t", "")
                 .replace("\\\\", "\\"),

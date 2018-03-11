@@ -6,6 +6,7 @@ from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
 import pymongo
 from scrapy.http.headers import Headers
 from webcrawler.settings import DATA_COLLECTION, DATABASE
+from webcrawler.utils import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ class MongoDBCacheStorage(object):
         url = data['url']
         status = data['status']
         headers = Headers(data['headers'])
-        body = data['body']
+        body = data['html']
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
@@ -64,9 +65,10 @@ class MongoDBCacheStorage(object):
     def store_response(self, spider, request, response):
         data = {
             'status': response.status,
+            'domain': get_domain(response.url),
             'url': response.url,
             'headers': self._clean_headers(response.headers),
-            'body': response.body,
+            'html': response.body,
         }
         self.db[self.COLLECTION_NAME].insert_one(data)
 

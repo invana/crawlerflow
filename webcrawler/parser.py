@@ -115,8 +115,6 @@ def crawler(config=None, settings=None):
                 else:
                     _d = get_selector_element(response, selector)
                     data[selector.get('id')] = _d.strip() if _d else None
-
-            data['updated'] = datetime.now()
             yield data
 
             next_selector = config.get('next_page_selector').get('selector')
