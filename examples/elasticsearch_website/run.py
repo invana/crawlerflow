@@ -24,4 +24,4 @@ common_settings.update(es_settings)
 print(common_settings)
 
 if __name__ == '__main__':
-    crawl_website(url="http://www.srmuniv.ac.in/", settings=common_settings)
+    crawl_website(url="http://www.someuniversity.ac.in/", settings=common_settings)

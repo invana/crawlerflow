@@ -8,9 +8,9 @@ class InvanaWebsiteSpider(CrawlSpider):
     academics , faculty, department, research, fund, research proposals, funding proposals
 
     """
-    name = 'srmuniv.ac.in'
-    allowed_domains = ['www.srmuniv.ac.in']
-    start_urls = ['http://www.srmuniv.ac.in/']
+    name = 'someuniversity.ac.in'
+    allowed_domains = ['www.someuniversity.ac.in']
+    start_urls = ['http://www.someuniversity.ac.in/']
 
     rules = (
         Rule(LinkExtractor(deny=(r'event-created/', r'event', r'content',r'career',
