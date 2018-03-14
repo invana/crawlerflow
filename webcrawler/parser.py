@@ -143,22 +143,30 @@ def crawle_multiple_websites(urls=None, settings=None, ignore_urls_with_words=No
                       stop_after_crawl=False)
 
 
-def crawl_website(url=None, settings=None, ignore_urls_with_words=None, follow=True,
+def crawl_website(url=None, settings=None,
+                  ignore_urls_with_words=None,
+                  allow_only_with_words=None, follow=True,
                   stop_after_crawl=True):
     if ignore_urls_with_words is None:
         ignore_urls_with_words = []
 
-    if len(ignore_urls_with_words) == 0:
-        rules = (
-            Rule(LinkExtractor(), callback='parse_item', follow=follow, ),
-        )
-    else:
+    if allow_only_with_words is None:
+        allow_only_with_words = []
+
+    extractor_options = {}
+    if len(ignore_urls_with_words) > 0:
         ignored_words_regex = [re.compile(word) for word in ignore_urls_with_words]
-        print(ignore_urls_with_words)
-        extractor = LinkExtractor(deny=ignored_words_regex)
-        rules = [
-            Rule(extractor, callback='parse_item', follow=follow)
-        ]
+        extractor_options['deny'] = ignored_words_regex
+
+    if len(allow_only_with_words) > 0:
+        allow_only_words_regex = [re.compile(word) for word in allow_only_with_words]
+        extractor_options['allow'] = allow_only_words_regex
+
+    extractor = LinkExtractor(**extractor_options)
+
+    rules = [
+        Rule(extractor, callback='parse_item', follow=follow)
+    ]
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
     process.crawl(InvanaWebsiteSpider, start_urls=[url],

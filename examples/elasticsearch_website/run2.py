@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler.parser import crawle_multiple_websites
+from webcrawler.parser import crawl_website
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -20,6 +20,8 @@ es_settings = {
 common_settings.update(es_settings)
 
 if __name__ == '__main__':
-    urls = ["https://www.blog.google/", "https://blog.scrapinghub.com/"]
-    crawle_multiple_websites(urls=urls,
-                             settings=common_settings, ignore_urls_with_words=['event', ])
+    crawl_website(url="https://medium.com/airbnb-engineering",
+                  settings=common_settings,
+                  ignore_urls_with_words=['@'],
+                  allow_only_with_words=['/airbnb-engineering'],
+                  )
