@@ -10,10 +10,10 @@ class InvanaWebsiteSpider(CrawlSpider):
     """
     name = 'website_spider'
 
-    rules = (
-        Rule(LinkExtractor(deny=(r'event-created/', r'event', r'content', r'career',
-                                 r'about', r'convocation', r'gallery')), callback='parse_item', follow=True, ),
-    )
-
-    def parse_item(self, response):
-        print(response.url)
+    # rules = (
+    #     Rule(LinkExtractor(deny=(r'event-created/', r'event', r'content', r'career',
+    #                              r'about', r'convocation', r'gallery')), callback='parse_item', follow=True, ),
+    # )
+    #
+    # def parse_item(self, response):
+    #     print(response.url)
