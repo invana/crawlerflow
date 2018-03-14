@@ -135,7 +135,16 @@ def crawler(config=None, settings=None):
     process.start()
 
 
-def crawl_website(url=None, settings=None, ignore_urls_with_words=None, follow=True):
+def crawle_multiple_websites(urls=None, settings=None, ignore_urls_with_words=None, follow=True):
+    # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
+    for url in urls:
+        crawl_website(url=url, settings=settings, ignore_urls_with_words=ignore_urls_with_words,
+                      follow=follow,
+                      stop_after_crawl=False)
+
+
+def crawl_website(url=None, settings=None, ignore_urls_with_words=None, follow=True,
+                  stop_after_crawl=True):
     if ignore_urls_with_words is None:
         ignore_urls_with_words = []
 
@@ -156,4 +165,4 @@ def crawl_website(url=None, settings=None, ignore_urls_with_words=None, follow=T
                   allowed_domains=[domain],
                   rules=rules
                   )
-    process.start()
+    process.start(stop_after_crawl=stop_after_crawl)
