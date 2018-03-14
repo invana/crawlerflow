@@ -24,4 +24,5 @@ common_settings.update(es_settings)
 print(common_settings)
 
 if __name__ == '__main__':
-    crawl_website(url="https://blog.scrapinghub.com/", settings=common_settings)
+    crawl_website(url="https://blog.scrapinghub.com/",
+                  settings=common_settings, ignore_urls_with_words=['event',])

@@ -6,6 +6,9 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from .exceptions import NotImplemented, InvalidCrawlerConfig
 from webcrawler.spiders.website import InvanaWebsiteSpider
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import Rule
+import re
 
 
 def validate_config(config=None):
@@ -132,10 +135,25 @@ def crawler(config=None, settings=None):
     process.start()
 
 
-def crawl_website(url=None, settings=None):
+def crawl_website(url=None, settings=None, ignore_urls_with_words=None, follow=True):
+    if ignore_urls_with_words is None:
+        ignore_urls_with_words = []
+
+    if len(ignore_urls_with_words) == 0:
+        rules = (
+            Rule(LinkExtractor(), callback='parse_item', follow=follow, ),
+        )
+    else:
+        ignored_words_regex = [re.compile(word) for word in ignore_urls_with_words]
+        print(ignore_urls_with_words)
+        extractor = LinkExtractor(deny=ignored_words_regex)
+        rules = [
+            Rule(extractor, callback='parse_item', follow=follow)
+        ]
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(InvanaWebsiteSpider,
-                  start_urls=[url],
-                  allowed_domains=[domain])
+    process.crawl(InvanaWebsiteSpider, start_urls=[url],
+                  allowed_domains=[domain],
+                  rules=rules
+                  )
     process.start()
