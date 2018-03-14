@@ -8,13 +8,11 @@ class InvanaWebsiteSpider(CrawlSpider):
     academics , faculty, department, research, fund, research proposals, funding proposals
 
     """
-    name = 'someuniversity.ac.in'
-    allowed_domains = ['www.someuniversity.ac.in']
-    start_urls = ['http://www.someuniversity.ac.in/']
+    name = 'website_spider'
 
     rules = (
-        Rule(LinkExtractor(deny=(r'event-created/', r'event', r'content',r'career',
-                                 r'about', r'convocation', r'gallery')), callback='parse_item', follow=True,),
+        Rule(LinkExtractor(deny=(r'event-created/', r'event', r'content', r'career',
+                                 r'about', r'convocation', r'gallery')), callback='parse_item', follow=True, ),
     )
 
     def parse_item(self, response):
