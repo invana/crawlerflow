@@ -5,7 +5,6 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from .exceptions import NotImplemented, InvalidCrawlerConfig
-from datetime import datetime
 from webcrawler.spiders.website import InvanaWebsiteSpider
 
 
