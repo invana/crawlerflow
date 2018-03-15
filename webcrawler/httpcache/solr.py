@@ -8,23 +8,12 @@ from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
 from webcrawler.settings import DATA_COLLECTION, DATABASE
 from webcrawler.utils import get_urn, get_domain
+import pysolr
 
 logger = logging.getLogger(__name__)
 
 
-class WebLink(DocType):
-    url = Text()
-    html = Text()
-    headers = Text()
-    status = Integer()
-    created = Date()
-
-    class Meta:
-        index = DATABASE
-        doc_type = DATA_COLLECTION
-
-
-class ESCacheStorage(object):
+class SolrCacheStorage(object):
     """
     should set HTTPCACHE_ES_DATABASE in the settings.py
 
@@ -33,15 +22,15 @@ class ESCacheStorage(object):
     COLLECTION_NAME = "weblinks"
 
     def __init__(self, settings):
-        self.database = settings['HTTPCACHE_ES_DATABASE']
-        self.database_host = settings.get('HTTPCACHE_ES_HOST', '127.0.0.1')
-        connections.create_connection(hosts=[self.database_host])
-        WebLink.init()
+        self.core_name = settings['INVANA_CRAWLER_COLLECTION']
+        self.solr_host = settings.get('HTTPCACHE_SOLR_HOST', '127.0.0.1')
 
+        self.solr = pysolr.Solr('http://{0}/solr/{1}'.format(self.solr_host, DATA_COLLECTION),
+                                timeout=10)
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
 
     def open_spider(self, spider):
-        logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.database},
+        logger.debug("Using solr cache storage with core name %(core_name)s" % {'core_name': self.core_name},
                      extra={'spider': spider})
 
     def close_spider(self, spider):
@@ -108,11 +97,14 @@ class ESCacheStorage(object):
             'created': datetime.now()
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
-        WebLink(meta={'id': get_urn(response.url)}, **data).save()
+        data['id'] = get_urn(response.url)
+        self.solr.add([data])
 
     def _read_data(self, spider, request):
         try:
-            return WebLink.get(id=get_urn(request.url)).to_dict()
+            result = self.solr.search(q='id:{}'.format(get_urn(request.url)))
+            doc = result.docs[0]
+            return doc
         except Exception as e:
             return None
 
