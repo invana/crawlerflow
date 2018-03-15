@@ -22,7 +22,5 @@ common_settings.update(solr_settings)
 if __name__ == '__main__':
     crawl_website(url="https://blog.github.com/",
                   settings=common_settings,
-                  # ignore_urls_with_words=['event'],
-                  # allow_only_with_words=['organisation'],
                   follow=True
                   )

@@ -1,8 +1,8 @@
 # Web-Crawler
 
 A micro-framework to crawl the web pages with crawlers configs. 
-It can use [MongoDB](https://www.mongodb.com/) and [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
-databases to cache and save the extracted data. 
+It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
+and [Solr](http://lucene.apache.org/solr/) databases to cache and save the extracted data. 
 
 
 ## Install
@@ -73,6 +73,37 @@ print(common_settings)
 
 if __name__ == '__main__':
     crawler(config=example_config, settings=common_settings)
+
+```
+
+
+## Using Solr as http cache storage
+
+```bash
+
+from webcrawler.parser import crawl_website
+
+common_settings = {
+    'COMPRESSION_ENABLED': False,
+    'HTTPCACHE_ENABLED': True,
+    'INVANA_CRAWLER_COLLECTION': "weblinks",
+    'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'LOG_LEVEL': 'INFO'
+}
+
+solr_settings = {
+
+    'HTTPCACHE_SOLR_HOST': '127.0.0.1:8983',
+    'HTTPCACHE_STORAGE': "webcrawler.httpcache.solr.SolrCacheStorage",
+}
+
+common_settings.update(solr_settings)
+
+if __name__ == '__main__':
+    crawl_website(url="https://blog.github.com/",
+                  settings=common_settings,
+                  follow=True
+                  )
 
 ```
 
