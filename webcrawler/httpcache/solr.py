@@ -4,7 +4,6 @@ from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
-from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
 from webcrawler.settings import DATA_COLLECTION, DATABASE
 from webcrawler.utils import get_urn, get_domain
@@ -20,6 +19,18 @@ class SolrCacheStorage(object):
 
     """
     COLLECTION_NAME = "weblinks"
+
+    solr_date_fields = [
+        'headers_Last-Modified',
+        'headers_Expires',
+        'headers_Date',
+        'created'
+    ]
+
+    solr_int_fields = [
+        'status',
+        'headers_X-Cache-Hits'
+    ]
 
     def __init__(self, settings):
         self.core_name = settings['INVANA_CRAWLER_COLLECTION']
@@ -50,7 +61,7 @@ class SolrCacheStorage(object):
         headers = {}
         for k, v in obj.items():
             if k.startswith("headers_"):
-                headers[k.replace("headers_", "")] = v
+                headers[k.replace("headers_", "").rstrip("_s").rstrip("_i").rstrip("_dt")] = v
 
         obj['headers'] = headers
         return obj
@@ -61,14 +72,14 @@ class SolrCacheStorage(object):
         if data is None:
             return  # not cached
         else:
-            if data['status'] == 200 and data['html'] is None:
+            if data['status_i'] == 200 and data['html'] is None:
                 return None
 
         data = self.get_headers(data)
-        url = data['url']
-        status = data['status']
+        url = data['url_s']
+        status = data['status_i']
         headers = Headers(data['headers'])
-        body = bytes(data['html'], encoding="utf-8")
+        body = bytes(data['html'][0], encoding="utf-8")
         respcls = responsetypes.from_args(headers=headers, url=url)
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
@@ -85,6 +96,33 @@ class SolrCacheStorage(object):
             flat_data['headers_{}'.format(k)] = v
         return flat_data
 
+    def handle_date(self, v):
+        new_v = None
+        try:
+            if type(v) == str:
+                new_v = datetime.strptime(v.replace("GMT", "").strip(), '%a, %d %b %Y %H:%M:%S')
+            else:
+                new_v = v
+        except Exception as e:
+            pass
+        return new_v
+
+    def map_to_solr_datatypes(self, data):
+        mapped_data = {}
+        for k, v in data.items():
+            if k in self.solr_date_fields:
+                new_v = self.handle_date(v)
+                if new_v:
+                    mapped_data["{}_dt".format(k)] = new_v
+            elif k in self.solr_int_fields:
+                mapped_data["{}_i".format(k)] = v
+            else:
+                mapped_data["{}_s".format(k)] = v
+        if "html_s" in mapped_data:
+            mapped_data['html'] = mapped_data['html_s']
+            del mapped_data['html_s']
+        return mapped_data
+
     def store_response(self, spider, request, response):
         data = {
             'status': response.status,
@@ -97,6 +135,8 @@ class SolrCacheStorage(object):
             'created': datetime.now()
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
+
+        data = self.map_to_solr_datatypes(data=data)
         data['id'] = get_urn(response.url)
         self.solr.add([data])
 

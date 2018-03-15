@@ -12,10 +12,8 @@ common_settings = {
 }
 
 solr_settings = {
-    # 'ITEM_PIPELINES': {'webcrawler.pipelines.elasticsearch.ElasticsearchPipeline': 1},
 
-
-    'HTTPCACHE_SOLR_HOST' : '127.0.0.1:8983',
+    'HTTPCACHE_SOLR_HOST': '127.0.0.1:8983',
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.solr.SolrCacheStorage",
 }
 
@@ -23,4 +21,8 @@ common_settings.update(solr_settings)
 
 if __name__ == '__main__':
     crawl_website(url="https://blog.github.com/",
-                  settings=common_settings, ignore_urls_with_words=['event', ])
+                  settings=common_settings,
+                  # ignore_urls_with_words=['event'],
+                  # allow_only_with_words=['organisation'],
+                  follow=True
+                  )
