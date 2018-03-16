@@ -34,7 +34,7 @@ class ESCacheStorage(object):
 
     def __init__(self, settings):
         self.database = settings['HTTPCACHE_ES_DATABASE']
-        self.database_host = settings.get('HTTPCACHE_ES_HOST', '127.0.0.1')
+        self.database_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
         connections.create_connection(hosts=[self.database_host])
         WebLink.init()
 

@@ -34,7 +34,7 @@ class SolrCacheStorage(object):
 
     def __init__(self, settings):
         self.core_name = settings['INVANA_CRAWLER_COLLECTION']
-        self.solr_host = settings.get('HTTPCACHE_SOLR_HOST', '127.0.0.1')
+        self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
 
         self.solr = pysolr.Solr('http://{0}/solr/{1}'.format(self.solr_host, DATA_COLLECTION),
                                 timeout=10)

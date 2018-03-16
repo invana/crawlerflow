@@ -27,7 +27,7 @@ class MongoDBPipeline(object):
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            host=crawler.settings.get('PIPELINE_MONGODB_HOST', '127.0.0.1'),
+            host=crawler.settings.get('HTTPCACHE_HOST', '127.0.0.1'),
             database=crawler.settings.get('PIPELINE_MONGODB_DATABASE', DATABASE),
             username=crawler.settings.get('PIPELINE_MONGODB_USERNAME', ''),
             password=crawler.settings.get('PIPELINE_MONGODB_PASSWORD', ''),

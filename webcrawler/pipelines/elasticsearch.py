@@ -18,19 +18,17 @@ class WebLinkExtracted(DocType):
 
 class ElasticsearchPipeline(object):
     def __init__(self, host=None,
-                 database=None,
                  collection=None):
-        self.database = database
         self.database_host = host
+        self.collection = collection
         connections.create_connection(hosts=[host])
         WebLinkExtracted.init()
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            host=crawler.settings.get('PIPELINE_ES_HOST', '127.0.0.1'),
-            database=crawler.settings.get('PIPELINE_ES_DATABASE', 'crawler_data'),
-            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks"),  # TODO - not using
+            host=crawler.settings.get('HTTPCACHE_HOST', '127.0.0.1'),
+            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks_extracted_data"),
         )
 
     def _flatten_headers(self, obj):

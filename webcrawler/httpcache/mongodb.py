@@ -21,7 +21,7 @@ class MongoDBCacheStorage(object):
 
     def __init__(self, settings):
         self.database = settings.get('HTTPCACHE_MONGODB_DATABASE', DATABASE)
-        self.database_host = settings.get('HTTPCACHE_MONGODB_HOST', '127.0.0.1')
+        self.database_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
 
         self.database_port = settings.get('HTTPCACHE_MONGODB_PORT', 27017)
 
