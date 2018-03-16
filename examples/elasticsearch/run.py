@@ -1,8 +1,6 @@
 import sys
-
 sys.path.append('../../')
-
-from webcrawler.parser import crawler
+from webcrawler.parser import crawl_website
 import json
 
 example_config = json.load(open('../example.json'))
@@ -24,4 +22,8 @@ common_settings.update(es_settings)
 print(common_settings)
 
 if __name__ == '__main__':
-    crawler(config=example_config, settings=common_settings)
+    crawl_website(url="https://medium.com/invanatech",
+                  settings=common_settings,
+                  ignore_urls_with_words=['@'],
+                  allow_only_with_words=['/invanatech'],
+                  )

@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append('../../')
 from webcrawler.parser import crawl_website
 
@@ -12,7 +11,6 @@ common_settings = {
 }
 
 solr_settings = {
-
     'HTTPCACHE_HOST': '127.0.0.1:8983',
     'HTTPCACHE_STORAGE': "webcrawler.httpcache.solr.SolrCacheStorage",
 
@@ -24,7 +22,8 @@ solr_settings = {
 common_settings.update(solr_settings)
 
 if __name__ == '__main__':
-    crawl_website(url="https://blog.github.com/",
+    crawl_website(url="https://medium.com/invanatech",
                   settings=common_settings,
-                  follow=True
+                  ignore_urls_with_words=['@'],
+                  allow_only_with_words=['/invanatech'],
                   )
