@@ -1,24 +1,19 @@
 import scrapy
+from webcrawler.utils.selectors import get_selector_element
 
 
-class BingSearchEngineSpider(scrapy.Spider):
+class SearchEngineBaseSpider(scrapy.Spider):
     """
-    This is generic spider
+    bing search engine
     """
-
-    name = config.get('crawler_name')
-    # allowed_domains = [] TODO
-    start_urls = [
-        config.get('start_url')
-    ]
+    name = 'search_engine_base'
 
     def parse(self, response):
         data = {}
         data['url'] = response.url
-        for selector in config['data_selectors']:
+        for selector in self.config['data_selectors']:
             if selector.get('selector_attribute') == 'element' and \
                     len(selector.get('child_selectors', [])) > 0:
-                # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = response.css(selector.get('selector'))
                 elements_data = []
                 for el in elements:
@@ -31,13 +26,14 @@ class BingSearchEngineSpider(scrapy.Spider):
             else:
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
+
         yield data
 
-        next_selector = config.get('next_page_selector').get('selector')
+        next_selector = self.config.get('next_page_selector').get('selector')
         if next_selector:
-            if config.get('next_page_selector').get('selector_type') == 'css':
+            if self.config.get('next_page_selector').get('selector_type') == 'css':
                 next_pages = response.css(next_selector)
-            elif config.get('next_page_selector').get('selector_type') == 'xpath':
+            elif self.config.get('next_page_selector').get('selector_type') == 'xpath':
                 next_pages = response.xpath(next_selector)
             else:
                 next_pages = []
