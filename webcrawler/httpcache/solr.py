@@ -6,7 +6,7 @@ from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from datetime import datetime
 from webcrawler.settings import DATA_COLLECTION, DATABASE
-from webcrawler.utils import get_urn, get_domain
+from webcrawler.utils.url import get_urn, get_domain
 import pysolr
 
 logger = logging.getLogger(__name__)

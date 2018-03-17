@@ -53,10 +53,6 @@ def process_config(config=None):
     return config
 
 
-def get_domain(url):
-    pass
-
-
 def get_selector_element(html_element, selector, ):
     if selector.get('selector_attribute') in ['text']:
         if selector.get('selector_type') == 'css':
@@ -80,7 +76,8 @@ def get_selector_element(html_element, selector, ):
             raise NotImplemented("selector_type not equal to css; this is not implemented")
 
 
-def crawler(config=None, settings=None):
+def crawler(config=None,
+            settings=None):
     print(settings)
     if settings is None:
         settings = {
@@ -135,7 +132,10 @@ def crawler(config=None, settings=None):
     process.start()
 
 
-def crawle_multiple_websites(urls=None, settings=None, ignore_urls_with_words=None, follow=True):
+def crawle_multiple_websites(urls=None,
+                             settings=None,
+                             ignore_urls_with_words=None,
+                             follow=True):
     # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
     for url in urls:
         crawl_website(url=url, settings=settings, ignore_urls_with_words=ignore_urls_with_words,

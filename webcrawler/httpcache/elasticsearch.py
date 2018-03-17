@@ -7,7 +7,7 @@ from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
 from webcrawler.settings import DATA_COLLECTION, DATABASE
-from webcrawler.utils import get_urn, get_domain
+from webcrawler.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 
