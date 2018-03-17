@@ -3,6 +3,7 @@ from scrapy.spiders import CrawlSpider
 
 class InvanaWebsiteSpider(CrawlSpider):
     """
+    This will crawl the entire website
 
     academics , faculty, department, research, fund, research proposals, funding proposals
 
