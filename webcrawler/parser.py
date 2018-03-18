@@ -82,12 +82,15 @@ def crawl_with_search_engine():
     pass
 
 
-def crawl_feeds(feed_url=None, settings=None):
+def crawl_feeds(feed_urls=None, settings=None):
     if settings is None:
         settings = {}
     process = CrawlerProcess(settings)
-    domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(GenericFeedSpider, start_urls=[feed_url],
-                  allowed_domains=[domain],
+    allowed_domains = []
+    for feed_url in feed_urls:
+        domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
+        allowed_domains.append(domain)
+    process.crawl(GenericFeedSpider, start_urls=feed_urls,
+                  allowed_domains=allowed_domains,
                   )
     process.start()

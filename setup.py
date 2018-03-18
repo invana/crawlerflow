@@ -2,12 +2,13 @@
 
 from distutils.core import setup
 
-setup(name='web-crawler',
-      version='0.999',
-      description='A micro-framework to crawl the web pages - blogs/rss using defined configurations',
-      author='Ravi RT Merugu',
+setup(name='web-crawler-plus',
+      version='0.9.0 beta',
+      description='A micro-framework to crawl the web pages with crawlers configs.'
+                  ' It can use MongoDB, Elasticsearch and Solr databases to cache and save the extracted data.',
+      author='Ravi Raja Merugu',
       author_email='rrmerugu@gmail.com',
-      url='https://github.com/invaana/web-crawler',
-      packages=['webcrawler', ],
-      install_requires=['scrapy']
+      url='https://github.com/invanatech/web-crawler-plus',
+      packages=['webcrawler', 'tests'],
+      install_requires=['scrapy', 'pysolr', 'pymongo', 'elasticsearch-dsl']
       )

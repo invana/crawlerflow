@@ -20,6 +20,10 @@ es_settings = {
 common_settings.update(es_settings)
 
 if __name__ == '__main__':
+    # crawl_feeds(
+    #     settings=common_settings, feed_urls=['http://www.jimmunol.org/rss/current.xml', "https://blog.google/rss/"]
+    # )
+
     crawl_feeds(
-        settings=common_settings, feed_url="https://blog.google/rss/"
+        settings=common_settings, feed_urls=['http://connect.iisc.ac.in/feed/',]
     )
