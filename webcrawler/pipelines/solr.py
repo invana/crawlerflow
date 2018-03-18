@@ -66,7 +66,6 @@ class SolrPipeline(object):
 
     def process_item(self, item, spider):
         data = dict(item)
-        print (data)
         data['updated'] = datetime.now()
         data = self.map_to_solr_datatypes(data=data)
 

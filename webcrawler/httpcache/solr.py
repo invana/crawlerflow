@@ -118,6 +118,7 @@ class SolrCacheStorage(object):
                 new_v = self.handle_date(v)
                 if new_v:
                     mapped_data["{}_dt".format(k)] = new_v
+                    mapped_data["{}_dt".format(k)] = new_v
             elif k in self.solr_int_fields:
                 mapped_data["{}_i".format(k)] = v
             else:
