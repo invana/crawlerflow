@@ -1,3 +1,5 @@
 result.json
 *.pyc
 .scrapy/
+web_crawler_plus.egg-info/
+dist/

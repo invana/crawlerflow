@@ -9,7 +9,7 @@ and [Solr](http://lucene.apache.org/solr/) databases to cache and save the extra
 
 ```bash
 
-pip install git+https://github.com/invanatech/web-crawler#egg=webcrawler
+pip install web-crawler-plus
 
 ```
 
