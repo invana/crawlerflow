@@ -20,6 +20,12 @@ class SolrPipeline(object):
     solr_int_fields = [
     ]
 
+    solr_content_fields = [
+
+        'description',
+        'content'
+    ]
+
     def handle_date(self, v):
         new_v = None
         try:
@@ -42,10 +48,15 @@ class SolrPipeline(object):
                 new_v = self.handle_date(v)
                 if new_v:
                     mapped_data["{}_dt".format(k)] = new_v
+
             elif k in self.solr_int_fields:
                 mapped_data["{}_i".format(k)] = v
             else:
-                mapped_data["{}_s".format(k)] = v
+                if k in self.solr_content_fields:
+                    mapped_data["{}".format(k)] = v
+                else:
+                    mapped_data["{}_s".format(k)] = v
+
         if "html_s" in mapped_data:
             mapped_data['html'] = mapped_data['html_s']
             del mapped_data['html_s']
@@ -68,6 +79,10 @@ class SolrPipeline(object):
         data = dict(item)
         data['updated'] = datetime.now()
         data = self.map_to_solr_datatypes(data=data)
+
+        # print(data['pub_date_dt'], "================")
+        if "pub_date_dt" in data.keys():
+            del data['pub_date_dt']
 
         data['id'] = get_urn(data['url_s'])
         self.solr.add([data])

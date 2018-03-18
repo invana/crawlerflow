@@ -32,6 +32,12 @@ class SolrCacheStorage(object):
         'headers_X-Cache-Hits'
     ]
 
+    solr_content_fields = [
+
+        'description',
+        'content'
+    ]
+
     def __init__(self, settings):
         self.core_name = settings['INVANA_CRAWLER_COLLECTION']
         self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1:8983')
@@ -118,11 +124,15 @@ class SolrCacheStorage(object):
                 new_v = self.handle_date(v)
                 if new_v:
                     mapped_data["{}_dt".format(k)] = new_v
-                    mapped_data["{}_dt".format(k)] = new_v
+
             elif k in self.solr_int_fields:
                 mapped_data["{}_i".format(k)] = v
             else:
-                mapped_data["{}_s".format(k)] = v
+                if k in self.solr_content_fields:
+                    mapped_data["{}".format(k)] = v
+                else:
+                    mapped_data["{}_s".format(k)] = v
+
         if "html_s" in mapped_data:
             mapped_data['html'] = mapped_data['html_s']
             del mapped_data['html_s']

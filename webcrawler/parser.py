@@ -6,7 +6,7 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from webcrawler.spiders.website import InvanaWebsiteSpider
 from webcrawler.spiders.generic import InvaanaGenericSpider
-from webcrawler.spiders.feeds import GenericFeedSpider
+from webcrawler.spiders.feeds import GenericFeedSpider, RSSSpider
 from scrapy.linkextractors import LinkExtractor
 from webcrawler.utils.config import validate_config, process_config
 from scrapy.spiders import Rule
@@ -90,7 +90,9 @@ def crawl_feeds(feed_urls=None, settings=None):
     for feed_url in feed_urls:
         domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
         allowed_domains.append(domain)
-    process.crawl(GenericFeedSpider, start_urls=feed_urls,
-                  allowed_domains=allowed_domains,
+
+    # print(allowed_domains)
+    process.crawl(RSSSpider,
+                  start_urls=feed_urls,
                   )
     process.start()
