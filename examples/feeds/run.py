@@ -1,10 +1,8 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler.spiders.search_engines.bing import crawl_with_bing
-import json
+from webcrawler.parser import crawl_feeds
 
-example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
@@ -20,9 +18,8 @@ es_settings = {
 }
 
 common_settings.update(es_settings)
-print(common_settings)
 
 if __name__ == '__main__':
-    crawl_with_bing(
-        settings=common_settings, topic="Invaana"
+    crawl_feeds(
+        settings=common_settings, feed_url="https://blog.google/rss/"
     )

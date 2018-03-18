@@ -38,7 +38,7 @@ class MongoDBPipeline(object):
     def process_item(self, item, spider):
 
         if self.extracted_data_collection is None:
-            raise Exception("self.connect() it not called in the Pipeline, please make the connection first")
+            raise Exception("pymongo.MongoClient() it not called in the Pipeline, please make the connection first")
         data = dict(item)
         data['updated'] = datetime.now()
         self.extracted_data_collection.insert(data)

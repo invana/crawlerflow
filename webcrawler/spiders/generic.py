@@ -1,5 +1,5 @@
 import scrapy
-from utils.selectors import get_selector_element
+from webcrawler.utils.selectors import get_selector_element
 
 
 class InvaanaGenericSpider(scrapy.Spider):
