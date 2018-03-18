@@ -9,6 +9,8 @@ setup(name='web-crawler-plus',
       author='Ravi Raja Merugu',
       author_email='rrmerugu@gmail.com',
       url='https://github.com/invanatech/web-crawler-plus',
-      packages=['webcrawler', 'tests'],
+      packages=['webcrawler', 'tests',
+                'webcrawler.spiders', 'webcrawler.pipelines', 'webcrawler.httpcache',
+                'webcrawler.spiders.search_engines', 'webcrawler.utils'],
       install_requires=['scrapy', 'pysolr', 'pymongo', 'elasticsearch-dsl']
       )
