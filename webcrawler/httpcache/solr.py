@@ -34,7 +34,7 @@ class SolrCacheStorage(object):
 
     def __init__(self, settings):
         self.core_name = settings['INVANA_CRAWLER_COLLECTION']
-        self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
+        self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1:8983')
 
         self.solr = pysolr.Solr('http://{0}/solr/{1}'.format(self.solr_host, DATA_COLLECTION),
                                 timeout=10)
@@ -100,7 +100,11 @@ class SolrCacheStorage(object):
         new_v = None
         try:
             if type(v) == str:
-                new_v = datetime.strptime(v.replace("GMT", "").strip(), '%a, %d %b %Y %H:%M:%S')
+                if "+" in v:
+                    v = v.split("+")[0].strip()
+                else:
+                    v = v.replace("GMT", "").strip()
+                new_v = datetime.strptime(v, '%a, %d %b %Y %H:%M:%S')
             else:
                 new_v = v
         except Exception as e:
