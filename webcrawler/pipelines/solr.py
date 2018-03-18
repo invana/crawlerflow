@@ -1,6 +1,6 @@
 from datetime import datetime
 from webcrawler.settings import EXTRACTED_DATA_COLLECTION, DATABASE
-from webcrawler.utils import get_urn
+from webcrawler.utils.url import get_urn
 import pysolr
 
 
