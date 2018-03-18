@@ -138,6 +138,9 @@ class SolrCacheStorage(object):
             del mapped_data['html_s']
         return mapped_data
 
+    def clean_str(self, url):
+        return url.replace(".", "-").replace(":", "-")
+
     def store_response(self, spider, request, response):
         data = {
             'status': response.status,
@@ -152,12 +155,13 @@ class SolrCacheStorage(object):
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
 
         data = self.map_to_solr_datatypes(data=data)
-        data['id'] = get_urn(response.url)
+        data['id'] = self.clean_str(get_urn(response.url))
+
         self.solr.add([data])
 
     def _read_data(self, spider, request):
         try:
-            result = self.solr.search(q='id:{}'.format(get_urn(request.url)))
+            result = self.solr.search(q='id:{}'.format(self.clean_str(get_urn(request.url))))
             doc = result.docs[0]
             return doc
         except Exception as e:

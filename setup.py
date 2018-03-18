@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='web-crawler-plus',
-      version='0.9.9',
+      version='0.9.10',
       description='A micro-framework to crawl the web pages with crawlers configs.'
                   ' It can use MongoDB, Elasticsearch and Solr databases to cache and save the extracted data.',
       author='Ravi Raja Merugu',

@@ -69,6 +69,9 @@ class SolrPipeline(object):
             collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
+    def clean_str(self, url):
+        return url.replace(".", "-").replace(":", "-")
+
     def _flatten_headers(self, obj):
         flat_data = {}
         for k, v in obj.items():
@@ -84,6 +87,6 @@ class SolrPipeline(object):
         if "pub_date_dt" in data.keys():
             del data['pub_date_dt']
 
-        data['id'] = get_urn(data['url_s'])
+        data['id'] = self.clean_str(get_urn(data['url_s']))
         self.solr.add([data])
         return item
