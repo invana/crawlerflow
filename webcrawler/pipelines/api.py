@@ -10,7 +10,7 @@ import time
 class ApiPipeline(object):
     def __init__(self, api_url=None, headers=None):
         if api_url is None:
-            raise Exception("INVANA_API_PIPELINE_URL should be provided in the settings "
+            raise Exception("INVANA_PIPELINE_API_URL should be provided in the settings "
                             "when using api.ApiPipeline")
 
         if headers is None:
@@ -21,7 +21,8 @@ class ApiPipeline(object):
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            api_url=crawler.settings.get('INVANA_API_PIPELINE_URL'),
+            api_url=crawler.settings.get('INVANA_PIPELINE_API_URL'),
+            headers=crawler.settings.get('INVANA_PIPELINE_API_HEADERS'),
         )
 
     def clean_data(self, data=None):
@@ -37,7 +38,7 @@ class ApiPipeline(object):
 
     def send(self, data=None):
         if data:
-            response = requests.post(self.api_url, data=json.dumps(data,  default=str), headers=self.headers)
+            response = requests.post(self.api_url, data=json.dumps(data, default=str), headers=self.headers)
             print(response.status_code)
 
     def process_item(self, item, spider):
