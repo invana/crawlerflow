@@ -66,7 +66,7 @@ class SolrPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('PIPELINE_HOST', '127.0.0.1:8983'),
-            collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
+            collection=crawler.settings.get('WCP_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
     def clean_str(self, url):

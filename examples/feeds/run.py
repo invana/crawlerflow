@@ -6,8 +6,8 @@ from webcrawler.parser import crawl_feeds
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_CRAWLER_COLLECTION': "weblinks",
-    'INVANA_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'WCP_CRAWLER_COLLECTION': "weblinks",
+    'WCP_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 

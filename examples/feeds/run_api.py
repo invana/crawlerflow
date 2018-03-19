@@ -6,8 +6,8 @@ from webcrawler.parser import crawl_feeds
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_PIPELINE_API_URL': "http://localhost:8000/extracted-data",
-    'INVANA_PIPELINE_API_HEADERS':  {},
+    'WCP_PIPELINE_API_URL': "http://localhost:8000/extracted-data",
+    'WCP_PIPELINE_API_HEADERS':  {},
     'LOG_LEVEL': 'INFO'
 }
 
