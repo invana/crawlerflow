@@ -31,7 +31,7 @@ class ElasticsearchPipeline(object):
             collection=crawler.settings.get('INVANA_CRAWLER_EXTRACTION_COLLECTION', "weblinks_extracted_data"),
         )
 
-    def _flatten_headers(self, obj):
+    def _flatten_headers(self, obj): # TODO -may be not using !!
         flat_data = {}
         for k, v in obj.items():
             flat_data['headers_{}'.format(k)] = v

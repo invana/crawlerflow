@@ -33,7 +33,13 @@ if __name__ == '__main__':
                                              "https://blog.bitbucket.org/feed/",
                                              "https://scienceblog.com/feed/",
                                              "http://scienceblogs.com/feed/"
-                                             "http://www.jimmunol.org/rss/current.xml"
+                                             "http://www.jimmunol.org/rss/current.xml",
+                                             "http://feeds.nature.com/gt/rss/current",
+                                             "http://feeds.nature.com/gene/rss/current",
+                                             "http://feeds.nature.com/gim/rss/current",
+                                             "http://feeds.nature.com/npjqi/rss/current",
+                                             "http://feeds.nature.com/npjquantmats/rss/current",
+                                             "http://feeds.nature.com/npjregenmed/rss/current"
                                              ]
     )
 
