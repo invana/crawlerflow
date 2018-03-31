@@ -2,7 +2,6 @@
 Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 
 """
-import scrapy
 from scrapy.crawler import CrawlerProcess
 from webcrawler_plus.spiders.website import InvanaWebsiteSpider
 from webcrawler_plus.spiders.generic import InvaanaGenericSpider
@@ -13,42 +12,46 @@ from scrapy.spiders import Rule
 import re
 
 
-def crawler(config=None,
-            settings=None):
-    print(settings)
-    if settings is None:
-        settings = {
-            'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-        }
-    if "USER_AGENT" not in settings.keys():
-        settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
-    validate_config(config=config)
-    config = process_config(config)
-    process = CrawlerProcess(settings)
+def crawl_websites(urls=None,
+                   settings=None,
+                   ignore_urls_with_words=None,
+                   allow_only_with_words=None,
+                   follow=True):
+    """
+    crawl multiple sites
 
-    process.crawl(InvaanaGenericSpider,
-                  start_urls=[config.get('start_url')],
-                  name=config.get('crawler_name'),
-                  config=config
-                  )
-    process.start()
-
-
-def crawle_multiple_websites(urls=None,
-                             settings=None,
-                             ignore_urls_with_words=None,
-                             follow=True):
+    :param urls:
+    :param settings:
+    :param ignore_urls_with_words:
+    :param follow:
+    :return:
+    """
     # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
     for url in urls:
-        crawl_website(url=url, settings=settings, ignore_urls_with_words=ignore_urls_with_words,
-                      follow=follow,
-                      stop_after_crawl=False)
+        crawl_website(url=url,
+                      settings=settings,
+                      ignore_urls_with_words=ignore_urls_with_words,
+                      allow_only_with_words=allow_only_with_words,
+                      follow=follow)
 
 
-def crawl_website(url=None, settings=None,
+def crawl_website(url=None,
+                  settings=None,
                   ignore_urls_with_words=None,
-                  allow_only_with_words=None, follow=True,
+                  allow_only_with_words=None,
+                  follow=True,
                   stop_after_crawl=True):
+    """
+    Crawl a single site
+
+    :param url:
+    :param settings:
+    :param ignore_urls_with_words:
+    :param allow_only_with_words:
+    :param follow:
+    :param stop_after_crawl:
+    :return:
+    """
     if ignore_urls_with_words is None:
         ignore_urls_with_words = []
 
@@ -91,8 +94,33 @@ def crawl_feeds(feed_urls=None, settings=None):
         domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
         allowed_domains.append(domain)
 
-    # print(allowed_domains)
     process.crawl(RSSSpider,
                   start_urls=feed_urls,
+                  )
+    process.start()
+
+
+def crawler(config=None,
+            settings=None):
+    """
+    Crawl the site and apply a parser on top of it.
+    :param config:
+    :param settings:
+    :return:
+    """
+    if settings is None:
+        settings = {
+            'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+        }
+    if "USER_AGENT" not in settings.keys():
+        settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
+    validate_config(config=config)
+    config = process_config(config)
+    process = CrawlerProcess(settings)
+
+    process.crawl(InvaanaGenericSpider,
+                  start_urls=[config.get('start_url')],
+                  name=config.get('crawler_name'),
+                  config=config
                   )
     process.start()

@@ -1,8 +1,9 @@
-# Web-Crawler
+# Web Crawler Plust
 
-A micro-framework to crawl the web pages with crawlers configs. 
+A micro-framework built on [scrapy](https://scrapy.org/) to crawl the sites. 
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
-and [Solr](http://lucene.apache.org/solr/) databases to cache and save the extracted data. 
+and [Solr](http://lucene.apache.org/solr/) databases to cache the requests and also extract the data using parser configs 
+and save them.
 
 
 [![Build Status](https://travis-ci.org/invanatech/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanatech/web-crawler-plus) | 
