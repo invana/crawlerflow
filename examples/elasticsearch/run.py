@@ -13,9 +13,9 @@ common_settings = {
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler.pipelines.elasticsearch.ElasticsearchPipeline': 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.elasticsearch.ElasticsearchPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage",
 }
 
 common_settings.update(es_settings)
