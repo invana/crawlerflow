@@ -9,6 +9,7 @@ and [Solr](http://lucene.apache.org/solr/) databases to cache and save the extra
 
 [![codecov](https://codecov.io/gh/invanatech/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanatech/web-crawler-plus)
 
+[Documentation](docs/index.md)
 
 ## Install
 
