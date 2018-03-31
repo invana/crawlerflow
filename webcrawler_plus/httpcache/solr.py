@@ -40,9 +40,10 @@ class SolrCacheStorage(object):
 
     def __init__(self, settings):
         self.core_name = settings['WCP_CRAWLER_COLLECTION']
-        self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1:8983')
+        self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
+        self.port = settings.get('HTTPCACHE_SOLR_PORT', '8983')
 
-        self.solr = pysolr.Solr('http://{0}/solr/{1}'.format(self.solr_host, DATA_COLLECTION),
+        self.solr = pysolr.Solr('http://{0}:{1}/solr/{2}'.format(self.solr_host, self.port, DATA_COLLECTION),
                                 timeout=10)
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
 

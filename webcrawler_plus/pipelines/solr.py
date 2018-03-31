@@ -6,10 +6,11 @@ import pysolr
 
 class SolrPipeline(object):
     def __init__(self, host=None,
+                 port=None,
                  collection=None):
         self.core_name = collection
         self.solr_host = host
-        self.solr = pysolr.Solr('http://{0}/solr/{1}'.format(self.solr_host, collection),
+        self.solr = pysolr.Solr('http://{0}:{1}/solr/{2}'.format(self.solr_host, port, collection),
                                 timeout=10)
 
     solr_date_fields = [
@@ -64,8 +65,10 @@ class SolrPipeline(object):
 
     @classmethod
     def from_crawler(cls, crawler):
+
         return cls(
-            host=crawler.settings.get('PIPELINE_HOST', '127.0.0.1:8983'),
+            host=crawler.settings.get('PIPELINE_HOST', '127.0.0.1'),
+            port=crawler.settings.get('HTTPCACHE_SOLR_PORT', '8983'),
             collection=crawler.settings.get('WCP_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
