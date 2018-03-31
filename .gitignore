@@ -5,3 +5,4 @@ web_crawler_plus.egg-info/
 dist/
 .tox/
 .pytest_cache/
+.coverage
