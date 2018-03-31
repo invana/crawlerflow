@@ -108,6 +108,8 @@ class WebCrawlerPlus(object):
             self.settings['HTTPCACHE_SOLR_PORT'] = database_credentials.get('port', '8993')
             self.settings['ITEM_PIPELINES'] = {'webcrawler_plus.pipelines.solr.SolrPipeline': 1}
             self.settings['HTTPCACHE_STORAGE'] = "webcrawler_plus.httpcache.solr.SolrCacheStorage"
+        else:
+            raise Exception("We only support, elasticsearch, solr and mongodb at this moment.")
 
         self.settings['LOG_LEVEL'] = log_level
 
