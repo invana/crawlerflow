@@ -1,5 +1,5 @@
 import scrapy
-from webcrawler_plus.webcrawler.utils.selectors import get_selector_element
+from webcrawler_plus.utils.selectors import get_selector_element
 
 
 class SearchEngineBaseSpider(scrapy.Spider):

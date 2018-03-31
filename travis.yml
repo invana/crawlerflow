@@ -1,0 +1,19 @@
+sudo: true
+
+language: python
+
+python:
+   - "3.6"
+
+dist: trusty
+
+cache: pip
+
+install:
+   - pip install tox-travis
+   - pip install codecov
+
+script:
+   - tox --version
+   - tox
+   - if [ ${TRAVIS} ]; then  codecov -t "3c3cbcea-c530-438a-af73-ff73c1ede243";  fi
