@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler.parser import crawl_feeds
+from webcrawler_plus.parser import crawl_feeds
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -12,9 +12,9 @@ common_settings = {
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.mongodb.MongoDBPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
 }
 
 common_settings.update(es_settings)

@@ -1,5 +1,5 @@
 from scrapy.spiders import XMLFeedSpider, Spider
-from webcrawler.utils.url import get_domain
+from webcrawler_plus.utils.url import get_domain
 import feedparser
 
 

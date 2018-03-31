@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../../')
-from webcrawler.parser import crawl_website
+from webcrawler_plus.parser import crawl_website
 import json
 
 example_config = json.load(open('../example.json'))

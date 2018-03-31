@@ -1,6 +1,6 @@
 import pymongo
 from datetime import datetime
-from webcrawler.settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from webcrawler_plus.settings import EXTRACTED_DATA_COLLECTION, DATABASE
 
 
 class MongoDBPipeline(object):

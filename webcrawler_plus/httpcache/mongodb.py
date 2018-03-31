@@ -5,8 +5,8 @@ from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
 import pymongo
 from scrapy.http.headers import Headers
-from webcrawler.settings import DATA_COLLECTION, DATABASE
-from webcrawler.utils.url import get_urn, get_domain
+from webcrawler_plus.settings import DATA_COLLECTION, DATABASE
+from webcrawler_plus.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 

@@ -17,7 +17,7 @@ pip install web-crawler-plus
 
 ```python
 
-from webcrawler.parser import crawler
+from webcrawler_plus.parser import crawler
 import json
 
 example_config = json.load(open('../example.json'))
@@ -32,9 +32,9 @@ common_settings = {
 
 mongodb_settings = {
     'PIPELINE_MONGODB_DATABASE': "crawler_data",
-    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
+    'ITEM_PIPELINES': {webcrawler_plus: 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': webcrawler_plus,
     'HTTPCACHE_MONGODB_DATABASE': "crawler_data",
     "HTTPCACHE_MONGODB_PORT": 27017,
 }
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 ```python
 
-from webcrawler.parser import crawler
+from webcrawler_plus.parser import crawler
 import json
 
 example_config = json.load(open('../example.json'))
@@ -63,9 +63,9 @@ common_settings = {
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler.pipelines.elasticsearch.ElasticsearchPipeline': 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.elasticsearch.ElasticsearchPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage",
 }
 
 common_settings.update(es_settings)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
 ```bash
 
-from webcrawler.parser import crawl_website
+from webcrawler_plus.parser import crawl_website
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -94,7 +94,7 @@ common_settings = {
 solr_settings = {
 
     'HTTPCACHE_SOLR_HOST': '127.0.0.1:8983',
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.solr.SolrCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.solr.SolrCacheStorage",
 }
 
 common_settings.update(solr_settings)
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
 settings = {
     'HTTPCACHE_ENABLED': True,
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
     'HTTPCACHE_MONGODB_DATABASE': "crawlers",
     "HTTPCACHE_MONGODB_PORT": 27017,
     'COMPRESSION_ENABLED': False,
@@ -131,7 +131,7 @@ settings = {
 
 
 settings = {
-    'HTTPCACHE_STORAGE': "webcrawler.pipelines.mongodb.MongoDBPipeline",
+    'HTTPCACHE_STORAGE': webcrawler_plus,
 }
 
 ```
@@ -144,7 +144,7 @@ settings = {
 
 settings = {
     'HTTPCACHE_ENABLED': True,
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_STORAGE': webcrawler_plus,
     'COMPRESSION_ENABLED': False,
 }
 
@@ -156,7 +156,7 @@ settings = {
 
 
 settings = {
-    'HTTPCACHE_STORAGE': "webcrawler.pipelines.elasticsearch.ElasticsearchPipeline",
+    'HTTPCACHE_STORAGE': webcrawler_plus,
 }
 
 ```
@@ -171,7 +171,7 @@ All the entries in ES as url as id.
 ```python
 
 
-from webcrawler.parser import crawler
+from webcrawler_plus.parser import crawler
 import json
 example_config = json.load(open('examples/example.json'))
 

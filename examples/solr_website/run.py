@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../../')
-from webcrawler.parser import crawl_website
+from webcrawler_plus.parser import crawl_website
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -12,9 +12,9 @@ common_settings = {
 
 solr_settings = {
     'HTTPCACHE_HOST': '127.0.0.1:8983',
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.solr.SolrCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.solr.SolrCacheStorage",
 
-    'ITEM_PIPELINES': {'webcrawler.pipelines.solr.SolrPipeline': 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.solr.SolrPipeline': 1},
     'PIPELINE_HOST': '127.0.0.1:8983',
 
 }

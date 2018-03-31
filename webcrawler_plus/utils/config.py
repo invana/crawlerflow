@@ -1,4 +1,4 @@
-from webcrawler.exceptions import NotImplemented, InvalidCrawlerConfig
+from webcrawler_plus.exceptions import NotImplemented, InvalidCrawlerConfig
 
 
 def validate_config(config=None):

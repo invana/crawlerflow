@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler.spiders.search_engines.bing import crawl_with_bing
+from webcrawler_plus.spiders.search_engines.bing import crawl_with_bing
 import json
 
 example_config = json.load(open('../example.json'))
@@ -14,9 +14,9 @@ common_settings = {
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler.pipelines.mongodb.MongoDBPipeline': 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.mongodb.MongoDBPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
 }
 
 common_settings.update(es_settings)

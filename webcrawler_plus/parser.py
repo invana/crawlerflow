@@ -4,11 +4,11 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 """
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from webcrawler.spiders.website import InvanaWebsiteSpider
-from webcrawler.spiders.generic import InvaanaGenericSpider
-from webcrawler.spiders.feeds import GenericFeedSpider, RSSSpider
+from webcrawler_plus.spiders.website import InvanaWebsiteSpider
+from webcrawler_plus.spiders.generic import InvaanaGenericSpider
+from webcrawler_plus.spiders.feeds import GenericFeedSpider, RSSSpider
 from scrapy.linkextractors import LinkExtractor
-from webcrawler.utils.config import validate_config, process_config
+from webcrawler_plus.utils.config import validate_config, process_config
 from scrapy.spiders import Rule
 import re
 

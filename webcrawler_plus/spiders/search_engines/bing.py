@@ -1,6 +1,6 @@
-from webcrawler.spiders.search_engines.base import SearchEngineBaseSpider
+from webcrawler_plus.spiders.search_engines.base import SearchEngineBaseSpider
 from scrapy.crawler import CrawlerProcess
-from webcrawler.utils.config import validate_config, process_config
+from webcrawler_plus.utils.config import validate_config, process_config
 
 BING_SELECTOR_CONFIG = {
     "crawler_name": "search_engine_bing",
