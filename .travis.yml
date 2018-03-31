@@ -12,7 +12,6 @@ cache: pip
 install:
    - pip install tox-travis
    - pip install codecov
-   - pip install requirements.txt
 
 script:
    - tox --version
