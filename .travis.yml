@@ -17,5 +17,3 @@ install:
 script:
    - tox --version
    - tox
-   - coverage run runtests.py
-   - if [ ${TRAVIS} ]; then  codecov -t "3c3cbcea-c530-438a-af73-ff73c1ede243";  fi
