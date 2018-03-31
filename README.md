@@ -84,4 +84,4 @@ if __name__ == '__main__':
 
 ```
 
-Checkout the [documentation](docs/index.md) for more information.
+Checkout the lower level [documentation](docs/index.md) for more information.
