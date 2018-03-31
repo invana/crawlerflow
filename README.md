@@ -32,9 +32,9 @@ common_settings = {
 
 mongodb_settings = {
     'PIPELINE_MONGODB_DATABASE': "crawler_data",
-    'ITEM_PIPELINES': {webcrawler_plus: 1},
+    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.mongodb.MongoDBPipeline': 1},
 
-    'HTTPCACHE_STORAGE': webcrawler_plus,
+    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
     'HTTPCACHE_MONGODB_DATABASE': "crawler_data",
     "HTTPCACHE_MONGODB_PORT": 27017,
 }
