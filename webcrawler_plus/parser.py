@@ -3,7 +3,7 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 
 """
 from scrapy.crawler import CrawlerProcess
-from webcrawler_plus.spiders.website import InvanaWebsiteSpider
+from webcrawler_plus.spiders.website import WCPWebsiteSpider
 from webcrawler_plus.spiders.generic import InvaanaGenericSpider
 from webcrawler_plus.spiders.feeds import GenericFeedSpider, RSSSpider
 from scrapy.linkextractors import LinkExtractor
@@ -74,7 +74,7 @@ def crawl_website(url=None,
     ]
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(InvanaWebsiteSpider, start_urls=[url],
+    process.crawl(WCPWebsiteSpider, start_urls=[url],
                   allowed_domains=[domain],
                   rules=rules
                   )
