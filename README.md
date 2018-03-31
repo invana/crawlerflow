@@ -9,6 +9,13 @@ and save them.
 [![Build Status](https://travis-ci.org/invanatech/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanatech/web-crawler-plus) 
 [![codecov](https://codecov.io/gh/invanatech/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanatech/web-crawler-plus) 
 
+## Overview 
+
+- This is a wrapper around scrapy framework.
+- This framework will give the user options to use solr, elasticsearch, mongodb as cache and storage databases.
+- **Cache collection** is where all the data is cached to. Defaults to `weblinks`.
+- **Storage collection** is where all the extracted/parsed data from scrapy job is saved to. Defaults to `weblinks_extracted_data`
+
 ## Install
 
 ```bash
@@ -18,6 +25,7 @@ pip install web-crawler-plus
 ```
 
 
+## Working Examples
 
 ```python
 # a simple usecase to use mongodb as cache and storage db.
