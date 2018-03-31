@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler_plus.options import WebCrawlerPlus
+from webcrawler_plus import WebCrawlerPlus
 
 if __name__ == '__main__':
     crawler = WebCrawlerPlus(

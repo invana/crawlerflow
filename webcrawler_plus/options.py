@@ -78,6 +78,7 @@ class WebCrawlerPlus(object):
                  database_credentials=None,
                  http_cache_enabled=True,
                  log_level="INFO",
+
                  **kwargs):
 
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled

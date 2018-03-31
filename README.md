@@ -30,7 +30,8 @@ pip install web-crawler-plus
 ```python
 # a simple usecase to use mongodb as cache and storage db.
 
-from webcrawler_plus.options import WebCrawlerPlus
+from webcrawler_plus import WebCrawlerPlus
+
 
 if __name__ == '__main__':
     crawler = WebCrawlerPlus(
@@ -52,7 +53,7 @@ if __name__ == '__main__':
 ```python
 # a simple usecase to use solr as cache and storage db.
 
-from webcrawler_plus.options import WebCrawlerPlus
+from webcrawler_plus import WebCrawlerPlus
 
 if __name__ == '__main__':
     # there is no database key for solr, it will be ignored
@@ -74,7 +75,7 @@ if __name__ == '__main__':
 ```python
 # a simple usecase to use elasticsearch as cache and storage db.
 
-from webcrawler_plus.options import WebCrawlerPlus
+from webcrawler_plus import WebCrawlerPlus
 
 if __name__ == '__main__':
     crawler = WebCrawlerPlus(
