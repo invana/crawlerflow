@@ -52,6 +52,8 @@ def crawl_website(url=None,
     :param stop_after_crawl:
     :return:
     """
+    settings['TELNETCONSOLE_PORT'] = None
+
     if ignore_urls_with_words is None:
         ignore_urls_with_words = []
 
@@ -72,6 +74,7 @@ def crawl_website(url=None,
     rules = [
         Rule(extractor, callback='parse_item', follow=follow)
     ]
+
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
     process.crawl(WCPWebsiteSpider, start_urls=[url],
@@ -88,6 +91,7 @@ def crawl_with_search_engine():
 def crawl_feeds(feed_urls=None, settings=None):
     if settings is None:
         settings = {}
+    settings['TELNETCONSOLE_PORT'] = None
     process = CrawlerProcess(settings)
     allowed_domains = []
     for feed_url in feed_urls:
@@ -116,6 +120,7 @@ def crawler(config=None,
         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
     validate_config(config=config)
     config = process_config(config)
+    settings['TELNETCONSOLE_PORT'] = None
     process = CrawlerProcess(settings)
 
     process.crawl(InvaanaGenericSpider,

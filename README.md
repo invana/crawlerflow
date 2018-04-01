@@ -93,4 +93,9 @@ if __name__ == '__main__':
 
 ```
 
+## Extra settings 
+
+
+- `WCP_SCRAPY_CRAWLER_TYPE` -  CrawlerRunner/CrawlerProcess
+
 Checkout the lower level [documentation](docs/index.md) for more information.

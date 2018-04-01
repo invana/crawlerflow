@@ -78,6 +78,7 @@ class WebCrawlerPlus(object):
                  database_credentials=None,
                  http_cache_enabled=True,
                  log_level="INFO",
+                 extra_settings=None,
 
                  **kwargs):
 
@@ -113,8 +114,11 @@ class WebCrawlerPlus(object):
             raise Exception("We only support, elasticsearch, solr and mongodb at this moment.")
 
         self.settings['LOG_LEVEL'] = log_level
+        if extra_settings:
+            self.settings.update(extra_settings)  # over riding or adding extra settings
 
-    def run(self, urls=None,
+    def run(self,
+            urls=None,
             ignore_urls_with_words=None,
             allow_only_with_words=None,
             follow=True):
