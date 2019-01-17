@@ -5,8 +5,8 @@ from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from datetime import datetime
-from webcrawler_plus.settings import DATA_COLLECTION, DATABASE
-from webcrawler_plus.utils.url import get_urn, get_domain
+from invana_bot.settings import DATA_COLLECTION, DATABASE
+from invana_bot.utils.url import get_urn, get_domain
 import pysolr
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class SolrCacheStorage(object):
 
 
     """
-    COLLECTION_NAME = "weblinks"
+    COLLECTION_NAME = "web_link"
 
     solr_date_fields = [
         'headers_Last-Modified',
@@ -39,7 +39,7 @@ class SolrCacheStorage(object):
     ]
 
     def __init__(self, settings):
-        self.core_name = settings['WCP_CRAWLER_COLLECTION']
+        self.core_name = settings['INVANA_BOT_COLLECTION']
         self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
         self.port = settings.get('HTTPCACHE_SOLR_PORT', '8983')
 

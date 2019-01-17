@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler_plus.parser import crawl_feeds
+from invana_bot.parser import crawl_feeds
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
@@ -12,9 +12,9 @@ common_settings = {
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.api.ApiPipeline': 1},
+    'ITEM_PIPELINES': {'invana_bot.pipelines.api.ApiPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
 }
 
 common_settings.update(es_settings)

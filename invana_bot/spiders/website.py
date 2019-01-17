@@ -3,7 +3,7 @@ from scrapy.http import Request
 import os
 
 
-class WCPWebsiteSpider(CrawlSpider):
+class InvanaWebsiteSpider(CrawlSpider):
     """
     This will crawl the entire website.
 

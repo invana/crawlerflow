@@ -1,7 +1,7 @@
 result.json
 *.pyc
 .scrapy/
-web_crawler_plus.egg-info/
+invana_bot.egg-info/
 dist/
 .tox/
 .pytest_cache/

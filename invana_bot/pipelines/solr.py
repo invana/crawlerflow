@@ -1,6 +1,6 @@
 from datetime import datetime
-from webcrawler_plus.settings import EXTRACTED_DATA_COLLECTION, DATABASE
-from webcrawler_plus.utils.url import get_urn
+from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from invana_bot.utils.url import get_urn
 import pysolr
 
 
@@ -69,7 +69,7 @@ class SolrPipeline(object):
         return cls(
             host=crawler.settings.get('PIPELINE_HOST', '127.0.0.1'),
             port=crawler.settings.get('HTTPCACHE_SOLR_PORT', '8983'),
-            collection=crawler.settings.get('WCP_CRAWLER_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
+            collection=crawler.settings.get('INVANA_BOT_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
     def clean_str(self, url):

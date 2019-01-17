@@ -1,16 +1,16 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler_plus import WebCrawlerPlus
+from invana_bot import InvanaBot
 
 if __name__ == '__main__':
-    crawler = WebCrawlerPlus(
+    crawler = InvanaBot(
         database_credentials={
             "database": "crawler_test"
         },
         database="mongodb",
     )
-    crawler.run(urls=["https://medium.com/invanatech", ],
+    crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanatech'],
+                allow_only_with_words=['/invanalabs'],
                 )

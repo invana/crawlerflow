@@ -6,8 +6,8 @@ from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
-from webcrawler_plus.settings import DATA_COLLECTION, DATABASE
-from webcrawler_plus.utils.url import get_urn, get_domain
+from invana_bot.settings import DATA_COLLECTION, DATABASE
+from invana_bot.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class ESCacheStorage(object):
 
 
     """
-    COLLECTION_NAME = "weblinks"
+    COLLECTION_NAME = "web_link"
 
     def __init__(self, settings):
         self.database = settings['HTTPCACHE_ES_DATABASE']

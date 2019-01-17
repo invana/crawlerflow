@@ -9,7 +9,7 @@ cache and save the extracted data.
 
 ```python
 
-from webcrawler_plus.parser import crawler
+from invana_bot.parser import crawler
 import json
 
 example_config = json.load(open('../example.json'))
@@ -17,16 +17,16 @@ example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'WCP_CRAWLER_COLLECTION': "weblinks",
-    'WCP_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'INVANA_BOT_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
 mongodb_settings = {
     'PIPELINE_MONGODB_DATABASE': "crawler_data",
-    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.mongodb.MongoDBPipeline': 1},
+    'ITEM_PIPELINES': {invana_bot: 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': invana_bot,
     'HTTPCACHE_MONGODB_DATABASE': "crawler_data",
     "HTTPCACHE_MONGODB_PORT": 27017,
 }
@@ -42,22 +42,22 @@ if __name__ == '__main__':
 
 ```python
 
-from webcrawler_plus.parser import crawler
+from invana_bot.parser import crawler
 import json
 
 example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'WCP_CRAWLER_COLLECTION': "weblinks",
-    'WCP_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'INVANA_BOT_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
 es_settings = {
-    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.elasticsearch.ElasticsearchPipeline': 1},
+    'ITEM_PIPELINES': {'invana_bot.pipelines.elasticsearch.ElasticsearchPipeline': 1},
 
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
 }
 
 common_settings.update(es_settings)
@@ -73,20 +73,20 @@ if __name__ == '__main__':
 
 ```bash
 
-from webcrawler_plus.parser import crawl_website
+from invana_bot.parser import crawl_website
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'WCP_CRAWLER_COLLECTION': "weblinks",
-    'WCP_CRAWLER_EXTRACTION_COLLECTION': "weblinks_extracted_data",
+    'INVANA_BOT_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
 solr_settings = {
 
     'HTTPCACHE_SOLR_HOST': '127.0.0.1:8983',
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.solr.SolrCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.solr.SolrCacheStorage",
 }
 
 common_settings.update(solr_settings)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
 settings = {
     'HTTPCACHE_ENABLED': True,
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
     'HTTPCACHE_MONGODB_DATABASE': "crawlers",
     "HTTPCACHE_MONGODB_PORT": 27017,
     'COMPRESSION_ENABLED': False,
@@ -123,7 +123,7 @@ settings = {
 
 
 settings = {
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
 }
 
 ```
@@ -136,7 +136,7 @@ settings = {
 
 settings = {
     'HTTPCACHE_ENABLED': True,
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
     'COMPRESSION_ENABLED': False
 }
 
@@ -148,13 +148,13 @@ settings = {
 
 
 settings = {
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage"
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage"
 }
 
 ```
 
 **Note:** By default, both ES and MongoDB uses `crawlers_data` as database and `weblinks` collection/doctype
-to save the webpage data and `weblinks_extracted_data` as collection/doctype to save the extracted data.
+to save the webpage data and `web_link_extracted_data` as collection/doctype to save the extracted data.
 
 All the entries in ES as url as id.
 
@@ -163,7 +163,7 @@ All the entries in ES as url as id.
 ```python
 
 
-from webcrawler_plus.parser import crawler
+from invana_bot.parser import crawler
 import json
 example_config = json.load(open('examples/example.json'))
 

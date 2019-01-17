@@ -1,7 +1,7 @@
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
-from webcrawler_plus.settings import EXTRACTED_DATA_COLLECTION, DATABASE
-from webcrawler_plus.utils.url import get_urn
+from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from invana_bot.utils.url import get_urn
 
 
 class WebLinkExtracted(DocType):
@@ -28,7 +28,7 @@ class ElasticsearchPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('HTTPCACHE_HOST', '127.0.0.1'),
-            collection=crawler.settings.get('WCP_CRAWLER_EXTRACTION_COLLECTION', "weblinks_extracted_data"),
+            collection=crawler.settings.get('INVANA_BOT_EXTRACTION_COLLECTION', "web_link_extracted_data"),
         )
 
     def _flatten_headers(self, obj): # TODO -may be not using !!

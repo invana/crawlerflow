@@ -1,12 +1,11 @@
 import scrapy
-from webcrawler_plus.utils.selectors import get_selector_element
+from invana_bot.utils.selectors import get_selector_element
 
 
-class SearchEngineBaseSpider(scrapy.Spider):
+class InvanaGenericSpider(scrapy.Spider):
     """
-    bing search engine
+    This is generic spider
     """
-    name = 'search_engine_base'
 
     def parse(self, response):
         data = {}
@@ -14,6 +13,7 @@ class SearchEngineBaseSpider(scrapy.Spider):
         for selector in self.config['data_selectors']:
             if selector.get('selector_attribute') == 'element' and \
                     len(selector.get('child_selectors', [])) > 0:
+                # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = response.css(selector.get('selector'))
                 elements_data = []
                 for el in elements:
@@ -26,7 +26,6 @@ class SearchEngineBaseSpider(scrapy.Spider):
             else:
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
-
         yield data
 
         next_selector = self.config.get('next_page_selector').get('selector')

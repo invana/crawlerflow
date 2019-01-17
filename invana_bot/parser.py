@@ -3,11 +3,11 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 
 """
 from scrapy.crawler import CrawlerProcess
-from webcrawler_plus.spiders.website import WCPWebsiteSpider
-from webcrawler_plus.spiders.generic import InvaanaGenericSpider
-from webcrawler_plus.spiders.feeds import GenericFeedSpider, RSSSpider
+from invana_bot.spiders.website import InvanaWebsiteSpider
+from invana_bot.spiders.generic import InvanaGenericSpider
+from invana_bot.spiders.feeds import GenericFeedSpider, RSSSpider
 from scrapy.linkextractors import LinkExtractor
-from webcrawler_plus.utils.config import validate_config, process_config
+from invana_bot.utils.config import validate_config, process_config
 from scrapy.spiders import Rule
 import re
 
@@ -77,7 +77,7 @@ def crawl_website(url=None,
 
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(WCPWebsiteSpider, start_urls=[url],
+    process.crawl(InvanaWebsiteSpider, start_urls=[url],
                   allowed_domains=[domain],
                   rules=rules
                   )
@@ -123,7 +123,7 @@ def crawler(config=None,
     settings['TELNETCONSOLE_PORT'] = None
     process = CrawlerProcess(settings)
 
-    process.crawl(InvaanaGenericSpider,
+    process.crawl(InvanaGenericSpider,
                   start_urls=[config.get('start_url')],
                   name=config.get('crawler_name'),
                   config=config

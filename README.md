@@ -6,15 +6,15 @@ and [Solr](http://lucene.apache.org/solr/) databases to cache the requests and a
 and save them.
 
 
-[![Build Status](https://travis-ci.org/invanatech/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanatech/web-crawler-plus) 
-[![codecov](https://codecov.io/gh/invanatech/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanatech/web-crawler-plus) 
+[![Build Status](https://travis-ci.org/invanalabs/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanalabs/web-crawler-plus) 
+[![codecov](https://codecov.io/gh/invanalabs/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/web-crawler-plus) 
 
 ## Overview 
 
 - This is a wrapper around scrapy framework.
 - This framework will give the user options to use solr, elasticsearch, mongodb as cache and storage databases.
 - **Cache collection** is where all the data is cached to. Defaults to `weblinks`.
-- **Storage collection** is where all the extracted/parsed data from scrapy job is saved to. Defaults to `weblinks_extracted_data`
+- **Storage collection** is where all the extracted/parsed data from scrapy job is saved to. Defaults to `web_link_extracted_data`
 
 ## Install
 
@@ -30,11 +30,11 @@ pip install web-crawler-plus
 ```python
 # a simple usecase to use mongodb as cache and storage db.
 
-from webcrawler_plus import WebCrawlerPlus
+from invana_bot import InvanaBot
 
 
 if __name__ == '__main__':
-    crawler = WebCrawlerPlus(
+    crawler = InvanaBot(
         database_credentials={
             "database": "crawler_test",
             "host": "127.0.0.1",
@@ -42,9 +42,9 @@ if __name__ == '__main__':
         },
         database="mongodb",
     )
-    crawler.run(urls=["https://medium.com/invanatech", ],
+    crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanatech'],
+                allow_only_with_words=['/invanalabs'],
                 )
 
 
@@ -53,20 +53,20 @@ if __name__ == '__main__':
 ```python
 # a simple usecase to use solr as cache and storage db.
 
-from webcrawler_plus import WebCrawlerPlus
+from invana_bot import InvanaBot
 
 if __name__ == '__main__':
     # there is no database key for solr, it will be ignored
-    crawler = WebCrawlerPlus(
+    crawler = InvanaBot(
         database_credentials={
             "host": "127.0.0.1",
             "port": "8983",
         },
         database="solr",
     )
-    crawler.run(urls=["https://medium.com/invanatech", ],
+    crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanatech'],
+                allow_only_with_words=['/invanalabs'],
                 )
 
 
@@ -75,19 +75,19 @@ if __name__ == '__main__':
 ```python
 # a simple usecase to use elasticsearch as cache and storage db.
 
-from webcrawler_plus import WebCrawlerPlus
+from invana_bot import InvanaBot
 
 if __name__ == '__main__':
-    crawler = WebCrawlerPlus(
+    crawler = InvanaBot(
         database_credentials={
             "host": "127.0.0.1",
             "port": "9200",
         },
         database="elasticsearch",
     )
-    crawler.run(urls=["https://medium.com/invanatech", ],
+    crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanatech'],
+                allow_only_with_words=['/invanalabs'],
                 )
 
 

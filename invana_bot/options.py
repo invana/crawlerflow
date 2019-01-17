@@ -1,8 +1,8 @@
-from webcrawler_plus.settings import EXTRACTED_DATA_COLLECTION, DATA_COLLECTION
-from webcrawler_plus.parser import crawl_websites
+from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATA_COLLECTION
+from invana_bot.parser import crawl_websites
 
 
-# class WebCrawlerPlusBase(object):
+# class InvanaBotBase(object):
 #     """
 #     The webcrawler plus runner.
 #
@@ -53,7 +53,7 @@ from webcrawler_plus.parser import crawl_websites
 #         raise Exception("Not implemented")
 
 
-class WebCrawlerPlus(object):
+class InvanaBot(object):
     """
 
 
@@ -83,33 +83,33 @@ class WebCrawlerPlus(object):
                  **kwargs):
 
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
-        self.settings['WCP_CRAWLER_COLLECTION'] = database_credentials.get('cache_collection', DATA_COLLECTION)
-        self.settings['WCP_CRAWLER_EXTRACTION_COLLECTION'] = database_credentials.get('storage_collection',
+        self.settings['INVANA_BOT_COLLECTION'] = database_credentials.get('cache_collection', DATA_COLLECTION)
+        self.settings['INVANA_BOT_EXTRACTION_COLLECTION'] = database_credentials.get('storage_collection',
                                                                                       EXTRACTED_DATA_COLLECTION)
 
         if database == "mongodb":
-            self.settings['HTTPCACHE_MONGODB_DATABASE'] = database_credentials.get('database', 'webcrawler_plus')
+            self.settings['HTTPCACHE_MONGODB_DATABASE'] = database_credentials.get('database', 'invana_bot')
             self.settings['HTTPCACHE_HOST'] = database_credentials.get('host', '127.0.0.1')
             self.settings['HTTPCACHE_MONGODB_PORT'] = database_credentials.get('port', '8983')
             self.settings['HTTPCACHE_MONGODB_USERNAME'] = database_credentials.get('username', '')
             self.settings['HTTPCACHE_MONGODB_PASSWORD'] = database_credentials.get('password', '')
 
-            self.settings['ITEM_PIPELINES'] = {'webcrawler_plus.pipelines.mongodb.MongoDBPipeline': 1}
-            self.settings['HTTPCACHE_STORAGE'] = "webcrawler_plus.httpcache.mongodb.MongoDBCacheStorage"
+            self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1}
+            self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.mongodb.MongoDBCacheStorage"
         elif database == "elasticsearch":
-            self.settings['HTTPCACHE_ES_DATABASE'] = database_credentials.get('database', 'webcrawler_plus')
+            self.settings['HTTPCACHE_ES_DATABASE'] = database_credentials.get('database', 'invana_bot')
             self.settings['HTTPCACHE_HOST'] = database_credentials.get('host', '127.0.0.1')
 
-            self.settings['ITEM_PIPELINES'] = {'webcrawler_plus.pipelines.elasticsearch.ElasticsearchPipeline': 1}
-            self.settings['HTTPCACHE_STORAGE'] = "webcrawler_plus.httpcache.elasticsearch.ESCacheStorage"
+            self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.elasticsearch.ElasticsearchPipeline': 1}
+            self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.elasticsearch.ESCacheStorage"
 
             # settings['HTTPCACHE_ES_PORT'] = database_credentials.get('port', '9200') # TODO - implement
         elif database == "solr":
-            self.settings['HTTPCACHE_ES_DATABASE'] = database_credentials.get('database', 'webcrawler_plus')
+            self.settings['HTTPCACHE_ES_DATABASE'] = database_credentials.get('database', 'invana_bot')
             self.settings['HTTPCACHE_HOST'] = database_credentials.get('host', '127.0.0.1')
             self.settings['HTTPCACHE_SOLR_PORT'] = database_credentials.get('port', '8993')
-            self.settings['ITEM_PIPELINES'] = {'webcrawler_plus.pipelines.solr.SolrPipeline': 1}
-            self.settings['HTTPCACHE_STORAGE'] = "webcrawler_plus.httpcache.solr.SolrCacheStorage"
+            self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.solr.SolrPipeline': 1}
+            self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.solr.SolrCacheStorage"
         else:
             raise Exception("We only support, elasticsearch, solr and mongodb at this moment.")
 

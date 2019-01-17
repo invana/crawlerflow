@@ -1,21 +1,21 @@
 import sys
 
 sys.path.append('../../')
-from webcrawler_plus.parser import crawl_feeds
+from invana_bot.parser import crawl_feeds
 
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'WCP_CRAWLER_COLLECTION': "weblinks",
-    'WCP_CRAWLER_EXTRACTION_COLLECTION': "website_feeds",
+    'INVANA_BOT_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTION_COLLECTION': "website_feeds",
     'LOG_LEVEL': 'INFO'
 }
 
 solr_settings = {
     'HTTPCACHE_HOST': '127.0.0.1:8983',
-    'HTTPCACHE_STORAGE': "webcrawler_plus.httpcache.solr.SolrCacheStorage",
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.solr.SolrCacheStorage",
 
-    'ITEM_PIPELINES': {'webcrawler_plus.pipelines.solr.SolrPipeline': 1},
+    'ITEM_PIPELINES': {'invana_bot.pipelines.solr.SolrPipeline': 1},
     'PIPELINE_HOST': '127.0.0.1:8983',
 
 }
