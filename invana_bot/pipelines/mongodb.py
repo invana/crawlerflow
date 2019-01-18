@@ -32,7 +32,7 @@ class MongoDBPipeline(object):
             username=crawler.settings.get('PIPELINE_MONGODB_USERNAME', ''),
             password=crawler.settings.get('PIPELINE_MONGODB_PASSWORD', ''),
             port=crawler.settings.get('PIPELINE_MONGODB_PORT', 27017),
-            collection=crawler.settings.get('INVANA_BOT_EXTRACTION_COLLECTION', EXTRACTED_DATA_COLLECTION),
+            collection=crawler.settings.get('INVANA_BOT_EXTRACTED_DATA_COLLECTION', EXTRACTED_DATA_COLLECTION),
         )
 
     def process_item(self, item, spider):

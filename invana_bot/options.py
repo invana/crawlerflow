@@ -83,8 +83,8 @@ class InvanaBot(object):
                  **kwargs):
 
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
-        self.settings['INVANA_BOT_COLLECTION'] = database_credentials.get('cache_collection', DATA_COLLECTION)
-        self.settings['INVANA_BOT_EXTRACTION_COLLECTION'] = database_credentials.get('storage_collection',
+        self.settings['INVANA_BOT_WEB_LINK_COLLECTION'] = database_credentials.get('cache_collection', DATA_COLLECTION)
+        self.settings['INVANA_BOT_EXTRACTED_DATA_COLLECTION'] = database_credentials.get('storage_collection',
                                                                                       EXTRACTED_DATA_COLLECTION)
 
         if database == "mongodb":

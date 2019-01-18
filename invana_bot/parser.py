@@ -12,6 +12,15 @@ from scrapy.spiders import Rule
 import re
 
 
+class InvanaBot(object):
+
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
+
+
 def crawl_websites(urls=None,
                    settings=None,
                    ignore_urls_with_words=None,

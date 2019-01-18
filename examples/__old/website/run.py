@@ -1,15 +1,15 @@
 import sys
 
 sys.path.append('../../')
-from invana_bot.spiders.search_engines.bing import crawl_with_bing
+from invana_bot.parser import crawler
 import json
 
 example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
-    'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'HTTPCACHE_ENABLED': False,
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
@@ -23,6 +23,6 @@ common_settings.update(es_settings)
 print(common_settings)
 
 if __name__ == '__main__':
-    crawl_with_bing(
-        settings=common_settings, topic="Invana"
+    crawler(
+        settings=common_settings, config=example_config
     )

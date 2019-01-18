@@ -5,8 +5,8 @@ from invana_bot.parser import crawl_website
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 

@@ -6,22 +6,23 @@ from invana_bot.parser import crawl_feeds
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "website_feeds",
     'LOG_LEVEL': 'INFO'
 }
 
-es_settings = {
-    'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
-    'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
+solr_settings = {
+    'HTTPCACHE_HOST': '127.0.0.1:8983',
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.solr.SolrCacheStorage",
+
+    'ITEM_PIPELINES': {'invana_bot.pipelines.solr.SolrPipeline': 1},
+    'PIPELINE_HOST': '127.0.0.1:8983',
+
 }
 
-common_settings.update(es_settings)
+common_settings.update(solr_settings)
 
 if __name__ == '__main__':
-    # crawl_feeds(
-    #     settings=common_settings, feed_urls=['http://www.jimmunol.org/rss/current.xml', "https://blog.google/rss/"]
-    # )
     crawl_feeds(
         settings=common_settings, feed_urls=['http://connect.iisc.ac.in/feed/',
                                              "https://blog.google/rss/",
@@ -42,6 +43,3 @@ if __name__ == '__main__':
                                              ]
     )
 
-    # crawl_feeds(
-    #     settings=common_settings, feed_urls=['http://connect.iisc.ac.in/feed/', ]
-    # )

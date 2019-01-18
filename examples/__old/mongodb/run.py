@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append('../../')
 from invana_bot.parser import crawl_website
 import json
@@ -9,20 +8,19 @@ example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'CRITICAL'
 }
 
-pipeline_settings = {
+mongodb_settings = {
+    'PIPELINE_MONGODB_DATABASE': "crawler_data",
     'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
+
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
     "HTTPCACHE_MONGODB_PORT": 27017,
 }
-mongodb_settings = {
-    'PIPELINE_MONGODB_DATABASE': "crawler_data",
-    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
-}
-common_settings.update(pipeline_settings)
+
 common_settings.update(mongodb_settings)
 
 if __name__ == '__main__':

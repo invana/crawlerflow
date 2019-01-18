@@ -1,4 +1,4 @@
-# Web Crawler Plust
+# Invana Bott
 
 A micro-framework built on [scrapy](https://scrapy.org/) to crawl the sites. 
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 

@@ -1,8 +1,10 @@
-# Web Crawler Plus
+# Invana Bot
 
 
-A micro-framework to crawl the web pages with crawlers configs. It can use MongoDB, Elasticsearch and Solr databases to 
-cache and save the extracted data.
+InvanaBot is web crawling bot which discovers new, updated pages and 
+extracted information to be added to the Invana index.
+
+It supports MongoDB and ElasticSearch for caching and data storage.
 
 
 ## Usage example with MongoDB as database
@@ -17,8 +19,8 @@ example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
@@ -49,8 +51,8 @@ example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
@@ -78,8 +80,8 @@ from invana_bot.parser import crawl_website
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTION_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 

@@ -39,7 +39,7 @@ class SolrCacheStorage(object):
     ]
 
     def __init__(self, settings):
-        self.core_name = settings['INVANA_BOT_COLLECTION']
+        self.core_name = settings['INVANA_BOT_WEB_LINK_COLLECTION']
         self.solr_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
         self.port = settings.get('HTTPCACHE_SOLR_PORT', '8983')
 
