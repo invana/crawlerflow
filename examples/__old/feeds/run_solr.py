@@ -6,7 +6,7 @@ from invana_bot.parser import crawl_feeds
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+    'CACHE_COLLECTION': "web_link",
     'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "website_feeds",
     'LOG_LEVEL': 'INFO'
 }

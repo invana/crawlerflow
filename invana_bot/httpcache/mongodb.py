@@ -5,7 +5,6 @@ from scrapy.utils.request import request_fingerprint
 from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
 import pymongo
 from scrapy.http.headers import Headers
-from invana_bot.settings import DATA_COLLECTION, DATABASE
 from invana_bot.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
@@ -13,32 +12,43 @@ logger = logging.getLogger(__name__)
 
 class MongoDBCacheStorage(object):
     """
-    should set HTTPCACHE_MONGODB_DATABASE in the settings.py
+    should set INVANA_BOT_SETTINGS in the settings.py
+
+    mongodb_settings = {
+        'INVANA_BOT_SETTINGS': {
+            'HTTPCACHE_STORAGE_SETTINGS': {
+                'DATABASE_ENGINE': 'mongodb',
+                'DATABASE_URI': "mongodb://127.0.0.1",
+                'DATABASE_NAME': "crawler_data",
+                'DATABASE_COLLECTION': "web_link",
+                "EXPIRY_TIME": 3600,
+            },
+            'ITEM_PIPELINES_SETTINGS': {
+                'DATABASE_ENGINE': "mongodb",
+                'DATABASE_NAME': "invanabot_data",
+
+            }
+        }
+    }
+    common_settings.update(mongodb_settings)
 
 
     """
-    COLLECTION_NAME = DATA_COLLECTION
 
     def __init__(self, settings):
-        self.database = settings.get('HTTPCACHE_MONGODB_DATABASE', DATABASE)
-        self.database_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
-
-        self.database_port = settings.get('HTTPCACHE_MONGODB_PORT', 27017)
-
-        auth = {
-            "username": settings.get('HTTPCACHE_MONGODB_USERNAME', ''),
-            "password": settings.get('HTTPCACHE_MONGODB_PASSWORD', '')
-        }
-        if auth.get('username'):
-            self.db_client = pymongo.MongoClient(self.database_host, **auth)
-        else:
-            self.db_client = pymongo.MongoClient(self.database_host, )
-        self.db = self.db_client[self.database]
-
-        self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
+        self.database_uri = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_URI", None)
+        self.database_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_NAME", None)
+        self.cache_expiry_time = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "EXPIRY_TIME", None)
+        self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_COLLECTION", None)
+        self.db_client = pymongo.MongoClient(self.database_uri)
+        self.db = self.db_client[self.database_name]
 
     def open_spider(self, spider):
-        logger.debug("Using mongodb cache storage with database name %(database)s" % {'database': self.database},
+        logger.debug("Using mongodb cache storage with database name %(database)s" % {'database': self.database_name},
                      extra={'spider': spider})
 
     def close_spider(self, spider):
@@ -70,10 +80,10 @@ class MongoDBCacheStorage(object):
             'headers': self._clean_headers(response.headers),
             'html': response.body,
         }
-        self.db[self.COLLECTION_NAME].insert_one(data)
+        self.db[self.collection_name].insert_one(data)
 
     def _read_data(self, spider, request):
-        return self.db[self.COLLECTION_NAME].find_one({'url': request.url})
+        return self.db[self.collection_name].find_one({'url': request.url})
 
     def _request_key(self, request):
         return to_bytes(request_fingerprint(request))

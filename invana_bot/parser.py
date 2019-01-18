@@ -86,7 +86,8 @@ def crawl_website(url=None,
 
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(InvanaWebsiteSpider, start_urls=[url],
+    process.crawl(InvanaWebsiteSpider,
+                  start_urls=[url],
                   allowed_domains=[domain],
                   rules=rules
                   )

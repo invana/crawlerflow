@@ -6,17 +6,33 @@ from invana_bot.parser import crawl_feeds
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'CACHE_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
     'LOG_LEVEL': 'INFO'
 }
 
-es_settings = {
+pipeline_settings = {
     'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
 }
 
-common_settings.update(es_settings)
+mongodb_settings = {
+    'INVANA_BOT_SETTINGS': {
+        'HTTPCACHE_STORAGE_SETTINGS': {
+            'DATABASE_ENGINE': 'mongodb',
+            'DATABASE_URI': "mongodb://127.0.0.1",
+            'DATABASE_NAME': "crawler_cache_db",
+            'DATABASE_COLLECTION': "web_link",
+            "EXPIRY_TIME": 3600
+        },
+        'ITEM_PIPELINES_SETTINGS': {
+            'DATABASE_ENGINE': 'mongodb',
+            'DATABASE_URI': "mongodb://127.0.0.1",
+            'DATABASE_NAME': "crawler_data",
+            'DATABASE_COLLECTION': "crawler_feeds_data"
+        }
+    }
+}
+common_settings.update(pipeline_settings)
+common_settings.update(mongodb_settings)
 
 if __name__ == '__main__':
     # crawl_feeds(

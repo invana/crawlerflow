@@ -1,46 +1,33 @@
 import pymongo
 from datetime import datetime
-from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATABASE
+from invana_bot.settings import DATABASE
 
 
 class MongoDBPipeline(object):
-    def __init__(self, host=None,
-                 database=None,
-                 username=None,
-                 password=None,
-                 port=None,
-                 collection=None):
-
-        auth = {
-            "username": username,
-            "password": password
-        }
-        if port:
-            auth.update({"port": port})
-        if auth.get('username'):
-            self.db_client = pymongo.MongoClient(host, **auth)
-        else:
-            self.db_client = pymongo.MongoClient(host, )
-        self.db = self.db_client[database]
-        self.extracted_data_collection = self.db[collection]
+    def __init__(self,
+                 database_uri=None,
+                 database_name=None,
+                 collection_name=None):
+        self.db_client = pymongo.MongoClient(database_uri)
+        self.db = self.db_client[database_name]
+        self.collection = self.db[collection_name]
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            host=crawler.settings.get('HTTPCACHE_HOST', '127.0.0.1'),
-            database=crawler.settings.get('PIPELINE_MONGODB_DATABASE', DATABASE),
-            username=crawler.settings.get('PIPELINE_MONGODB_USERNAME', ''),
-            password=crawler.settings.get('PIPELINE_MONGODB_PASSWORD', ''),
-            port=crawler.settings.get('PIPELINE_MONGODB_PORT', 27017),
-            collection=crawler.settings.get('INVANA_BOT_EXTRACTED_DATA_COLLECTION', EXTRACTED_DATA_COLLECTION),
+            database_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('DATABASE_URI',
+                                                                                                        DATABASE),
+            database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+                'DATABASE_NAME', DATABASE),
+            collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+                'DATABASE_COLLECTION', DATABASE),
         )
 
     def process_item(self, item, spider):
-
-        if self.extracted_data_collection is None:
+        if self.collection is None:
             raise Exception("pymongo.MongoClient() it not called in the Pipeline, please make the connection first")
         data = dict(item)
         data['updated'] = datetime.now()
-        self.extracted_data_collection.insert(data)
+        self.collection.insert(data)
         print("Post added to MongoDB")
         return item

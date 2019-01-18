@@ -9,7 +9,7 @@ def test_solr_cache_storage():
     common_settings = {
         'COMPRESSION_ENABLED': False,
         'HTTPCACHE_ENABLED': True,
-        'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
+        'CACHE_COLLECTION': "web_link",
         'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
         'LOG_LEVEL': 'INFO'
     }

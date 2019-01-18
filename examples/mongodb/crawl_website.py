@@ -9,18 +9,30 @@ example_config = json.load(open('../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,
-    'LOG_LEVEL': 'CRITICAL'
+    'LOG_LEVEL': 'INFO'
 }
 
 pipeline_settings = {
     'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
-    "HTTPCACHE_MONGODB_PORT": 27017,
 }
+
 mongodb_settings = {
-    'PIPELINE_MONGODB_DATABASE': "crawler_data",
-    'INVANA_BOT_WEB_LINK_COLLECTION': "web_link",
-    'INVANA_BOT_EXTRACTED_DATA_COLLECTION': "web_link_extracted_data",
+    'INVANA_BOT_SETTINGS': {
+        'HTTPCACHE_STORAGE_SETTINGS': {
+            'DATABASE_ENGINE': 'mongodb',
+            'DATABASE_URI': "mongodb://127.0.0.1",
+            'DATABASE_NAME': "crawler_cache_db",
+            'DATABASE_COLLECTION': "web_link",
+            "EXPIRY_TIME": 3600
+        },
+        'ITEM_PIPELINES_SETTINGS': {
+            'DATABASE_ENGINE': 'mongodb',
+            'DATABASE_URI': "mongodb://127.0.0.1",
+            'DATABASE_NAME': "crawler_data",
+            'DATABASE_COLLECTION': "crawler_website_data"
+        }
+    }
 }
 common_settings.update(pipeline_settings)
 common_settings.update(mongodb_settings)

@@ -1,4 +1,4 @@
-from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATA_COLLECTION
+from invana_bot.settings import EXTRACTED_DATA_COLLECTION, CACHE_COLLECTION
 from invana_bot.parser import crawl_websites
 
 
@@ -83,7 +83,7 @@ class InvanaBot(object):
                  **kwargs):
 
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
-        self.settings['INVANA_BOT_WEB_LINK_COLLECTION'] = database_credentials.get('cache_collection', DATA_COLLECTION)
+        self.settings['CACHE_COLLECTION'] = database_credentials.get('cache_collection', CACHE_COLLECTION)
         self.settings['INVANA_BOT_EXTRACTED_DATA_COLLECTION'] = database_credentials.get('storage_collection',
                                                                                       EXTRACTED_DATA_COLLECTION)
 
