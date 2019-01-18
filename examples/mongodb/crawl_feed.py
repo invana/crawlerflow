@@ -31,13 +31,11 @@ mongodb_settings = {
         }
     }
 }
+
 common_settings.update(pipeline_settings)
 common_settings.update(mongodb_settings)
 
 if __name__ == '__main__':
-    # crawl_feeds(
-    #     settings=common_settings, feed_urls=['http://www.jimmunol.org/rss/current.xml', "https://blog.google/rss/"]
-    # )
     crawl_feeds(
         settings=common_settings, feed_urls=['http://connect.iisc.ac.in/feed/',
                                              "https://blog.google/rss/",
@@ -57,7 +55,3 @@ if __name__ == '__main__':
                                              "http://feeds.nature.com/npjregenmed/rss/current"
                                              ]
     )
-
-    # crawl_feeds(
-    #     settings=common_settings, feed_urls=['http://connect.iisc.ac.in/feed/', ]
-    # )
