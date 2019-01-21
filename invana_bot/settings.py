@@ -20,7 +20,7 @@ KEYWORD_CRAWLER_DEFAULTS = {
         'ITEM_PIPELINES_SETTINGS': {
             'DATABASE_URI': "127.0.0.1",
             'DATABASE_NAME': "crawler_data",
-            'COLLECTION_NAME': "crawler_feeds_data"
+            'COLLECTION_NAME': "keywords_data"
         }
     }
 }
@@ -37,7 +37,7 @@ FEEDS_CRAWLER_DEFAULTS = {
         'ITEM_PIPELINES_SETTINGS': {
             'DATABASE_URI': "127.0.0.1",
             'DATABASE_NAME': "crawler_data",
-            'COLLECTION_NAME': "crawler_feeds_data"
+            'COLLECTION_NAME': "feeds_data"
         }
     }
 }
@@ -54,7 +54,7 @@ WEBSITE_CRAWLER_DEFAULTS = {
         'ITEM_PIPELINES_SETTINGS': {
             'DATABASE_URI': "127.0.0.1",
             'DATABASE_NAME': "crawler_data",
-            'COLLECTION_NAME': "WEBSITE_data"
+            'COLLECTION_NAME': "website_data"
         }
     }
 }

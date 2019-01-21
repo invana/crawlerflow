@@ -5,7 +5,7 @@ if __name__ == '__main__':
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
-        storage_database="mongodb",
+        storage_database="elasticsearch",
     )
     crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],

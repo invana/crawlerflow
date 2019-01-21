@@ -20,11 +20,20 @@ pip install invana-bot
 ```
 
 
+
 ## Skills of the Bot
 
 **1. Crawl a site and save the page content**: Use full for gathering the data and performing analytics on the page.
 
 **2. Crawl a site and extract the content(s)**: This will extract the specific use full content(s) inside the pages(parsing the data). 
+
+**3. Crawl and extract data from rss/atom feeds:** This will extract the data from the rss/atom feeds of the site you may want to follow.
+
+**3. Analysers**: Built-in analysers to run on top the data like cleaning the data, categorize the data based on NLP, more on the roadmap.
+
+**4. Seperate Cache and Storage Database Support**: There is difference in importance of the data for caching and storage, so
+InvanaBot allows developer to implement seperate databases for caching and storage, where developer can use mongodb
+for caching the crawled data, and storing the actual extracted data into elasticsearch, which can work as a instant search engine.
 
 
 ## Working Examples
@@ -40,13 +49,14 @@ if __name__ == '__main__':
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
-        storage_database="mongodb",
+        storage_database="elasticsearch",
     )
     """
     crawler = InvanaBot(
         cache_database_uri="127.0.0.1",
         storage_database_uri="127.0.0.1",
-        database="elasticsearch",
+        cache_database="elasticsearch",
+        storage_database="elasticsearch",
     )
     """
     crawler.run(urls=["https://medium.com/invanalabs", ],
