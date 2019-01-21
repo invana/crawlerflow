@@ -76,18 +76,9 @@ class InvanaBot(object):
         'HTTPCACHE_ENABLED': True,
     }
 
-    def __init__(self,
-                 cache_database=None,
-                 storage_database=None,
-                 cache_database_uri=None,
-                 storage_database_uri=None,
-                 http_cache_enabled=True,
-                 log_level="INFO",
-                 extra_settings=None,
-
-                 **kwargs):
-
-        self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
+    def setup_database_settings(self, cache_database=None, storage_database=None,
+                                cache_database_uri=None, storage_database_uri=None,
+                                ):
 
         if cache_database not in ["mongodb", "elasticsearch"]:
             raise Exception("we only support {} as cache_database".format(",".join(SUPPORTED_DATABASES)))
@@ -113,10 +104,26 @@ class InvanaBot(object):
         if storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = storage_database_uri
 
+    def __init__(self,
+                 cache_database=None,
+                 storage_database=None,
+                 cache_database_uri=None,
+                 storage_database_uri=None,
+                 http_cache_enabled=True,
+                 log_level="INFO",
+                 extra_settings=None,
+
+                 **kwargs):
+
+        self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
         self.settings['LOG_LEVEL'] = log_level
-        print(self.settings)
         if extra_settings:
             self.settings.update(extra_settings)  # over riding or adding extra settings
+
+        self.setup_database_settings(cache_database=cache_database, storage_database=storage_database,
+                                     cache_database_uri=cache_database_uri, storage_database_uri=storage_database_uri,
+                                     )
+        print(self.settings)
 
     def run(self,
             urls=None,
