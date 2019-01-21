@@ -44,7 +44,7 @@ example_config = {
 
 }
 
-print("example_configexample_config", example_config)
+print("example_config", example_config)
 if __name__ == '__main__':
     crawler = InvanaBot(
         cache_database_uri="mongodb://127.0.0.1",
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         cache_database="mongodb",
         storage_database="mongodb",
     )
-    crawler.run(urls=["https://blog.scrapinghub.com", ],
-                parser_config=example_config,
-                # allow_only_with_words=['*']
-                )
+    crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
+                           parser_config=example_config,
+                           # allow_only_with_words=['*']
+                           )

@@ -52,17 +52,29 @@ example_parser_config =  {
 
 }
 
-if __name__ == '__main__':
-    crawler = InvanaBot(
-        cache_database_uri="mongodb://127.0.0.1",
-        storage_database_uri="127.0.0.1",
-        cache_database="mongodb",
-        storage_database="elasticsearch",
-    )
-    crawler.run(urls=["https://blog.scrapinghub.com", ],
-                parser_config=example_parser_config
-                )
+crawler = InvanaBot(
+    cache_database_uri="mongodb://127.0.0.1",
+    storage_database_uri="127.0.0.1",
+    cache_database="mongodb",
+    storage_database="elasticsearch",
+)
+crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
+            parser_config=example_parser_config
+            )
 
 
+
+
+"""
+crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
+            parser_config=example_parser_config,
+            allow_only_with_words=['author'] # to follow only urls with the word author.
+            )
+
+
+""" 
+
+            
 ```
+
 

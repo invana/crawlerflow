@@ -7,7 +7,7 @@ if __name__ == '__main__':
         cache_database="mongodb",
         storage_database="elasticsearch",
     )
-    crawler.run(urls=["https://medium.com/invanalabs", ],
-                ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanalabs'],
-                )
+    crawler.crawl_websites(urls=["https://medium.com/invanalabs", ],
+                           ignore_urls_with_words=['@'],
+                           allow_only_with_words=['/invanalabs'],
+                           )
