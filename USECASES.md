@@ -1,4 +1,14 @@
-{
+# InvanaBot UseCases
+
+
+
+#### 1. UseCase I - Crawling with Pagination and extracting specific content(s)
+
+```python
+# example_parser_with_pagination.py
+
+from invana_bot import InvanaBot
+example_parser_config =  {
     "crawler_name": "scrapinghub-1",
     "domain": "scrapinghub.com",
     "subdomain": "blog.scrapinghub.com",
@@ -8,7 +18,7 @@
             "id": "items",
             "selector": ".post-item",
             "selector_attribute": "element",
-            "multiple": true
+            "multiple": True
         },
         {
             "id": "url",
@@ -16,7 +26,7 @@
             "selector_type": "css",
             "selector_attribute": "href",
             "parent_selector": "items",
-            "multiple": false
+            "multiple": False
         },
         {
             "id": "title",
@@ -24,7 +34,7 @@
             "selector_type": "css",
             "selector_attribute": "text",
             "parent_selector": "items",
-            "multiple": false
+            "multiple": False
         },
         {
             "id": "content",
@@ -32,7 +42,7 @@
             "selector_type": "css",
             "selector_attribute": "html",
             "parent_selector": "items",
-            "multiple": false
+            "multiple": False
         }
     ],
     "next_page_selector": {
@@ -41,3 +51,18 @@
     }
 
 }
+
+if __name__ == '__main__':
+    crawler = InvanaBot(
+        cache_database_uri="mongodb://127.0.0.1",
+        storage_database_uri="127.0.0.1",
+        cache_database="mongodb",
+        storage_database="elasticsearch",
+    )
+    crawler.run(urls=["https://blog.scrapinghub.com", ],
+                parser_config=example_parser_config
+                )
+
+
+```
+

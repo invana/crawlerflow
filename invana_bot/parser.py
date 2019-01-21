@@ -4,10 +4,9 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 """
 from scrapy.crawler import CrawlerProcess
 from invana_bot.spiders.website import InvanaWebsiteSpider
-from invana_bot.spiders.generic import InvanaGenericSpider
-from invana_bot.spiders.feeds import GenericFeedSpider, RSSSpider
+from invana_bot.spiders.generic import InvanaWebsiteParserSpider
+from invana_bot.spiders.feeds import RSSSpider
 from scrapy.linkextractors import LinkExtractor
-from invana_bot.utils.config import validate_config, process_config
 from scrapy.spiders import Rule
 import re
 
@@ -16,6 +15,7 @@ def crawl_websites(urls=None,
                    settings=None,
                    ignore_urls_with_words=None,
                    allow_only_with_words=None,
+                   parser_config=None,
                    follow=True):
     """
     crawl multiple sites
@@ -32,6 +32,7 @@ def crawl_websites(urls=None,
                       settings=settings,
                       ignore_urls_with_words=ignore_urls_with_words,
                       allow_only_with_words=allow_only_with_words,
+                      parser_config=parser_config,
                       follow=follow)
 
 
@@ -39,6 +40,7 @@ def crawl_website(url=None,
                   settings=None,
                   ignore_urls_with_words=None,
                   allow_only_with_words=None,
+                  parser_config=None,
                   follow=True,
                   stop_after_crawl=True):
     """
@@ -49,16 +51,14 @@ def crawl_website(url=None,
     :param ignore_urls_with_words:
     :param allow_only_with_words:
     :param follow:
+    :param parser_config:
     :param stop_after_crawl:
     :return:
     """
     settings['TELNETCONSOLE_PORT'] = None
 
-    if ignore_urls_with_words is None:
-        ignore_urls_with_words = []
-
-    if allow_only_with_words is None:
-        allow_only_with_words = []
+    ignore_urls_with_words = [] if ignore_urls_with_words is None else ignore_urls_with_words
+    allow_only_with_words = [] if allow_only_with_words is None else allow_only_with_words
 
     extractor_options = {}
     if len(ignore_urls_with_words) > 0:
@@ -77,19 +77,27 @@ def crawl_website(url=None,
 
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-    process.crawl(InvanaWebsiteSpider,
+
+    if parser_config:
+        spider_cls = InvanaWebsiteParserSpider
+    else:
+        spider_cls = InvanaWebsiteSpider
+    process.crawl(spider_cls,
                   start_urls=[url],
                   allowed_domains=[domain],
-                  rules=rules
+                  rules=rules,
+                  parser_config=parser_config
                   )
     process.start(stop_after_crawl=stop_after_crawl)
 
 
-def crawl_with_search_engine():
-    pass
-
-
 def crawl_feeds(feed_urls=None, settings=None):
+    """
+
+    :param feed_urls:
+    :param settings:
+    :return:
+    """
     if settings is None:
         settings = {}
     settings['TELNETCONSOLE_PORT'] = None
@@ -104,29 +112,30 @@ def crawl_feeds(feed_urls=None, settings=None):
                   )
     process.start()
 
-
-def crawler(config=None,
-            settings=None):
-    """
-    Crawl the site and apply a parser on top of it.
-    :param config:
-    :param settings:
-    :return:
-    """
-    if settings is None:
-        settings = {
-            'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-        }
-    if "USER_AGENT" not in settings.keys():
-        settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
-    validate_config(config=config)
-    config = process_config(config)
-    settings['TELNETCONSOLE_PORT'] = None
-    process = CrawlerProcess(settings)
-
-    process.crawl(InvanaGenericSpider,
-                  start_urls=[config.get('start_url')],
-                  name=config.get('crawler_name'),
-                  config=config
-                  )
-    process.start()
+#
+# def crawler(config=None,
+#             settings=None):
+#     """
+#     DEPRECATED IN FAVOUR OF merging into InvanaBot
+#     Crawl the site and apply a parser on top of it.
+#     :param config:
+#     :param settings:
+#     :return:
+#     """
+#     if settings is None:
+#         settings = {
+#             'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+#         }
+#     if "USER_AGENT" not in settings.keys():
+#         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
+#     validate_config(config=config)
+#     config = process_config(config)
+#     settings['TELNETCONSOLE_PORT'] = None
+#     process = CrawlerProcess(settings)
+#
+#     process.crawl(InvanaWebsiteParserSpider,
+#                   start_urls=[config.get('start_url')],
+#                   name=config.get('crawler_name'),
+#                   parser_config=config
+#                   )
+#     process.start()

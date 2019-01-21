@@ -4,7 +4,7 @@ sys.path.append('../../')
 from invana_bot.parser import crawler
 import json
 
-example_config = json.load(open('../example.json'))
+example_config = json.load(open('../../example.json'))
 common_settings = {
     'COMPRESSION_ENABLED': False,
     'HTTPCACHE_ENABLED': True,

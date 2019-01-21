@@ -1,7 +1,6 @@
 # Invana Bott
 
-A micro-framework built on [scrapy](https://scrapy.org/) for crawling and 
-storing to NoSQL database solutions. 
+A batteries included crawler framework built on top of [scrapy](https://scrapy.org/) for scale and intelligent crawling.
 
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
 and <del>[Solr](http://lucene.apache.org/solr/)</del> databases to cache the requests and also extract the data using parser configs 
@@ -35,6 +34,11 @@ pip install invana-bot
 InvanaBot allows developer to implement seperate databases for caching and storage, where developer can use mongodb
 for caching the crawled data, and storing the actual extracted data into elasticsearch, which can work as a instant search engine.
 
+**5. ProxyRotator** [in roadmap]
+
+**6. Headless Browsers** [in roadmap]
+
+**7. Taking screenshots while crawling ** [in roadmap] for visual crawling
 
 ## Working Examples
 

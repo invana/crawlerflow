@@ -1,16 +1,18 @@
-import scrapy
 from invana_bot.utils.selectors import get_selector_element
+from scrapy.spiders import CrawlSpider
 
 
-class InvanaGenericSpider(scrapy.Spider):
+class InvanaWebsiteParserSpider(CrawlSpider):
     """
     This is generic spider
     """
+    name = "invana_website_parser_spider"
 
     def parse(self, response):
+        print ("Parser=========,", response.url)
         data = {}
         data['url'] = response.url
-        for selector in self.config['data_selectors']:
+        for selector in self.parser_config['data_selectors']:
             if selector.get('selector_attribute') == 'element' and \
                     len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
@@ -28,13 +30,17 @@ class InvanaGenericSpider(scrapy.Spider):
                 data[selector.get('id')] = _d.strip() if _d else None
         yield data
 
-        next_selector = self.config.get('next_page_selector').get('selector')
+        next_selector = self.parser_config.get('next_page_selector').get('selector')
+        print (next_selector)
         if next_selector:
-            if self.config.get('next_page_selector').get('selector_type') == 'css':
+            if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
                 next_pages = response.css(next_selector)
-            elif self.config.get('next_page_selector').get('selector_type') == 'xpath':
+            elif self.parser_config.get('next_page_selector').get('selector_type') == 'xpath':
                 next_pages = response.xpath(next_selector)
             else:
                 next_pages = []
             for next_page in next_pages:
                 yield response.follow(next_page, self.parse)
+
+    def parse_item(self, response):
+        print(response.url)

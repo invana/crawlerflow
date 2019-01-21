@@ -1,6 +1,7 @@
 from invana_bot.parser import crawl_websites
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, KEYWORD_CRAWLER_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS
+from invana_bot.utils.config import validate_config, process_config
 
 # class InvanaBotBase(object):
 #     """
@@ -76,6 +77,26 @@ class InvanaBot(object):
         'HTTPCACHE_ENABLED': True,
     }
 
+    def __init__(self,
+                 cache_database=None,
+                 storage_database=None,
+                 cache_database_uri=None,
+                 storage_database_uri=None,
+                 http_cache_enabled=True,
+                 log_level="INFO",
+                 extra_settings=None,
+                 **kwargs):
+
+        self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
+        self.settings['LOG_LEVEL'] = log_level
+        if extra_settings:
+            self.settings.update(extra_settings)  # over riding or adding extra settings
+
+        self.setup_database_settings(cache_database=cache_database, storage_database=storage_database,
+                                     cache_database_uri=cache_database_uri, storage_database_uri=storage_database_uri,
+                                     )
+        print(self.settings)
+
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 cache_database_uri=None, storage_database_uri=None,
                                 ):
@@ -104,41 +125,26 @@ class InvanaBot(object):
         if storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = storage_database_uri
 
-    def __init__(self,
-                 cache_database=None,
-                 storage_database=None,
-                 cache_database_uri=None,
-                 storage_database_uri=None,
-                 http_cache_enabled=True,
-                 log_level="INFO",
-                 extra_settings=None,
-
-                 **kwargs):
-
-        self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
-        self.settings['LOG_LEVEL'] = log_level
-        if extra_settings:
-            self.settings.update(extra_settings)  # over riding or adding extra settings
-
-        self.setup_database_settings(cache_database=cache_database, storage_database=storage_database,
-                                     cache_database_uri=cache_database_uri, storage_database_uri=storage_database_uri,
-                                     )
-        print(self.settings)
-
     def run(self,
             urls=None,
             ignore_urls_with_words=None,
             allow_only_with_words=None,
-            follow=True):
-
+            follow=True,
+            parser_config=None
+            ):
+        print("parser_config", parser_config)
         if type(urls) is None:
             raise Exception("urls should be list type.")
         if len(urls) is 0:
             raise Exception("urls length should be atleast one.")
 
+        validate_config(config=parser_config)
+        parser_config = process_config(parser_config)
+
         crawl_websites(urls=urls,
                        settings=self.settings,
                        ignore_urls_with_words=ignore_urls_with_words,
                        allow_only_with_words=allow_only_with_words,
-                       follow=follow
+                       follow=follow,
+                       parser_config=parser_config
                        )
