@@ -19,14 +19,12 @@ pipeline_settings = {
 mongodb_settings = {
     'INVANA_BOT_SETTINGS': {
         'HTTPCACHE_STORAGE_SETTINGS': {
-            'DATABASE_ENGINE': 'mongodb',
             'DATABASE_URI': "mongodb://127.0.0.1",
             'DATABASE_NAME': "crawler_cache_db",
             'DATABASE_COLLECTION': "web_link",
             "EXPIRY_TIME": 3600
         },
         'ITEM_PIPELINES_SETTINGS': {
-            'DATABASE_ENGINE': 'mongodb',
             'DATABASE_URI': "mongodb://127.0.0.1",
             'DATABASE_NAME': "crawler_data",
             'DATABASE_COLLECTION': "crawler_website_parsed_data"

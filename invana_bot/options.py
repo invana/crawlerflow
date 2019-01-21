@@ -93,7 +93,7 @@ class InvanaBot(object):
         #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1}
         #     self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.mongodb.MongoDBCacheStorage"
         # elif database == "elasticsearch":
-        #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.elasticsearch.ElasticsearchPipeline': 1}
+        #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.elasticsearch.ElasticSearchPipeline': 1}
         #     self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.elasticsearch.ESCacheStorage"
         # elif database == "solr":
         #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.solr.SolrPipeline': 1}

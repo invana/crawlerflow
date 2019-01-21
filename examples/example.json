@@ -6,20 +6,13 @@
     "data_selectors": [
         {
             "id": "items",
-            "selector": ".post-content",
+            "selector": ".post-item",
             "selector_attribute": "element",
             "multiple": true
         },
         {
-            "id": "site_title",
-            "selector": ".site-title",
-            "selector_type": "css",
-            "selector_attribute": "text",
-            "multiple": false
-        },
-        {
             "id": "url",
-            "selector": "h2 a",
+            "selector": ".post-header h2 a",
             "selector_type": "css",
             "selector_attribute": "href",
             "parent_selector": "items",
@@ -27,7 +20,7 @@
         },
         {
             "id": "title",
-            "selector": "h2 a",
+            "selector": ".post-header h2 a",
             "selector_type": "css",
             "selector_attribute": "text",
             "parent_selector": "items",
@@ -35,7 +28,7 @@
         },
         {
             "id": "content",
-            "selector": ".entry-summary",
+            "selector": ".post-content",
             "selector_type": "css",
             "selector_attribute": "html",
             "parent_selector": "items",

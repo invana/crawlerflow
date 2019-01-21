@@ -16,22 +16,27 @@ class WebLinkExtracted(DocType):
         doc_type = EXTRACTED_DATA_COLLECTION
 
 
-class ElasticsearchPipeline(object):
-    def __init__(self, host=None,
-                 collection=None):
-        self.database_host = host
-        self.collection = collection
-        connections.create_connection(hosts=[host])
+class ElasticSearchPipeline(object):
+    def __init__(self, database_uri=None,
+                 database_name=None,
+                 collection_name=None):
+        print ("++++++",database_name, collection_name, collection_name)
+        self.database_uri = database_uri
+        self.collection_name = collection_name
+        connections.create_connection(hosts=[self.database_uri])
         WebLinkExtracted.init()
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            host=crawler.settings.get('HTTPCACHE_HOST', '127.0.0.1'),
-            collection=crawler.settings.get('INVANA_BOT_EXTRACTED_DATA_COLLECTION', "web_link_extracted_data"),
+            database_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('DATABASE_URI'),
+            database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+                'DATABASE_NAME'),
+            collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+                'DATABASE_COLLECTION')
         )
 
-    def _flatten_headers(self, obj): # TODO -may be not using !!
+    def _flatten_headers(self, obj):  # TODO -may be not using !!
         flat_data = {}
         for k, v in obj.items():
             flat_data['headers_{}'.format(k)] = v

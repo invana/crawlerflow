@@ -6,7 +6,7 @@ from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
-from invana_bot.settings import DATA_COLLECTION, DATABASE
+from invana_bot.settings import CACHE_COLLECTION, DATABASE
 from invana_bot.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
@@ -20,8 +20,8 @@ class WebLink(DocType):
     created = Date()
 
     class Meta:
-        index = DATABASE
-        doc_type = DATA_COLLECTION
+        index = "invana_cache_db"
+        doc_type = CACHE_COLLECTION
 
 
 class ESCacheStorage(object):
@@ -30,18 +30,26 @@ class ESCacheStorage(object):
 
 
     """
-    COLLECTION_NAME = "web_link"
+    COLLECTION_NAME = CACHE_COLLECTION
 
     def __init__(self, settings):
-        self.database = settings['HTTPCACHE_ES_DATABASE']
-        self.database_host = settings.get('HTTPCACHE_HOST', '127.0.0.1')
-        connections.create_connection(hosts=[self.database_host])
+
+        self.database_uri = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_URI", None)
+        self.database_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_NAME", None)
+        self.cache_expiry_time = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "EXPIRY_TIME", None)
+        self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "DATABASE_COLLECTION", None)
+
+        print("=-------", self.database_name, self.database_uri, self.collection_name, self.cache_expiry_time)
+
+        connections.create_connection(hosts=[self.database_uri])
         WebLink.init()
 
-        self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
-
     def open_spider(self, spider):
-        logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.database},
+        logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.database_uri},
                      extra={'spider': spider})
 
     def close_spider(self, spider):
