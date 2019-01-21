@@ -1,75 +1,12 @@
 from invana_bot.parser import crawl_websites
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, KEYWORD_CRAWLER_DEFAULTS, \
-    FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS
+    FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES
 from invana_bot.utils.config import validate_config, process_config
-
-# class InvanaBotBase(object):
-#     """
-#     The webcrawler plus runner.
-#
-#     """
-#
-#     base_settings = {
-#         'COMPRESSION_ENABLED': False,  # this will save the data in normal text form, otherwise to bytes form.
-#         'HTTPCACHE_ENABLED': True,
-#     }
-#
-#     def __init__(self,
-#                  settings=None,
-#                  urls=[]
-#                  ):
-#         """
-#
-#
-#         cache_enabled is needed to control the cache expiring etc, but we always want to save the data!(may be not necessary)
-#
-#
-#
-#         cache_db_credentials = storage_db_credentials= {
-#             "host" : "127.0.0.1",
-#             "port": "27017",
-#             "username": "admin",
-#             "password": "password",
-#             "cache_collection": "cache_collection"
-#             "storage_collection": "extracted_data_collection"
-#             "database": "some_database"
-#         }
-#
-#         :param cache_db_credentials:
-#         :param cache_db:
-#         :param cache_enabled:
-#         :param storage_db_credentials:
-#         :param storage_db:
-#         :param urls:
-#         """
-#         if type(urls) is None:
-#             raise Exception("urls should be list type.")
-#         if len(urls) is 0:
-#             raise Exception("urls length should be atleast one.")
-#
-#         if settings is None:
-#             self.settings = self.settings
-#
-#     def run(self, ):
-#         raise Exception("Not implemented")
-
-
-SUPPORTED_DATABASES = ["mongodb", "elasticsearch"]
 
 
 class InvanaBot(object):
     """
 
-
-    database_credentials = {
-            "host" : "127.0.0.1",
-            "port": "27017",
-            "username": "admin",
-            "password": "password",
-            "cache_collection": "cache_collection"
-            "storage_collection": "extracted_data_collection"
-            "database": "some_database"
-        }
 
     """
     settings = {
@@ -95,7 +32,6 @@ class InvanaBot(object):
         self.setup_database_settings(cache_database=cache_database, storage_database=storage_database,
                                      cache_database_uri=cache_database_uri, storage_database_uri=storage_database_uri,
                                      )
-        print(self.settings)
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 cache_database_uri=None, storage_database_uri=None,

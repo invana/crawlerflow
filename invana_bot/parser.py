@@ -59,7 +59,6 @@ def crawl_website(url=None,
 
     ignore_urls_with_words = [] if ignore_urls_with_words is None else ignore_urls_with_words
     allow_only_with_words = [] if allow_only_with_words is None else allow_only_with_words
-
     extractor_options = {}
     if len(ignore_urls_with_words) > 0:
         ignored_words_regex = [re.compile(word) for word in ignore_urls_with_words]
@@ -68,13 +67,10 @@ def crawl_website(url=None,
     if len(allow_only_with_words) > 0:
         allow_only_words_regex = [re.compile(word) for word in allow_only_with_words]
         extractor_options['allow'] = allow_only_words_regex
-
     extractor = LinkExtractor(**extractor_options)
-
     rules = [
         Rule(extractor, callback='parse_item', follow=follow)
     ]
-
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
 

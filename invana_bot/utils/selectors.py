@@ -13,7 +13,6 @@ def get_selector_element(html_element, selector, ):
         else:
             raise NotImplemented("selector_type not equal to css; this is not implemented")
     else:
-        print(selector.get('selector_type'), selector)
         if selector.get('selector_type') == 'css':
             elems = html_element.css(selector.get('selector')) \
                 .xpath("@{0}".format(selector.get('selector_attribute')))

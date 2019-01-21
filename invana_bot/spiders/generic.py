@@ -8,8 +8,8 @@ class InvanaWebsiteParserSpider(CrawlSpider):
     """
     name = "invana_website_parser_spider"
 
-    def parse(self, response):
-        print ("Parser=========,", response.url)
+    def parse_item(self, response):
+        print("Parser=========,", response.url)
         data = {}
         data['url'] = response.url
         for selector in self.parser_config['data_selectors']:
@@ -31,7 +31,7 @@ class InvanaWebsiteParserSpider(CrawlSpider):
         yield data
 
         next_selector = self.parser_config.get('next_page_selector').get('selector')
-        print (next_selector)
+        print(next_selector)
         if next_selector:
             if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
                 next_pages = response.css(next_selector)
@@ -41,6 +41,3 @@ class InvanaWebsiteParserSpider(CrawlSpider):
                 next_pages = []
             for next_page in next_pages:
                 yield response.follow(next_page, self.parse)
-
-    def parse_item(self, response):
-        print(response.url)

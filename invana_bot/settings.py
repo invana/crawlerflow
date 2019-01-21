@@ -1,3 +1,5 @@
+SUPPORTED_DATABASES = ["mongodb", "elasticsearch"]
+
 MONGODB_DEFAULTS = {
     'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
