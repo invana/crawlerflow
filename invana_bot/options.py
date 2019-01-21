@@ -93,8 +93,9 @@ class InvanaBot(object):
         print("parser_config", parser_config)
         self.setup_crawler_type_settings(crawler_type="websites")
         self._validate_urls(urls)
-        validate_config(config=parser_config)
-        parser_config = process_config(parser_config)
+        if parser_config is not None:
+            validate_config(config=parser_config)
+            parser_config = process_config(parser_config)
 
         _crawl_websites(urls=urls,
                         settings=self.settings,

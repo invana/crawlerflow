@@ -3,16 +3,7 @@ from scrapy.http import Request
 import os
 
 
-class InvanaWebsiteSpider(CrawlSpider):
-    """
-    This will crawl the entire website.
-
-    using WCP_REQUEST_HEADERS_USER_AGENT variable in os will set the user-agent.
-
-    academics , faculty, department, research, fund, research proposals, funding proposals
-
-    """
-    name = 'website_spider'
+class InvanaWebsiteSpiderBase(CrawlSpider):
 
     def _build_request(self, rule, link):
         headers = {}
@@ -22,6 +13,3 @@ class InvanaWebsiteSpider(CrawlSpider):
         r = Request(url=link.url, headers=headers, callback=self._response_downloaded)
         r.meta.update(rule=rule, link_text=link.text)
         return r
-
-    def parse_item(self, response):
-        print(response.url)

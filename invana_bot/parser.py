@@ -3,8 +3,7 @@ Look at https://doc.scrapy.org/en/latest/topics/practices.html for usage
 
 """
 from scrapy.crawler import CrawlerProcess
-from invana_bot.spiders.website import InvanaWebsiteSpider
-from invana_bot.spiders.generic import InvanaWebsiteParserSpider
+from invana_bot.spiders.websites import InvanaWebsiteSpider, InvanaWebsiteParserSpider
 from invana_bot.spiders.feeds import RSSSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule

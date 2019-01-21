@@ -1,8 +1,24 @@
+from .base import InvanaWebsiteSpiderBase
+import os
 from invana_bot.utils.selectors import get_selector_element
-from scrapy.spiders import CrawlSpider
 
 
-class InvanaWebsiteParserSpider(CrawlSpider):
+class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
+    """
+    This will crawl the entire website.
+
+    using WCP_REQUEST_HEADERS_USER_AGENT variable in os will set the user-agent.
+
+    academics , faculty, department, research, fund, research proposals, funding proposals
+
+    """
+    name = 'website_spider'
+
+    def parse_item(self, response):
+        print(response.url)
+
+
+class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     """
     This is generic spider
     """
