@@ -6,31 +6,49 @@ from scrapy.utils.python import to_bytes
 from scrapy.http.headers import Headers
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
 from datetime import datetime
-from invana_bot.settings import CACHE_COLLECTION, DATABASE
 from invana_bot.utils.url import get_urn, get_domain
 
 logger = logging.getLogger(__name__)
 
 
-class WebLink(DocType):
-    url = Text()
-    html = Text()
-    headers = Text()
-    status = Integer()
-    created = Date()
-
-    class Meta:
-        index = "invana_cache_db"
-        doc_type = CACHE_COLLECTION
-
-
 class ESCacheStorage(object):
     """
-    should set HTTPCACHE_ES_DATABASE in the settings.py
+    pipeline_settings = {
+        'ITEM_PIPELINES': {'invana_bot.pipelines.elasticsearch.ElasticSearchPipeline': 1},
+        'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
+    }
 
+    es_settings = {
+        'INVANA_BOT_SETTINGS': {
+            'HTTPCACHE_STORAGE_SETTINGS': {
+                'DATABASE_URI': "127.0.0.1",
+                'DATABASE_NAME': "crawler_cache_db",
+                'DATABASE_COLLECTION': "web_link",
+                "EXPIRY_TIME": 3600
+            },
+            'ITEM_PIPELINES_SETTINGS': {
+                'DATABASE_URI': "127.0.0.1",
+                'DATABASE_NAME': "crawler_data",
+                'DATABASE_COLLECTION': "crawler_feeds_data"
+            }
+        }
+    }
 
     """
-    COLLECTION_NAME = CACHE_COLLECTION
+
+    def setup_collection(self):
+        class WebLink(DocType):
+            url = Text()
+            html = Text()
+            headers = Text()
+            status = Integer()
+            created = Date()
+
+            class Meta:
+                index = self.database_name
+                doc_type = self.collection_name
+
+        return WebLink
 
     def __init__(self, settings):
 
@@ -42,11 +60,9 @@ class ESCacheStorage(object):
             "EXPIRY_TIME", None)
         self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "DATABASE_COLLECTION", None)
-
-        print("=-------", self.database_name, self.database_uri, self.collection_name, self.cache_expiry_time)
-
         connections.create_connection(hosts=[self.database_uri])
-        WebLink.init()
+        self.WebLink = self.setup_collection()
+        self.WebLink.init()
 
     def open_spider(self, spider):
         logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.database_uri},
@@ -116,11 +132,11 @@ class ESCacheStorage(object):
             'created': datetime.now()
         }
         data.update(self._flatten_headers(self._clean_headers(response.headers)))
-        WebLink(meta={'id': get_urn(response.url)}, **data).save()
+        self.WebLink(meta={'id': get_urn(response.url)}, **data).save()
 
     def _read_data(self, spider, request):
         try:
-            return WebLink.get(id=get_urn(request.url)).to_dict()
+            return self.WebLink.get(id=get_urn(request.url)).to_dict()
         except Exception as e:
             return None
 

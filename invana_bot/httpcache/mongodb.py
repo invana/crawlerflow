@@ -14,23 +14,26 @@ class MongoDBCacheStorage(object):
     """
     should set INVANA_BOT_SETTINGS in the settings.py
 
+    pipeline_settings = {
+        'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
+        'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
+    }
+
     mongodb_settings = {
         'INVANA_BOT_SETTINGS': {
             'HTTPCACHE_STORAGE_SETTINGS': {
-                'DATABASE_ENGINE': 'mongodb',
                 'DATABASE_URI': "mongodb://127.0.0.1",
-                'DATABASE_NAME': "crawler_data",
+                'DATABASE_NAME': "crawler_cache_db",
                 'DATABASE_COLLECTION': "web_link",
-                "EXPIRY_TIME": 3600,
+                "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
-                'DATABASE_ENGINE': "mongodb",
-                'DATABASE_NAME': "invanabot_data",
-
+                'DATABASE_URI': "mongodb://127.0.0.1",
+                'DATABASE_NAME': "crawler_data",
+                'DATABASE_COLLECTION': "crawler_feeds_data"
             }
         }
     }
-    common_settings.update(mongodb_settings)
 
 
     """

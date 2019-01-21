@@ -1,30 +1,58 @@
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Text, connections
-from invana_bot.settings import EXTRACTED_DATA_COLLECTION, DATABASE
 from invana_bot.utils.url import get_urn
 
 
-class WebLinkExtracted(DocType):
-    url = Text()
-    body = Text()
-    headers = Text()
-    status = Integer()
-    created = Date()
-
-    class Meta:
-        index = DATABASE
-        doc_type = EXTRACTED_DATA_COLLECTION
-
-
 class ElasticSearchPipeline(object):
+    """
+
+
+    pipeline_settings = {
+        'ITEM_PIPELINES': {'invana_bot.pipelines.elasticsearch.ElasticSearchPipeline': 1},
+        'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
+    }
+
+    es_settings = {
+        'INVANA_BOT_SETTINGS': {
+            'HTTPCACHE_STORAGE_SETTINGS': {
+                'DATABASE_URI': "127.0.0.1",
+                'DATABASE_NAME': "crawler_cache_db",
+                'DATABASE_COLLECTION': "web_link",
+                "EXPIRY_TIME": 3600
+            },
+            'ITEM_PIPELINES_SETTINGS': {
+                'DATABASE_URI': "127.0.0.1",
+                'DATABASE_NAME': "crawler_data",
+                'DATABASE_COLLECTION': "crawler_feeds_data"
+            }
+        }
+    }
+
+    """
+
+    def setup_collection(self):
+        class WebLinkExtracted(DocType):
+            url = Text()
+            body = Text()
+            headers = Text()
+            status = Integer()
+            created = Date()
+
+            class Meta:
+                index = self.database_name
+                doc_type = self.collection_name
+
+        return WebLinkExtracted
+
     def __init__(self, database_uri=None,
                  database_name=None,
                  collection_name=None):
-        print ("++++++",database_name, collection_name, collection_name)
         self.database_uri = database_uri
+        self.database_name = database_name
         self.collection_name = collection_name
         connections.create_connection(hosts=[self.database_uri])
-        WebLinkExtracted.init()
+        self.WebLinkExtracted = self.setup_collection()
+        self.WebLinkExtracted.init()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -45,5 +73,5 @@ class ElasticSearchPipeline(object):
     def process_item(self, item, spider):
         data = dict(item)
         data['updated'] = datetime.now()
-        WebLinkExtracted(meta={'id': get_urn(data['url'])}, **data).save()
+        self.WebLinkExtracted(meta={'id': get_urn(data['url'])}, **data).save()
         return item

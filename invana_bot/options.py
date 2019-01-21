@@ -1,4 +1,3 @@
-from invana_bot.settings import EXTRACTED_DATA_COLLECTION, CACHE_COLLECTION
 from invana_bot.parser import crawl_websites
 
 # class InvanaBotBase(object):
