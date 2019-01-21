@@ -17,13 +17,13 @@ class ElasticSearchPipeline(object):
             'HTTPCACHE_STORAGE_SETTINGS': {
                 'DATABASE_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_cache_db",
-                'DATABASE_COLLECTION': "web_link",
+                'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
                 'DATABASE_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_data",
-                'DATABASE_COLLECTION': "crawler_feeds_data"
+                'COLLECTION_NAME': "crawler_feeds_data"
             }
         }
     }
@@ -61,7 +61,7 @@ class ElasticSearchPipeline(object):
             database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'DATABASE_NAME'),
             collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
-                'DATABASE_COLLECTION')
+                'COLLECTION_NAME')
         )
 
     def _flatten_headers(self, obj):  # TODO -may be not using !!

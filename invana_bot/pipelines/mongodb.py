@@ -1,6 +1,5 @@
 import pymongo
 from datetime import datetime
-from invana_bot.settings import DATABASE
 
 
 class MongoDBPipeline(object):
@@ -8,6 +7,9 @@ class MongoDBPipeline(object):
                  database_uri=None,
                  database_name=None,
                  collection_name=None):
+        if None in [database_uri, database_name, collection_name]:
+            raise Exception("database_uri, database_name, collection_name should be provided.")
+
         self.db_client = pymongo.MongoClient(database_uri)
         self.db = self.db_client[database_name]
         self.collection = self.db[collection_name]
@@ -16,11 +18,11 @@ class MongoDBPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             database_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('DATABASE_URI',
-                                                                                                        DATABASE),
+                                                                                                        None),
             database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
-                'DATABASE_NAME', DATABASE),
+                'DATABASE_NAME', None),
             collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
-                'DATABASE_COLLECTION', DATABASE),
+                'COLLECTION_NAME', None),
         )
 
     def process_item(self, item, spider):

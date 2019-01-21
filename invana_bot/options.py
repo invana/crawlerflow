@@ -1,4 +1,6 @@
 from invana_bot.parser import crawl_websites
+from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, KEYWORD_CRAWLER_DEFAULTS, \
+    FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS
 
 # class InvanaBotBase(object):
 #     """
@@ -76,7 +78,8 @@ class InvanaBot(object):
 
     def __init__(self,
                  database=None,
-                 database_credentials=None,
+                 cache_database_uri=None,
+                 storage_database_uri=None,
                  http_cache_enabled=True,
                  log_level="INFO",
                  extra_settings=None,
@@ -87,20 +90,21 @@ class InvanaBot(object):
 
         if database not in ["mongodb", "elasticsearch"]:
             raise Exception("we only support {}".format(",".join(SUPPORTED_DATABASES)))
-        #
-        # if database == "mongodb":
-        #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1}
-        #     self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.mongodb.MongoDBCacheStorage"
-        # elif database == "elasticsearch":
-        #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.elasticsearch.ElasticSearchPipeline': 1}
-        #     self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.elasticsearch.ESCacheStorage"
-        # elif database == "solr":
-        #     self.settings['ITEM_PIPELINES'] = {'invana_bot.pipelines.solr.SolrPipeline': 1}
-        #     self.settings['HTTPCACHE_STORAGE'] = "invana_bot.httpcache.solr.SolrCacheStorage"
-        # else:
-        #     raise Exception("We only support, elasticsearch, solr and mongodb at this moment.")
+
+        if database == "mongodb":
+            self.settings.update(MONGODB_DEFAULTS)
+        elif database == "elasticsearch":
+            self.settings.update(ELASTICSEARCH_DEFAULTS)
+        self.settings.update(WEBSITE_CRAWLER_DEFAULTS)
+
+        if cache_database_uri:
+            self.settings['INVANA_BOT_SETTINGS']['HTTPCACHE_STORAGE_SETTINGS']['DATABASE_URI'] = cache_database_uri
+
+        if storage_database_uri:
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = storage_database_uri
 
         self.settings['LOG_LEVEL'] = log_level
+        print (self.settings)
         if extra_settings:
             self.settings.update(extra_settings)  # over riding or adding extra settings
 

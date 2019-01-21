@@ -21,13 +21,13 @@ mongodb_settings = {
         'HTTPCACHE_STORAGE_SETTINGS': {
             'DATABASE_URI': "mongodb://127.0.0.1",
             'DATABASE_NAME': "crawler_cache_db",
-            'DATABASE_COLLECTION': "web_link",
+            'COLLECTION_NAME': "web_link",
             "EXPIRY_TIME": 3600
         },
         'ITEM_PIPELINES_SETTINGS': {
             'DATABASE_URI': "mongodb://127.0.0.1",
             'DATABASE_NAME': "crawler_data",
-            'DATABASE_COLLECTION': "crawler_website_data"
+            'COLLECTION_NAME': "crawler_website_data"
         }
     }
 }

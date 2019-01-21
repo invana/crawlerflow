@@ -1,26 +1,21 @@
 # Invana Bott
 
-A micro-framework built on [scrapy](https://scrapy.org/) to crawl the sites. 
+A micro-framework built on [scrapy](https://scrapy.org/) for crawling and 
+storing to NoSQL database solutions. 
+
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
-and [Solr](http://lucene.apache.org/solr/) databases to cache the requests and also extract the data using parser configs 
+and <del>[Solr](http://lucene.apache.org/solr/)</del> databases to cache the requests and also extract the data using parser configs 
 and save them.
 
 
 [![Build Status](https://travis-ci.org/invanalabs/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanalabs/web-crawler-plus) 
 [![codecov](https://codecov.io/gh/invanalabs/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/web-crawler-plus) 
 
-## Overview 
-
-- This is a wrapper around scrapy framework.
-- This framework will give the user options to use solr, elasticsearch, mongodb as cache and storage databases.
-- **Cache collection** is where all the data is cached to. Defaults to `weblinks`.
-- **Storage collection** is where all the extracted/parsed data from scrapy job is saved to. Defaults to `web_link_extracted_data`
-
 ## Install
 
 ```bash
 
-pip install web-crawler-plus
+pip install invana-bot
 
 ```
 

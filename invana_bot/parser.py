@@ -12,7 +12,6 @@ from scrapy.spiders import Rule
 import re
 
 
-
 def crawl_websites(urls=None,
                    settings=None,
                    ignore_urls_with_words=None,

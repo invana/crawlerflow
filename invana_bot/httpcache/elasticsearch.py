@@ -23,13 +23,13 @@ class ESCacheStorage(object):
             'HTTPCACHE_STORAGE_SETTINGS': {
                 'DATABASE_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_cache_db",
-                'DATABASE_COLLECTION': "web_link",
+                'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
                 'DATABASE_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_data",
-                'DATABASE_COLLECTION': "crawler_feeds_data"
+                'COLLECTION_NAME': "crawler_feeds_data"
             }
         }
     }
@@ -59,7 +59,7 @@ class ESCacheStorage(object):
         self.cache_expiry_time = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "EXPIRY_TIME", None)
         self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
-            "DATABASE_COLLECTION", None)
+            "COLLECTION_NAME", None)
         connections.create_connection(hosts=[self.database_uri])
         self.WebLink = self.setup_collection()
         self.WebLink.init()
