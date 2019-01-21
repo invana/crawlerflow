@@ -77,7 +77,8 @@ class InvanaBot(object):
     }
 
     def __init__(self,
-                 database=None,
+                 cache_database=None,
+                 storage_database=None,
                  cache_database_uri=None,
                  storage_database_uri=None,
                  http_cache_enabled=True,
@@ -88,13 +89,22 @@ class InvanaBot(object):
 
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
 
-        if database not in ["mongodb", "elasticsearch"]:
-            raise Exception("we only support {}".format(",".join(SUPPORTED_DATABASES)))
+        if cache_database not in ["mongodb", "elasticsearch"]:
+            raise Exception("we only support {} as cache_database".format(",".join(SUPPORTED_DATABASES)))
 
-        if database == "mongodb":
-            self.settings.update(MONGODB_DEFAULTS)
-        elif database == "elasticsearch":
-            self.settings.update(ELASTICSEARCH_DEFAULTS)
+        if storage_database not in ["mongodb", "elasticsearch"]:
+            raise Exception("we only support {} as storage_database ".format(",".join(SUPPORTED_DATABASES)))
+
+        if cache_database == "mongodb":
+            self.settings['HTTPCACHE_STORAGE'] = MONGODB_DEFAULTS['HTTPCACHE_STORAGE']
+        if storage_database == "mongodb":
+            self.settings['ITEM_PIPELINES'] = MONGODB_DEFAULTS['ITEM_PIPELINES']
+
+        if cache_database == "elasticsearch":
+            self.settings['HTTPCACHE_STORAGE'] = ELASTICSEARCH_DEFAULTS['HTTPCACHE_STORAGE']
+        if storage_database == "elasticsearch":
+            self.settings['ITEM_PIPELINES'] = ELASTICSEARCH_DEFAULTS['ITEM_PIPELINES']
+
         self.settings.update(WEBSITE_CRAWLER_DEFAULTS)
 
         if cache_database_uri:
@@ -104,7 +114,7 @@ class InvanaBot(object):
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = storage_database_uri
 
         self.settings['LOG_LEVEL'] = log_level
-        print (self.settings)
+        print(self.settings)
         if extra_settings:
             self.settings.update(extra_settings)  # over riding or adding extra settings
 

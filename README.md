@@ -20,6 +20,13 @@ pip install invana-bot
 ```
 
 
+## Skills of the Bot
+
+**1. Crawl a site and save the page content**: Use full for gathering the data and performing analytics on the page.
+
+**2. Crawl a site and extract the content(s)**: This will extract the specific use full content(s) inside the pages(parsing the data). 
+
+
 ## Working Examples
 
 ```python
@@ -30,56 +37,18 @@ from invana_bot import InvanaBot
 
 if __name__ == '__main__':
     crawler = InvanaBot(
-        database_credentials={
-            "database": "crawler_test",
-            "host": "127.0.0.1",
-            "port": "27017",
-        },
-        database="mongodb",
+        cache_database_uri="mongodb://127.0.0.1",
+        storage_database_uri="mongodb://127.0.0.1",
+        cache_database="mongodb",
+        storage_database="mongodb",
     )
-    crawler.run(urls=["https://medium.com/invanalabs", ],
-                ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanalabs'],
-                )
-
-
-```
-
-```python
-# a simple usecase to use solr as cache and storage db.
-
-from invana_bot import InvanaBot
-
-if __name__ == '__main__':
-    # there is no database key for solr, it will be ignored
+    """
     crawler = InvanaBot(
-        database_credentials={
-            "host": "127.0.0.1",
-            "port": "8983",
-        },
-        database="solr",
-    )
-    crawler.run(urls=["https://medium.com/invanalabs", ],
-                ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanalabs'],
-                )
-
-
-```
-
-```python
-# a simple usecase to use elasticsearch as cache and storage db.
-
-from invana_bot import InvanaBot
-
-if __name__ == '__main__':
-    crawler = InvanaBot(
-        database_credentials={
-            "host": "127.0.0.1",
-            "port": "9200",
-        },
+        cache_database_uri="127.0.0.1",
+        storage_database_uri="127.0.0.1",
         database="elasticsearch",
     )
+    """
     crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
                 allow_only_with_words=['/invanalabs'],
@@ -87,6 +56,9 @@ if __name__ == '__main__':
 
 
 ```
+
+ 
+
 
 ## Extra settings 
 
