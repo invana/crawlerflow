@@ -1,11 +1,40 @@
 # InvanaBot UseCases
 
-
-
-#### 1. UseCase I - Crawling with Pagination and extracting specific content(s)
+#### 1. UseCase I - Crawling a website
 
 ```python
-# example_parser_with_pagination.py
+# a simple usecase to use mongodb as cache and storage db.
+
+from invana_bot import InvanaBot
+
+
+if __name__ == '__main__':
+    crawler = InvanaBot(
+        cache_database_uri="mongodb://127.0.0.1",
+        storage_database_uri="mongodb://127.0.0.1",
+        cache_database="mongodb",
+        storage_database="elasticsearch",
+    )
+    """
+    crawler = InvanaBot(
+        cache_database_uri="127.0.0.1",
+        storage_database_uri="127.0.0.1",
+        cache_database="elasticsearch",
+        storage_database="elasticsearch",
+    )
+    """
+    crawler.run(urls=["https://medium.com/invanalabs", ],
+                ignore_urls_with_words=['@'],
+                allow_only_with_words=['/invanalabs'],
+                )
+
+
+```
+
+
+#### 1. UseCase II - Crawling with Pagination and extracting specific content(s)
+
+```python
 
 from invana_bot import InvanaBot
 example_parser_config =  {
@@ -76,5 +105,41 @@ crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
 
             
 ```
+
+####4. UseCase 2: Crawling the feeds
+
+```python
+from invana_bot import InvanaBot
+
+if __name__ == '__main__':
+    crawler = InvanaBot(
+        cache_database_uri="127.0.0.1",
+        storage_database_uri="127.0.0.1",
+        cache_database="mongodb",
+        storage_database="mongodb",
+    )
+    crawler.crawl_feeds(
+        feed_urls=[
+            # 'http://connect.iisc.ac.in/feed/',
+            # "https://blog.google/rss/",
+            # "https://blog.github.com/all.atom",
+            # "https://githubengineering.com/atom.xml",
+            # "http://blog.atom.io/feed.xml",
+            # "https://phraseapp.com/blog/feed/",
+            # "https://blog.bitbucket.org/feed/",
+            # "https://scienceblog.com/feed/",
+            "http://www.jimmunol.org/rss/current.xml",
+            "http://feeds.nature.com/gt/rss/current",
+            "http://feeds.nature.com/gene/rss/current",
+            "http://feeds.nature.com/gim/rss/current",
+            "http://feeds.nature.com/npjqi/rss/current",
+            "http://feeds.nature.com/npjquantmats/rss/current",
+            "http://feeds.nature.com/npjregenmed/rss/current"
+        ]
+    )
+
+
+```
+
 
 

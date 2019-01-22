@@ -10,6 +10,8 @@ and save them.
 [![Build Status](https://travis-ci.org/invanalabs/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanalabs/web-crawler-plus) 
 [![codecov](https://codecov.io/gh/invanalabs/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/web-crawler-plus) 
 
+Look at the `examples/` folder for basic and advanced implementations.
+
 ## Install
 
 ```bash
@@ -40,43 +42,4 @@ for caching the crawled data, and storing the actual extracted data into elastic
 
 **7. Taking screenshots while crawling ** [in roadmap] for visual crawling
 
-## Working Examples
 
-```python
-# a simple usecase to use mongodb as cache and storage db.
-
-from invana_bot import InvanaBot
-
-
-if __name__ == '__main__':
-    crawler = InvanaBot(
-        cache_database_uri="mongodb://127.0.0.1",
-        storage_database_uri="mongodb://127.0.0.1",
-        cache_database="mongodb",
-        storage_database="elasticsearch",
-    )
-    """
-    crawler = InvanaBot(
-        cache_database_uri="127.0.0.1",
-        storage_database_uri="127.0.0.1",
-        cache_database="elasticsearch",
-        storage_database="elasticsearch",
-    )
-    """
-    crawler.run(urls=["https://medium.com/invanalabs", ],
-                ignore_urls_with_words=['@'],
-                allow_only_with_words=['/invanalabs'],
-                )
-
-
-```
-
- 
-
-
-## Extra settings 
-
-
-- `WCP_SCRAPY_CRAWLER_TYPE` -  CrawlerRunner/CrawlerProcess
-
-Checkout the lower level [documentation](docs/index.md) for more information.
