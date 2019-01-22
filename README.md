@@ -1,4 +1,4 @@
-# Invana Bott
+# Invana Bot
 
 A batteries included crawler framework built on top of [scrapy](https://scrapy.org/) for scale and intelligent crawling.
 
