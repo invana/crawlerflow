@@ -18,6 +18,11 @@ Look at the `examples/` folder for basic and advanced implementations.
 
 pip install invana-bot
 
+or 
+
+pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
+
+
 ```
 
 
