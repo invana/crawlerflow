@@ -52,7 +52,6 @@ if __name__ == '__main__':
         cache_database="mongodb",
         storage_database="mongodb",
     )
-    crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
-                           parser_config=example_config,
+    crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ], parser_config=example_config,
                            # allow_only_with_words=['*']
                            )

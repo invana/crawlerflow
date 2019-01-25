@@ -7,8 +7,8 @@ and <del>[Solr](http://lucene.apache.org/solr/)</del> databases to cache the req
 and save them.
 
 
-[![Build Status](https://travis-ci.org/invanalabs/web-crawler-plus.svg?branch=master)](https://travis-ci.org/invanalabs/web-crawler-plus) 
-[![codecov](https://codecov.io/gh/invanalabs/web-crawler-plus/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/web-crawler-plus) 
+[![Build Status](https://travis-ci.org/invanalabs/invana-bot.svg?branch=master)](https://travis-ci.org/invanalabs/invana-bot) 
+[![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
 Look at the `examples/` folder for basic and advanced implementations.
 
@@ -25,6 +25,31 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 ```
 
+## Usage
+
+```python
+from invana_bot import InvanaBot
+
+crawler = InvanaBot(
+    cache_database_uri="mongodb://127.0.0.1",
+    storage_database_uri="mongodb://127.0.0.1",
+    cache_database="mongodb",
+    storage_database="mongodb",
+)
+crawler.crawl_websites(urls=["https://medium.com/invanalabs", ],
+                       ignore_urls_with_words=['@'],
+                       allow_only_with_words=['/invanalabs'],
+                       )
+                       
+crawler.crawl_feeds(
+    feed_urls=[
+        "https://blog.scrapinghub.com/rss.xml"
+    ]
+)
+
+
+
+```
 
 
 ## Skills of the Bot

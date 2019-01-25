@@ -24,9 +24,6 @@ class InvanaBot(object):
                  extra_settings=None,
                  **kwargs):
 
-        # if crawler_type not in SUPPORTED_CRAWLERS:
-        #     raise Exception("{} should be on of the following: {}".format(crawler_type, ",".join(SUPPORTED_CRAWLERS)))
-        # self.crawler_type = crawler_type
         self.settings['HTTPCACHE_ENABLED'] = http_cache_enabled
         self.settings['LOG_LEVEL'] = log_level
         if extra_settings:
@@ -75,10 +72,7 @@ class InvanaBot(object):
         if len(urls) is 0:
             raise Exception("urls length should be atleast one.")
 
-    def crawl_feeds(self,
-                    feed_urls=None,
-                    ):
-
+    def crawl_feeds(self, feed_urls=None):
         self.setup_crawler_type_settings(crawler_type="feeds")
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
@@ -90,7 +84,6 @@ class InvanaBot(object):
                        follow=True,
                        parser_config=None
                        ):
-        print("parser_config", parser_config)
         self.setup_crawler_type_settings(crawler_type="websites")
         self._validate_urls(urls)
         if parser_config is not None:

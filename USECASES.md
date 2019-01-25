@@ -11,18 +11,11 @@ from invana_bot import InvanaBot
 if __name__ == '__main__':
     crawler = InvanaBot(
         cache_database_uri="mongodb://127.0.0.1",
-        storage_database_uri="mongodb://127.0.0.1",
+        storage_database_uri="127.0.0.1",
         cache_database="mongodb",
         storage_database="elasticsearch",
     )
-    """
-    crawler = InvanaBot(
-        cache_database_uri="127.0.0.1",
-        storage_database_uri="127.0.0.1",
-        cache_database="elasticsearch",
-        storage_database="elasticsearch",
-    )
-    """
+
     crawler.run(urls=["https://medium.com/invanalabs", ],
                 ignore_urls_with_words=['@'],
                 allow_only_with_words=['/invanalabs'],
