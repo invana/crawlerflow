@@ -2,11 +2,11 @@ import scrapy
 from invana_bot.utils.selectors import get_selector_element
 
 
-class SearchEngineBaseSpider(scrapy.Spider):
+class SearchCrawlerBaseSpider(scrapy.Spider):
     """
-    bing search engine
+    search crawler
     """
-    name = 'search_engine_base'
+    name = 'search_crawler_base'
 
     def parse(self, response):
         data = {}
