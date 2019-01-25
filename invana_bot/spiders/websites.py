@@ -37,6 +37,7 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 elements = response.css(selector.get('selector'))
                 elements_data = []
                 for item_no, el in enumerate(elements):
+                    item_no = item_no + 1  # because enumerate starts from 0
                     datum = {}
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
