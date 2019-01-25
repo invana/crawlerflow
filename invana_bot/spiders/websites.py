@@ -57,6 +57,3 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 next_pages = []
             for next_page in next_pages:
                 yield response.follow(next_page, self.parse)
-
-    def parse_item(self, response):
-        print(response.url)
