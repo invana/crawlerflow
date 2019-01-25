@@ -36,18 +36,17 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = response.css(selector.get('selector'))
                 elements_data = []
-                for el in elements:
+                for item_no, el in enumerate(elements):
                     datum = {}
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
                         datum[child_selector.get('id')] = _d.strip() if _d else None
+                    datum['item_no'] = item_no
                     elements_data.append(datum)
-                    print("****", datum)
                 data[selector.get('id')] = elements_data
             else:
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
-        print("+++", data)
         yield data
         print("current_page_count", current_page_count, max_pages)
         if current_page_count < max_pages:
