@@ -28,14 +28,14 @@ example_config = {
             "parent_selector": "items",
             "multiple": False
         },
-        # {
-        #     "id": "content",
-        #     "selector": ".post-content",
-        #     "selector_type": "css",
-        #     "selector_attribute": "html",
-        #     "parent_selector": "items",
-        #     "multiple": False
-        # }
+        {
+            "id": "content",
+            "selector": ".post-content",
+            "selector_type": "css",
+            "selector_attribute": "html",
+            "parent_selector": "items",
+            "multiple": False
+        }
     ],
     "next_page_selector": {
         "selector": ".next-posts-link",
