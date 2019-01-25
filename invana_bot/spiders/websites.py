@@ -1,5 +1,4 @@
 from .base import InvanaWebsiteSpiderBase
-import os
 from invana_bot.utils.selectors import get_selector_element
 
 
@@ -15,19 +14,22 @@ class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
     name = 'website_spider'
 
     def parse(self, response):
-        print(response.url)
+        print("Parser=========,", response.url)
 
 
 class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     """
     This is generic spider
     """
-    name = "invana_website_parser_spider"
+    name = "website_parser_spider"
 
     def parse(self, response):
         print("Parser=========,", response.url)
         data = {}
         data['url'] = response.url
+        max_pages = self.parser_config.get("next_page_selector", {}).get("max_pages", 1)
+        current_page_count = self.parser_config.get("next_page_selector", {}).get("current_page_count", 1)
+
         for selector in self.parser_config['data_selectors']:
             if selector.get('selector_attribute') == 'element' and \
                     len(selector.get('child_selectors', [])) > 0:
@@ -39,21 +41,26 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
                         datum[child_selector.get('id')] = _d.strip() if _d else None
-                        elements_data.append(datum)
+                    elements_data.append(datum)
+                    print("****", datum)
                 data[selector.get('id')] = elements_data
             else:
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
+        print("+++", data)
         yield data
-
-        next_selector = self.parser_config.get('next_page_selector').get('selector')
-        print(next_selector)
-        if next_selector:
-            if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
-                next_pages = response.css(next_selector)
-            elif self.parser_config.get('next_page_selector').get('selector_type') == 'xpath':
-                next_pages = response.xpath(next_selector)
-            else:
-                next_pages = []
-            for next_page in next_pages:
-                yield response.follow(next_page, self.parse)
+        print("current_page_count", current_page_count, max_pages)
+        if current_page_count < max_pages:
+            next_selector = self.parser_config.get('next_page_selector').get('selector')
+            if next_selector:
+                if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
+                    next_pages = response.css(next_selector)
+                elif self.parser_config.get('next_page_selector').get('selector_type') == 'xpath':
+                    next_pages = response.xpath(next_selector)
+                else:
+                    next_pages = []
+                for next_page in next_pages:
+                    self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
+                    yield response.follow(next_page, self.parse)
+        else:
+            print("### ended")

@@ -8,7 +8,7 @@ example_config = {
     "data_selectors": [
         {
             "id": "items",
-            "selector": ".post-item",
+            "selector": ".post-listing .post-item",
             "selector_attribute": "element",
             "multiple": True
         },
@@ -28,18 +28,19 @@ example_config = {
             "parent_selector": "items",
             "multiple": False
         },
-        {
-            "id": "content",
-            "selector": ".post-content",
-            "selector_type": "css",
-            "selector_attribute": "html",
-            "parent_selector": "items",
-            "multiple": False
-        }
+        # {
+        #     "id": "content",
+        #     "selector": ".post-content",
+        #     "selector_type": "css",
+        #     "selector_attribute": "html",
+        #     "parent_selector": "items",
+        #     "multiple": False
+        # }
     ],
     "next_page_selector": {
         "selector": ".next-posts-link",
-        "selector_type": "css"
+        "selector_type": "css",
+        "max_pages": 2
     }
 
 }
