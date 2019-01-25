@@ -14,7 +14,7 @@ class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
     """
     name = 'website_spider'
 
-    def parse_item(self, response):
+    def parse(self, response):
         print(response.url)
 
 
@@ -24,7 +24,7 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     """
     name = "invana_website_parser_spider"
 
-    def parse_item(self, response):
+    def parse(self, response):
         print("Parser=========,", response.url)
         data = {}
         data['url'] = response.url

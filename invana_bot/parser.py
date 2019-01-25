@@ -68,7 +68,8 @@ def crawl_website(url=None,
         extractor_options['allow'] = allow_only_words_regex
     extractor = LinkExtractor(**extractor_options)
     rules = [
-        Rule(extractor, callback='parse_item', follow=follow)
+        # Rule(extractor, callback='parse_item', follow=follow)
+        Rule(extractor, follow=follow)
     ]
     process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
@@ -77,6 +78,7 @@ def crawl_website(url=None,
         spider_cls = InvanaWebsiteParserSpider
     else:
         spider_cls = InvanaWebsiteSpider
+    print("parser config", parser_config)
     process.crawl(spider_cls,
                   start_urls=[url],
                   allowed_domains=[domain],
