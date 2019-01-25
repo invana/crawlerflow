@@ -40,6 +40,6 @@ for caching the crawled data, and storing the actual extracted data into elastic
 
 **6. Headless Browsers** [in roadmap]
 
-**7. Taking screenshots while crawling ** [in roadmap] for visual crawling
+**7. Taking screenshots while crawling** [in roadmap] for visual crawling
 
 
