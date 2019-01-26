@@ -5,6 +5,10 @@ example_config = {
     "domain": "scrapinghub.com",
     "subdomain": "blog.scrapinghub.com",
     "start_url": "https://blog.scrapinghub.com",
+    "crawler_metadata": {
+        "client_id": "invana",
+        "crawler_pipeline_id": "11223"
+    },
     "data_selectors": [
         {
             "id": "items",

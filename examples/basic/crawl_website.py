@@ -5,9 +5,9 @@ if __name__ == '__main__':
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
-        storage_database="elasticsearch",
+        storage_database="mongodb",
     )
-    crawler.crawl_websites(urls=["https://medium.com/invanalabs", ],
-                           ignore_urls_with_words=['@'],
-                           allow_only_with_words=['/invanalabs'],
+    crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
+                           # ignore_urls_with_words=['@'],
+                           # allow_only_with_words=['/invanalabs'],
                            )
