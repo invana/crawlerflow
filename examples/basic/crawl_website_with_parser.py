@@ -1,14 +1,15 @@
 from invana_bot import InvanaBot
 
-example_config = {
-    "crawler_name": "scrapinghub-1",
+client_info = {
     "domain": "scrapinghub.com",
     "subdomain": "blog.scrapinghub.com",
+    "client_id": "invana",
+    "crawler_pipeline_id": "11223",
+    "crawler_name": "scrapinghub-1",
+
+}
+example_config = {
     "start_url": "https://blog.scrapinghub.com",
-    "crawler_metadata": {
-        "client_id": "invana",
-        "crawler_pipeline_id": "11223"
-    },
     "data_selectors": [
         {
             "id": "items",
@@ -58,5 +59,6 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
     crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ], parser_config=example_config,
+                           client_info=client_info
                            # allow_only_with_words=['*']
                            )

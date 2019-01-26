@@ -13,9 +13,6 @@ class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
     """
     name = 'website_spider'
 
-    # def parse(self, response):
-    #     print("Parser=========,", response.url)
-
 
 class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     """
@@ -29,8 +26,8 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
         data['url'] = response.url
         max_pages = self.parser_config.get("next_page_selector", {}).get("max_pages", 1)
         current_page_count = self.parser_config.get("next_page_selector", {}).get("current_page_count", 1)
-        crawler_metadata = self.parser_config.get("crawler_metadata", None)
-        print("crawler_metadata", crawler_metadata)
+        client_info = self.client_info
+        print("client_info", client_info)
         for selector in self.parser_config['data_selectors']:
             if selector.get('selector_attribute') == 'element' and \
                     len(selector.get('child_selectors', [])) > 0:
@@ -49,8 +46,8 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
             else:
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
-        if crawler_metadata is not None:
-            data.update({"crawler_metadata": crawler_metadata})
+        if client_info is not None:
+            data.update({"client_info": client_info})
         yield data
         print("current_page_count", current_page_count, max_pages)
         if current_page_count < max_pages:

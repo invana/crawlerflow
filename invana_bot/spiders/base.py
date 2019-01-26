@@ -16,23 +16,23 @@ class InvanaWebsiteSpiderBase(CrawlSpider):
         r.meta.update(rule=rule, link_text=link.text)
         return r
 
-    def _parse_response(self, response, callback, cb_kwargs, follow=True):
-        if self.parser_config:
-            crawler_metadata = self.parser_config.get("crawler_metadata", None)
-            print("=============crawler_metadata", crawler_metadata)
-
-        else:
-            crawler_metadata = None
-        if callback:
-            cb_res = callback(response, **cb_kwargs) or ()
-            cb_res = self.process_results(response, cb_res)
-            for requests_or_item in iterate_spider_output(cb_res):
-                if crawler_metadata is not None:
-                    requests_or_item.update({"crawler_metadata": crawler_metadata})
-                yield requests_or_item
-
-        if follow and self._follow_links:
-            for request_or_item in self._requests_to_follow(response):
-                if crawler_metadata is not None:
-                    request_or_item.update({"crawler_metadata": crawler_metadata})
-                yield request_or_item
+    # def _parse_response(self, response, callback, cb_kwargs, follow=True):
+    #     if self.client_info:
+    #         client_info = self.client_info
+    #         print("=============crawler_metadata", client_info)
+    #     else:
+    #         client_info = None
+    #
+    #     if callback:
+    #         cb_res = callback(response, **cb_kwargs) or ()
+    #         cb_res = self.process_results(response, cb_res)
+    #         for requests_or_item in iterate_spider_output(cb_res):
+    #             if client_info is not None:
+    #                 requests_or_item.update({"client_info": client_info})
+    #             yield requests_or_item
+    #
+    #     if follow and self._follow_links:
+    #         for request_or_item in self._requests_to_follow(response):
+    #             if client_info is not None:
+    #                 request_or_item.update({"client_info": client_info})
+    #             yield request_or_item

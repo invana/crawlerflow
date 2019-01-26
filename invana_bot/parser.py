@@ -15,6 +15,7 @@ def crawl_websites(urls=None,
                    ignore_urls_with_words=None,
                    allow_only_with_words=None,
                    parser_config=None,
+                   client_info=None,
                    follow=True):
     """
     crawl multiple sites
@@ -32,6 +33,7 @@ def crawl_websites(urls=None,
                       ignore_urls_with_words=ignore_urls_with_words,
                       allow_only_with_words=allow_only_with_words,
                       parser_config=parser_config,
+                      client_info=client_info,
                       follow=follow)
 
 
@@ -41,6 +43,7 @@ def crawl_website(url=None,
                   allow_only_with_words=None,
                   parser_config=None,
                   follow=True,
+                  client_info=None,
                   stop_after_crawl=True):
     """
     Crawl a single site
@@ -83,7 +86,8 @@ def crawl_website(url=None,
                   start_urls=[url],
                   allowed_domains=[domain],
                   rules=rules,
-                  parser_config=parser_config
+                  parser_config=parser_config,
+                  client_info=client_info
                   )
     process.start(stop_after_crawl=stop_after_crawl)
 

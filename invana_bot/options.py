@@ -82,7 +82,8 @@ class InvanaBot(object):
                        ignore_urls_with_words=None,
                        allow_only_with_words=None,
                        follow=True,
-                       parser_config=None
+                       parser_config=None,
+                       client_info=None,
                        ):
         self.setup_crawler_type_settings(crawler_type="websites")
         self._validate_urls(urls)
@@ -95,5 +96,6 @@ class InvanaBot(object):
                         ignore_urls_with_words=ignore_urls_with_words,
                         allow_only_with_words=allow_only_with_words,
                         follow=follow,
-                        parser_config=parser_config
+                        parser_config=parser_config,
+                        client_info=client_info
                         )
