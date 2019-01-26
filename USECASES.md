@@ -8,6 +8,7 @@
 from invana_bot import InvanaBot
 
 
+
 if __name__ == '__main__':
     crawler = InvanaBot(
         cache_database_uri="mongodb://127.0.0.1",
@@ -37,10 +38,6 @@ example_parser_config = {
     "domain": "scrapinghub.com",
     "subdomain": "blog.scrapinghub.com",
     "start_url": "https://blog.scrapinghub.com",
-    "crawler_metadata": {
-        "client_id": "invana",
-        "crawler_pipeline_id": "11223"
-    },
     "data_selectors": [
         {
             "id": "items",
