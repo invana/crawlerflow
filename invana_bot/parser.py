@@ -81,9 +81,6 @@ def crawl_website(url=None,
         spider_cls = InvanaWebsiteParserSpider
     else:
         spider_cls = InvanaWebsiteSpider
-    print("parser_config", parser_config)
-    print("spider_cls", spider_cls)
-
     spider_kwargs = {
         "start_urls": [url],
         "allowed_domains": [domain],

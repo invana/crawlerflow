@@ -93,35 +93,12 @@ class InvanaBot(object):
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start(self):
-        self.process.start(stop_after_crawl=False)
-        # reactor.run()  # the script will block here until all crawling jobs are finished
+        self.process.start(stop_after_crawl=True)
 
-    # @defer.inlineCallbacks
     def start_jobs(self, jobs=None):
         for job in jobs:
             print("job", job)
-            # yield self.process.crawl(job[0], **job[1])
             self.process.crawl(job[0], **job[1])
-        # reactor.stop()
-
-    # def _crawl_websites(self, urls=None,
-    #                     ignore_urls_with_words=None,
-    #                     allow_only_with_words=None,
-    #                     follow=None,
-    #                     parser_config=None,
-    #                     context=None
-    #                     ):
-    #     jobs = _crawl_websites(urls=urls,
-    #                            ignore_urls_with_words=ignore_urls_with_words,
-    #                            allow_only_with_words=allow_only_with_words,
-    #                            follow=follow,
-    #                            parser_config=parser_config,
-    #                            context=context
-    #                            )
-    #     print("LOLO parser_config later", jobs[0][1]['parser_config']['data_selectors'][0]['child_selectors'],
-    #           jobs[0][1]['parser_config'])
-    #
-    #     self.start_jobs(jobs=jobs)
 
     def process_parser(self, parser_config=None):
         parser_config_cleaned = None
@@ -146,17 +123,6 @@ class InvanaBot(object):
 
         self._validate_urls(urls)
 
-
-        print("LOLO self.settings", self.settings)
-        print("LOLO parser_config", parser_config)
-
-        print(self.process)
-        # self._crawl_websites(urls=urls, ignore_urls_with_words=ignore_urls_with_words,
-        #                      allow_only_with_words=allow_only_with_words,
-        #                      follow=follow,
-        #                      parser_config=parser_config_cleaned,
-        #                      context=context
-        #                      )
         jobs = _crawl_websites(urls=urls,
                                ignore_urls_with_words=ignore_urls_with_words,
                                allow_only_with_words=allow_only_with_words,
@@ -164,7 +130,5 @@ class InvanaBot(object):
                                parser_config=parser_config,
                                context=context
                                )
-        print("LOLO parser_config later", jobs[0][1]['parser_config']['data_selectors'][0]['child_selectors'],
-              jobs[0][1]['parser_config'])
 
         self.start_jobs(jobs=jobs)
