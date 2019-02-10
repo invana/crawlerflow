@@ -36,9 +36,6 @@ def crawl_websites(urls=None,
                                                   follow=follow)
 
         jobs.append([spider_cls, spider_kwargs])
-        # process.crawl(spider_cls,
-        #               **spider_kwargs
-        #               ) # sending crawl jobs into a process.
     return jobs
 
 
@@ -112,31 +109,3 @@ def crawl_feeds(feed_urls=None, settings=None):
                   start_urls=feed_urls,
                   )
     process.start()
-
-#
-# def crawler(config=None,
-#             settings=None):
-#     """
-#     DEPRECATED IN FAVOUR OF merging into InvanaBot
-#     Crawl the site and apply a parser on top of it.
-#     :param config:
-#     :param settings:
-#     :return:
-#     """
-#     if settings is None:
-#         settings = {
-#             'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-#         }
-#     if "USER_AGENT" not in settings.keys():
-#         settings['USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'  # TODO - make this random
-#     validate_config(config=config)
-#     config = process_config(config)
-#     settings['TELNETCONSOLE_PORT'] = None
-#     process = CrawlerProcess(settings)
-#
-#     process.crawl(InvanaWebsiteParserSpider,
-#                   start_urls=[config.get('start_url')],
-#                   name=config.get('crawler_name'),
-#                   parser_config=config
-#                   )
-#     process.start()

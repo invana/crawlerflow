@@ -61,9 +61,8 @@ if __name__ == '__main__':
 
     all_jobs = []
     crawler.start_process()
-    for i in [1, 2]:
+    for i in [3,4]:
         parser_config = crawler.process_parser(parser_config=example_config)
-
         jobs = crawler.crawl_websites(
             urls=[
                 "https://blog.scrapinghub.com",

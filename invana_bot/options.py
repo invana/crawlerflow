@@ -39,10 +39,10 @@ class InvanaBot(object):
                                      storage_database=storage_database
                                      )
         print("self.settings", self.settings)
-        self.is_settings_done = False
+        # self.is_settings_done = False
 
     def start_process(self):
-        self.is_settings_done = False
+        # self.is_settings_done = False
         self.process = CrawlerProcess(self.settings)
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
@@ -76,7 +76,7 @@ class InvanaBot(object):
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
-        self.is_settings_done = True
+        # self.is_settings_done = True
         self.start_process()
 
     def _validate_urls(self, urls):
@@ -86,8 +86,8 @@ class InvanaBot(object):
             raise Exception("urls length should be atleast one.")
 
     def crawl_feeds(self, feed_urls=None):
-        if self.is_settings_done is False:
-            self.setup_crawler_type_settings(crawler_type="feeds")
+        # if self.is_settings_done is False:
+        self.setup_crawler_type_settings(crawler_type="feeds")
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
@@ -121,8 +121,8 @@ class InvanaBot(object):
                        parser_config=None,
                        context=None
                        ):
-        if self.is_settings_done is False:
-            self.setup_crawler_type_settings(crawler_type="websites")
+        # if self.is_settings_done is False:
+        self.setup_crawler_type_settings(crawler_type="websites")
 
         self._validate_urls(urls)
 
@@ -135,5 +135,3 @@ class InvanaBot(object):
                                )
 
         return jobs
-
-        # self.start_jobs(jobs=jobs)

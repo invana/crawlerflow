@@ -64,19 +64,20 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
             next_selector = parser_config.get('next_page_selector').get('selector')
             if next_selector:
                 if parser_config.get('next_page_selector').get('selector_type') == 'css':
-                    next_pages = response.css(next_selector + "::attr(href)").extract()
+                    next_page = response.css(next_selector + "::attr(href)").extract_first()
                 elif parser_config.get('next_page_selector').get('selector_type') == 'xpath':
-                    next_pages = response.xpath(next_selector + "::attr(href)").extract()
+                    next_page = response.xpath(next_selector + "::attr(href)").extract_first()
                 else:
-                    next_pages = []
-                for next_page in next_pages:
-                    self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
+                    next_page = None
+                self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
+
+                if not "://" in next_page:
+                    next_page_url = "https://" + get_domain(response.url) + next_page
+                else:
                     next_page_url = next_page
-                    if not "://" in next_page_url:
-                        next_page_url = "https://" + get_domain(response.url) + next_page_url
-                    print("=====next_page", next_page_url, current_page_count)
-                    yield response.follow(next_page_url, self.parse)
-                    # yield scrapy.Request(next_page_url, callback=self.parse)
+                print("####==next_page_url", next_page_url, current_page_count)
+                yield response.follow(next_page_url, self.parse)
+                # yield scrapy.Request(next_page_url, callback=self.parse)
 
         else:
             print("### ended")
