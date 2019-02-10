@@ -59,7 +59,7 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    for i in [1, 2]:
+    for i in [1]:
         parser_config = crawler.process_parser(parser_config=example_config)
 
         crawler.crawl_websites(
