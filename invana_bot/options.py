@@ -102,10 +102,14 @@ class InvanaBot(object):
 
     def process_parser(self, parser_config=None):
         parser_config_cleaned = None
-        if parser_config is not None:
+        if parser_config:
             is_valid_config = validate_config(config=parser_config)
             if is_valid_config:
-                parser_config_cleaned = process_config(parser_config)
+                if parser_config.get("is_processed") == True:
+                    return parser_config_cleaned
+                else:
+                    parser_config_cleaned = process_config(parser_config)
+                    parser_config_cleaned['is_processed'] = True
             else:
                 raise Exception("invalid parser config")
         return parser_config_cleaned
