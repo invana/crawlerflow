@@ -1,6 +1,7 @@
 from .base import InvanaWebsiteSpiderBase
 from invana_bot.utils.selectors import get_selector_element
 from invana_bot.utils.url import get_urn, get_domain
+import scrapy
 
 
 class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
@@ -21,16 +22,20 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     """
     name = "website_parser_spider"
 
-    def parse(self, response):
+    def print_info(self, response):
         print("response.url=========,", response.url)
         print("parser=========,", self.parser_config)
         print("context=========,", self.context)
+
+    def parse(self, response):
+        self.print_info(response)
         context = self.context
+        parser_config = self.parser_config
         data = {}
         data['url'] = response.url
-        max_pages = self.parser_config.get("next_page_selector", {}).get("max_pages", 1)
-        current_page_count = self.parser_config.get("next_page_selector", {}).get("current_page_count", 1)
-        if current_page_count == 1 and self.parser_config.get("next_page_selector", None):
+        max_pages = parser_config.get("next_page_selector", {}).get("max_pages", 1)
+        current_page_count = parser_config.get("next_page_selector", {}).get("current_page_count", 1)
+        if current_page_count == 1 and parser_config.get("next_page_selector", None):
             self.parser_config["next_page_selector"]['current_page_count'] = 1
         print("current_page_count", current_page_count, max_pages)
         for selector in self.parser_config.get('data_selectors', []):
@@ -53,13 +58,14 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
         if context is not None:
             # context['page_count'] = current_page_count
             data.update({"context": context})
+        print("=======data", data)
         yield data
         if current_page_count < max_pages:
-            next_selector = self.parser_config.get('next_page_selector').get('selector')
+            next_selector = parser_config.get('next_page_selector').get('selector')
             if next_selector:
-                if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
+                if parser_config.get('next_page_selector').get('selector_type') == 'css':
                     next_pages = response.css(next_selector + "::attr(href)").extract()
-                elif self.parser_config.get('next_page_selector').get('selector_type') == 'xpath':
+                elif parser_config.get('next_page_selector').get('selector_type') == 'xpath':
                     next_pages = response.xpath(next_selector + "::attr(href)").extract()
                 else:
                     next_pages = []
@@ -68,8 +74,9 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     next_page_url = next_page
                     if not "://" in next_page_url:
                         next_page_url = "https://" + get_domain(response.url) + next_page_url
-                    print("=====next_page", next_page_url)
-
+                    print("=====next_page", next_page_url, current_page_count)
                     yield response.follow(next_page_url, self.parse)
+                    # yield scrapy.Request(next_page_url, callback=self.parse)
+
         else:
             print("### ended")

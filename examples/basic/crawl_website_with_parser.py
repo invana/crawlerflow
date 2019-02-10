@@ -45,7 +45,7 @@ example_config = {
     "next_page_selector": {
         "selector": ".next-posts-link",
         "selector_type": "css",
-        "max_pages": 3
+        "max_pages": 2
     }
 
 }
@@ -59,16 +59,18 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    for i in [1]:
+    all_jobs = []
+    crawler.start_process()
+    for i in [1, 2]:
         parser_config = crawler.process_parser(parser_config=example_config)
 
-        crawler.crawl_websites(
+        jobs = crawler.crawl_websites(
             urls=[
                 "https://blog.scrapinghub.com",
             ],
             parser_config=parser_config,
             context=client_info,
-            # transformations=[]
-            # allow_only_with_words=['*']
         )
-    crawler.start()
+        all_jobs.extend(jobs)
+    print("Total crawling jobs ", len(all_jobs))
+    crawler.start_jobs(jobs=all_jobs)

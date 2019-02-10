@@ -3,7 +3,6 @@ from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
 from invana_bot.utils.config import validate_config, process_config
 from scrapy.crawler import CrawlerProcess
-from twisted.internet import reactor, defer
 
 
 class InvanaBot(object):
@@ -42,9 +41,9 @@ class InvanaBot(object):
         print("self.settings", self.settings)
         self.is_settings_done = False
 
-    def _init_process(self):
-        if self.process is None:
-            self.process = CrawlerProcess(self.settings)
+    def start_process(self):
+        self.is_settings_done = False
+        self.process = CrawlerProcess(self.settings)
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
@@ -77,8 +76,8 @@ class InvanaBot(object):
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
-        self._init_process()
         self.is_settings_done = True
+        self.start_process()
 
     def _validate_urls(self, urls):
         if type(urls) is None:
@@ -92,13 +91,12 @@ class InvanaBot(object):
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
-    def start(self):
-        self.process.start(stop_after_crawl=True)
-
-    def start_jobs(self, jobs=None):
+    def start_jobs(self, jobs=None, stop_after_crawl=True):
+        print("start_jobs", len(jobs))
         for job in jobs:
-            print("job", job)
+            print("**job", job[0], job[1])
             self.process.crawl(job[0], **job[1])
+        self.process.start(stop_after_crawl=stop_after_crawl)
 
     def process_parser(self, parser_config=None):
         parser_config_cleaned = None
@@ -136,4 +134,6 @@ class InvanaBot(object):
                                context=context
                                )
 
-        self.start_jobs(jobs=jobs)
+        return jobs
+
+        # self.start_jobs(jobs=jobs)
