@@ -45,7 +45,7 @@ example_config = {
     "next_page_selector": {
         "selector": ".next-posts-link",
         "selector_type": "css",
-        "max_pages": 2
+        "max_pages": 3
     }
 
 }

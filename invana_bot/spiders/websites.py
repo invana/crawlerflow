@@ -47,6 +47,7 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
         if context is not None:
+            context['page_count'] = current_page_count
             data.update({"context": context})
         yield data
         print("current_page_count", current_page_count, max_pages)
