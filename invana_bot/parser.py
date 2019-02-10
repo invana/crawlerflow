@@ -16,7 +16,8 @@ def crawl_websites(urls=None,
                    allow_only_with_words=None,
                    parser_config=None,
                    context=None,
-                   follow=True):
+                   follow=True,
+                   stop_after_crawl=True):
     """
     crawl multiple sites
 
@@ -34,7 +35,8 @@ def crawl_websites(urls=None,
                       allow_only_with_words=allow_only_with_words,
                       parser_config=parser_config,
                       context=context,
-                      follow=follow)
+                      follow=follow,
+                      stop_after_crawl=stop_after_crawl)
 
 
 def crawl_website(url=None,
