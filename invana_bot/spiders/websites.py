@@ -1,5 +1,6 @@
 from .base import InvanaWebsiteSpiderBase
 from invana_bot.utils.selectors import get_selector_element
+from invana_bot.utils.url import get_urn, get_domain
 
 
 class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
@@ -23,13 +24,16 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     def parse(self, response):
         print("response.url=========,", response.url)
         print("parser=========,", self.parser_config)
-        print("context", self.context)
+        print("context=========,", self.context)
         context = self.context
         data = {}
         data['url'] = response.url
         max_pages = self.parser_config.get("next_page_selector", {}).get("max_pages", 1)
         current_page_count = self.parser_config.get("next_page_selector", {}).get("current_page_count", 1)
-        for selector in self.parser_config.get('data_selectors',[]):
+        if current_page_count == 1 and self.parser_config.get("next_page_selector", None):
+            self.parser_config["next_page_selector"]['current_page_count'] = 1
+        print("current_page_count", current_page_count, max_pages)
+        for selector in self.parser_config.get('data_selectors', []):
             if selector.get('selector_attribute') == 'element' and len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = response.css(selector.get('selector'))
@@ -47,21 +51,25 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
         if context is not None:
-            context['page_count'] = current_page_count
+            # context['page_count'] = current_page_count
             data.update({"context": context})
         yield data
-        print("current_page_count", current_page_count, max_pages)
         if current_page_count < max_pages:
             next_selector = self.parser_config.get('next_page_selector').get('selector')
             if next_selector:
                 if self.parser_config.get('next_page_selector').get('selector_type') == 'css':
-                    next_pages = response.css(next_selector)
+                    next_pages = response.css(next_selector + "::attr(href)").extract()
                 elif self.parser_config.get('next_page_selector').get('selector_type') == 'xpath':
-                    next_pages = response.xpath(next_selector)
+                    next_pages = response.xpath(next_selector + "::attr(href)").extract()
                 else:
                     next_pages = []
                 for next_page in next_pages:
                     self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
-                    yield response.follow(next_page, self.parse)
+                    next_page_url = next_page
+                    if not "://" in next_page_url:
+                        next_page_url = "https://" + get_domain(response.url) + next_page_url
+                    print("=====next_page", next_page_url)
+
+                    yield response.follow(next_page_url, self.parse)
         else:
             print("### ended")

@@ -6,3 +6,4 @@ dist/
 .tox/
 .pytest_cache/
 .coverage
+./examples/basic/crawl_test.py
