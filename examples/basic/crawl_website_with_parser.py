@@ -58,16 +58,16 @@ if __name__ == '__main__':
         cache_database="mongodb",
         storage_database="mongodb",
     )
-    # for i in [1,2,4,5,6,7,8,8,9,00,00]:
-    for i in [1,2]:
+
+    parser_config = crawler.process_parser(parser_config=example_config)
+    for i in [1, 2]:
         crawler.crawl_websites(
             urls=[
                 "https://blog.scrapinghub.com",
             ],
-            parser_config=example_config,
+            parser_config=parser_config,
             context=client_info,
             # transformations=[]
             # allow_only_with_words=['*']
         )
-        print("crawler.process", crawler.process)
     crawler.start()

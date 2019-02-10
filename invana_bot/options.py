@@ -18,6 +18,7 @@ class InvanaBot(object):
 
     }
     process = None
+
     def __init__(self,
                  cache_database=None,
                  storage_database=None,
@@ -99,8 +100,38 @@ class InvanaBot(object):
     def start_jobs(self, jobs=None):
         for job in jobs:
             print("job", job)
+            # yield self.process.crawl(job[0], **job[1])
             self.process.crawl(job[0], **job[1])
         # reactor.stop()
+
+    # def _crawl_websites(self, urls=None,
+    #                     ignore_urls_with_words=None,
+    #                     allow_only_with_words=None,
+    #                     follow=None,
+    #                     parser_config=None,
+    #                     context=None
+    #                     ):
+    #     jobs = _crawl_websites(urls=urls,
+    #                            ignore_urls_with_words=ignore_urls_with_words,
+    #                            allow_only_with_words=allow_only_with_words,
+    #                            follow=follow,
+    #                            parser_config=parser_config,
+    #                            context=context
+    #                            )
+    #     print("LOLO parser_config later", jobs[0][1]['parser_config']['data_selectors'][0]['child_selectors'],
+    #           jobs[0][1]['parser_config'])
+    #
+    #     self.start_jobs(jobs=jobs)
+
+    def process_parser(self, parser_config=None):
+        parser_config_cleaned = None
+        if parser_config is not None:
+            is_valid_config = validate_config(config=parser_config)
+            if is_valid_config:
+                parser_config_cleaned = process_config(parser_config)
+            else:
+                raise Exception("invalid parser config")
+        return parser_config_cleaned
 
     def crawl_websites(self,
                        urls=None,
@@ -112,16 +143,20 @@ class InvanaBot(object):
                        ):
         if self.is_settings_done is False:
             self.setup_crawler_type_settings(crawler_type="websites")
-            print("LOLO self.settings", self.settings)
 
         self._validate_urls(urls)
-        if parser_config is not None:
-            is_valid_config = validate_config(config=parser_config)
-            if is_valid_config:
-                parser_config = process_config(parser_config)
-            else:
-                raise Exception("invalid parser config")
+
+
+        print("LOLO self.settings", self.settings)
+        print("LOLO parser_config", parser_config)
+
         print(self.process)
+        # self._crawl_websites(urls=urls, ignore_urls_with_words=ignore_urls_with_words,
+        #                      allow_only_with_words=allow_only_with_words,
+        #                      follow=follow,
+        #                      parser_config=parser_config_cleaned,
+        #                      context=context
+        #                      )
         jobs = _crawl_websites(urls=urls,
                                ignore_urls_with_words=ignore_urls_with_words,
                                allow_only_with_words=allow_only_with_words,
@@ -129,4 +164,7 @@ class InvanaBot(object):
                                parser_config=parser_config,
                                context=context
                                )
+        print("LOLO parser_config later", jobs[0][1]['parser_config']['data_selectors'][0]['child_selectors'],
+              jobs[0][1]['parser_config'])
+
         self.start_jobs(jobs=jobs)

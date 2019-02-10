@@ -43,9 +43,9 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     datum['item_no'] = item_no
                     elements_data.append(datum)
                 data[selector.get('id')] = elements_data
-            # else:
-            #     _d = get_selector_element(response, selector)
-            #     data[selector.get('id')] = _d.strip() if _d else None
+            else:
+                _d = get_selector_element(response, selector)
+                data[selector.get('id')] = _d.strip() if _d else None
         if context is not None:
             data.update({"context": context})
         yield data

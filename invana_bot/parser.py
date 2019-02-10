@@ -23,9 +23,9 @@ def crawl_websites(urls=None,
     :param urls:
     :param ignore_urls_with_words:
     :param follow:
+    :param parser_config:
     :return:
     """
-    # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
     jobs = []
     for url in urls:
         spider_cls, spider_kwargs = crawl_website(url=url,
