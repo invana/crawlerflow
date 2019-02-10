@@ -106,6 +106,7 @@ class InvanaBot(object):
             is_valid_config = validate_config(config=parser_config)
             if is_valid_config:
                 if parser_config.get("is_processed") == True:
+                    parser_config_cleaned = parser_config
                     return parser_config_cleaned
                 else:
                     parser_config_cleaned = process_config(parser_config)
