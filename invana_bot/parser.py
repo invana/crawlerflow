@@ -15,7 +15,7 @@ def crawl_websites(urls=None,
                    ignore_urls_with_words=None,
                    allow_only_with_words=None,
                    parser_config=None,
-                   client_info=None,
+                   context=None,
                    follow=True):
     """
     crawl multiple sites
@@ -33,7 +33,7 @@ def crawl_websites(urls=None,
                       ignore_urls_with_words=ignore_urls_with_words,
                       allow_only_with_words=allow_only_with_words,
                       parser_config=parser_config,
-                      client_info=client_info,
+                      context=context,
                       follow=follow)
 
 
@@ -43,7 +43,7 @@ def crawl_website(url=None,
                   allow_only_with_words=None,
                   parser_config=None,
                   follow=True,
-                  client_info=None,
+                  context=None,
                   stop_after_crawl=True):
     """
     Crawl a single site
@@ -54,6 +54,7 @@ def crawl_website(url=None,
     :param allow_only_with_words:
     :param follow:
     :param parser_config:
+    :param context:
     :param stop_after_crawl:
     :return:
     """
@@ -82,12 +83,13 @@ def crawl_website(url=None,
     else:
         spider_cls = InvanaWebsiteSpider
     print("parser config", parser_config)
+    print("spider_cls", spider_cls)
     process.crawl(spider_cls,
                   start_urls=[url],
                   allowed_domains=[domain],
                   rules=rules,
                   parser_config=parser_config,
-                  client_info=client_info
+                  context=context
                   )
     process.start(stop_after_crawl=stop_after_crawl)
 

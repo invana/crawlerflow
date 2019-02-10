@@ -60,7 +60,7 @@ if __name__ == '__main__':
     )
     crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
                            parser_config=example_config,
-                           client_info=client_info,
+                           context=client_info,
                            # transformations=[]
                            # allow_only_with_words=['*']
                            )

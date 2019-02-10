@@ -17,5 +17,5 @@ if __name__ == '__main__':
     crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
                            # ignore_urls_with_words=['@'],
                            # allow_only_with_words=['/invanalabs'],
-                           client_info=client_info
+                           context=client_info
                            )
