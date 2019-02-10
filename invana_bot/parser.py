@@ -28,15 +28,21 @@ def crawl_websites(urls=None,
     :return:
     """
     # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
+    process = CrawlerProcess(settings)
+
     for url in urls:
-        crawl_website(url=url,
-                      settings=settings,
-                      ignore_urls_with_words=ignore_urls_with_words,
-                      allow_only_with_words=allow_only_with_words,
-                      parser_config=parser_config,
-                      context=context,
-                      follow=follow,
-                      stop_after_crawl=stop_after_crawl)
+        spider_cls, spider_kwargs = crawl_website(url=url,
+                                                  settings=settings,
+                                                  ignore_urls_with_words=ignore_urls_with_words,
+                                                  allow_only_with_words=allow_only_with_words,
+                                                  parser_config=parser_config,
+                                                  context=context,
+                                                  follow=follow)
+
+        process.crawl(spider_cls,
+                      **spider_kwargs
+                      )
+    process.start(stop_after_crawl=stop_after_crawl)
 
 
 def crawl_website(url=None,
@@ -45,8 +51,7 @@ def crawl_website(url=None,
                   allow_only_with_words=None,
                   parser_config=None,
                   follow=True,
-                  context=None,
-                  stop_after_crawl=True):
+                  context=None):
     """
     Crawl a single site
 
@@ -77,7 +82,6 @@ def crawl_website(url=None,
         # Rule(extractor, callback='parse_item', follow=follow)
         Rule(extractor, follow=follow)
     ]
-    process = CrawlerProcess(settings)
     domain = url.split("://")[1].split("/")[0]  # TODO - clean this
 
     if parser_config:
@@ -86,14 +90,16 @@ def crawl_website(url=None,
         spider_cls = InvanaWebsiteSpider
     print("parser config", parser_config)
     print("spider_cls", spider_cls)
-    process.crawl(spider_cls,
-                  start_urls=[url],
-                  allowed_domains=[domain],
-                  rules=rules,
-                  parser_config=parser_config,
-                  context=context
-                  )
-    process.start(stop_after_crawl=stop_after_crawl)
+
+    spider_kwargs = {
+        "start_urls": [url],
+        "allowed_domains": [domain],
+        "rules": rules,
+        "parser_config": parser_config,
+        "context": context
+    }
+
+    return spider_cls, spider_kwargs
 
 
 def crawl_feeds(feed_urls=None, settings=None):
