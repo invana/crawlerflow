@@ -39,6 +39,7 @@ class MongoDBCacheStorage(object):
     """
 
     def __init__(self, settings):
+        print ("settings", settings.__dict__)
         self.database_uri = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "DATABASE_URI", None)
         self.database_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(

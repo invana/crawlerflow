@@ -11,42 +11,38 @@ import re
 
 
 def crawl_websites(urls=None,
-                   settings=None,
                    ignore_urls_with_words=None,
                    allow_only_with_words=None,
                    parser_config=None,
                    context=None,
                    follow=True,
-                   stop_after_crawl=True):
+                   ):
     """
     crawl multiple sites
 
     :param urls:
-    :param settings:
     :param ignore_urls_with_words:
     :param follow:
     :return:
     """
     # TODO - usage of stop_after_crawl=False will leave the process at the end, need to fix this
-    process = CrawlerProcess(settings)
-
+    jobs = []
     for url in urls:
         spider_cls, spider_kwargs = crawl_website(url=url,
-                                                  settings=settings,
                                                   ignore_urls_with_words=ignore_urls_with_words,
                                                   allow_only_with_words=allow_only_with_words,
                                                   parser_config=parser_config,
                                                   context=context,
                                                   follow=follow)
 
-        process.crawl(spider_cls,
-                      **spider_kwargs
-                      )
-    process.start(stop_after_crawl=stop_after_crawl)
+        jobs.append([spider_cls, spider_kwargs])
+        # process.crawl(spider_cls,
+        #               **spider_kwargs
+        #               ) # sending crawl jobs into a process.
+    return jobs
 
 
 def crawl_website(url=None,
-                  settings=None,
                   ignore_urls_with_words=None,
                   allow_only_with_words=None,
                   parser_config=None,
@@ -56,16 +52,13 @@ def crawl_website(url=None,
     Crawl a single site
 
     :param url:
-    :param settings:
     :param ignore_urls_with_words:
     :param allow_only_with_words:
     :param follow:
     :param parser_config:
     :param context:
-    :param stop_after_crawl:
     :return:
     """
-    settings['TELNETCONSOLE_PORT'] = None
 
     ignore_urls_with_words = [] if ignore_urls_with_words is None else ignore_urls_with_words
     allow_only_with_words = [] if allow_only_with_words is None else allow_only_with_words
@@ -88,7 +81,7 @@ def crawl_website(url=None,
         spider_cls = InvanaWebsiteParserSpider
     else:
         spider_cls = InvanaWebsiteSpider
-    print("parser config", parser_config)
+    print("parser_config", parser_config)
     print("spider_cls", spider_cls)
 
     spider_kwargs = {

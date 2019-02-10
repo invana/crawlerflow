@@ -2,6 +2,8 @@ from invana_bot.parser import crawl_websites as _crawl_websites, crawl_feeds as 
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
 from invana_bot.utils.config import validate_config, process_config
+from scrapy.crawler import CrawlerProcess
+from twisted.internet import reactor, defer
 
 
 class InvanaBot(object):
@@ -12,8 +14,10 @@ class InvanaBot(object):
     settings = {
         'COMPRESSION_ENABLED': False,  # this will save the data in normal text form, otherwise to bytes form.
         'HTTPCACHE_ENABLED': True,
-    }
+        'TELNETCONSOLE_PORT': None
 
+    }
+    process = None
     def __init__(self,
                  cache_database=None,
                  storage_database=None,
@@ -34,6 +38,12 @@ class InvanaBot(object):
         self.setup_database_settings(cache_database=cache_database,
                                      storage_database=storage_database
                                      )
+        print("self.settings", self.settings)
+        self.is_settings_done = False
+
+    def _init_process(self):
+        if self.process is None:
+            self.process = CrawlerProcess(self.settings)
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
@@ -66,6 +76,9 @@ class InvanaBot(object):
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
+        self._init_process()
+        self.is_settings_done = True
+
     def _validate_urls(self, urls):
         if type(urls) is None:
             raise Exception("urls should be list type.")
@@ -73,9 +86,21 @@ class InvanaBot(object):
             raise Exception("urls length should be atleast one.")
 
     def crawl_feeds(self, feed_urls=None):
-        self.setup_crawler_type_settings(crawler_type="feeds")
+        if self.is_settings_done is False:
+            self.setup_crawler_type_settings(crawler_type="feeds")
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
+
+    def start(self):
+        self.process.start(stop_after_crawl=False)
+        # reactor.run()  # the script will block here until all crawling jobs are finished
+
+    # @defer.inlineCallbacks
+    def start_jobs(self, jobs=None):
+        for job in jobs:
+            print("job", job)
+            self.process.crawl(job[0], **job[1])
+        # reactor.stop()
 
     def crawl_websites(self,
                        urls=None,
@@ -83,21 +108,25 @@ class InvanaBot(object):
                        allow_only_with_words=None,
                        follow=True,
                        parser_config=None,
-                       context=None,
-                       stop_after_crawl=True
+                       context=None
                        ):
-        self.setup_crawler_type_settings(crawler_type="websites")
+        if self.is_settings_done is False:
+            self.setup_crawler_type_settings(crawler_type="websites")
+            print("LOLO self.settings", self.settings)
+
         self._validate_urls(urls)
         if parser_config is not None:
-            validate_config(config=parser_config)
-            parser_config = process_config(parser_config)
-
-        _crawl_websites(urls=urls,
-                        settings=self.settings,
-                        ignore_urls_with_words=ignore_urls_with_words,
-                        allow_only_with_words=allow_only_with_words,
-                        follow=follow,
-                        parser_config=parser_config,
-                        context=context,
-                        stop_after_crawl=stop_after_crawl
-                        )
+            is_valid_config = validate_config(config=parser_config)
+            if is_valid_config:
+                parser_config = process_config(parser_config)
+            else:
+                raise Exception("invalid parser config")
+        print(self.process)
+        jobs = _crawl_websites(urls=urls,
+                               ignore_urls_with_words=ignore_urls_with_words,
+                               allow_only_with_words=allow_only_with_words,
+                               follow=follow,
+                               parser_config=parser_config,
+                               context=context
+                               )
+        self.start_jobs(jobs=jobs)

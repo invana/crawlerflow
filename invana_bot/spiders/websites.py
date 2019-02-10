@@ -21,16 +21,16 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     name = "website_parser_spider"
 
     def parse(self, response):
-        print("Parser=========,", response.url)
+        print("response.url=========,", response.url)
+        print("parser=========,", self.parser_config)
+        print("context", self.context)
+        context = self.context
         data = {}
         data['url'] = response.url
         max_pages = self.parser_config.get("next_page_selector", {}).get("max_pages", 1)
         current_page_count = self.parser_config.get("next_page_selector", {}).get("current_page_count", 1)
-        context = self.context
-        print("context", context)
-        for selector in self.parser_config['data_selectors']:
-            if selector.get('selector_attribute') == 'element' and \
-                    len(selector.get('child_selectors', [])) > 0:
+        for selector in self.parser_config.get('data_selectors',[]):
+            if selector.get('selector_attribute') == 'element' and len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = response.css(selector.get('selector'))
                 elements_data = []
@@ -43,9 +43,9 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     datum['item_no'] = item_no
                     elements_data.append(datum)
                 data[selector.get('id')] = elements_data
-            else:
-                _d = get_selector_element(response, selector)
-                data[selector.get('id')] = _d.strip() if _d else None
+            # else:
+            #     _d = get_selector_element(response, selector)
+            #     data[selector.get('id')] = _d.strip() if _d else None
         if context is not None:
             data.update({"context": context})
         yield data

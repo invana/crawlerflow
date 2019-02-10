@@ -2,15 +2,16 @@ from invana_bot.exceptions import NotImplemented, InvalidCrawlerConfig
 
 
 def validate_config(config=None):
-    required_keys = ['crawler_name', 'domain', 'subdomain', 'start_url', 'data_selectors']
+    required_keys = [ 'start_url', 'data_selectors']
     for key_ in required_keys:
         if key_ not in config.keys():
-            InvalidCrawlerConfig("Invalid configuration: Required Key {0} not found in the configuration".format(key_))
+            raise InvalidCrawlerConfig("Invalid configuration: Required Key {0} not found in the configuration".format(key_))
     # TODO - validate all the data_selectors data aswell
     return True
 
 
 def process_config(config=None):
+    print ("process_config", config)
     processed_config_dict = {}
     parent_selectors = []
     new_config_selectors = []
