@@ -41,6 +41,7 @@ class InvanaBot(object):
         self.setup_database_settings(cache_database=cache_database,
                                      storage_database=storage_database
                                      )
+        print("self.settings", self.settings)
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
