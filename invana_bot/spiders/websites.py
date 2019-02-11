@@ -21,13 +21,11 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     This is generic spider
     """
     name = "website_parser_spider"
-    new_page_number = 1
 
     def print_info(self, response):
         print("response.url=========,", response.url)
-        print("parser=========,", self.parser_config)
-        print("context=========,", self.context)
-        # print("new_page_number=========,", self.new_page_number)
+        # print("parser=========,", self.parser_config)
+        # print("context=========,", self.context)
 
     def closed(self, reason):
         print("spider closed with payload:", reason, self.parser_config)
@@ -61,9 +59,8 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                 _d = get_selector_element(response, selector)
                 data[selector.get('id')] = _d.strip() if _d else None
         if context is not None:
-            # context['page_count'] = current_page_count
             data.update({"context": context})
-        print("=======data", data)
+        # print("=======data", data)
         yield data
         if current_page_count < max_pages:
             next_selector = parser_config.get('next_page_selector').get('selector')
@@ -74,16 +71,14 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     next_page = response.xpath(next_selector + "::attr(href)").extract_first()
                 else:
                     next_page = None
-                new_page_number = current_page_count + 1
-                # new_page_number = +  1
-                self.parser_config["next_page_selector"]["current_page_count"] = new_page_number
+                self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
 
                 if next_page:
                     if not "://" in next_page:
                         next_page_url = "https://" + get_domain(response.url) + next_page
                     else:
                         next_page_url = next_page
-                    print("####==next_page_url", next_page_url, "current_page_count", current_page_count, max_pages)
+                    # print("####==next_page_url", next_page_url, "current_page_count", current_page_count, max_pages)
                     yield scrapy.Request(next_page_url, callback=self.parse, meta={"parser_config": self.parser_config,
                                                                                    "context": self.context})
 

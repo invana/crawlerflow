@@ -41,8 +41,6 @@ class InvanaBot(object):
         self.setup_database_settings(cache_database=cache_database,
                                      storage_database=storage_database
                                      )
-        print("self.settings", self.settings)
-        # self.is_settings_done = False
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
@@ -75,7 +73,6 @@ class InvanaBot(object):
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
-
     def _validate_urls(self, urls):
         if type(urls) is None:
             raise Exception("urls should be list type.")
@@ -83,13 +80,12 @@ class InvanaBot(object):
             raise Exception("urls length should be atleast one.")
 
     def crawl_feeds(self, feed_urls=None):
-        # if self.is_settings_done is False:
         self.setup_crawler_type_settings(crawler_type="feeds")
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start_jobs(self, jobs=None):
-        runner = CrawlerRunner()
+        runner = CrawlerRunner(self.settings)
         for job in jobs:
             spider_cls = job[0]
             spider_kwargs = job[1]
