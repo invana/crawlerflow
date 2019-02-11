@@ -2,10 +2,11 @@ from invana_bot.parser import crawl_websites as _crawl_websites, crawl_feeds as 
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
 from invana_bot.utils.config import validate_config, process_config
-from scrapy.crawler import CrawlerProcess
 from scrapy.crawler import CrawlerRunner
-from threading import Thread
 from twisted.internet import reactor
+# from scrapy.utils.log import configure_logging
+
+# configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 
 
 class InvanaBot(object):
@@ -27,7 +28,7 @@ class InvanaBot(object):
                  cache_database_uri=None,
                  storage_database_uri=None,
                  http_cache_enabled=True,
-                 log_level="INFO",
+                 log_level="DEBUG",
                  extra_settings=None,
                  **kwargs):
 
@@ -53,12 +54,14 @@ class InvanaBot(object):
             raise Exception("we only support {} as storage_database ".format(",".join(SUPPORTED_DATABASES)))
 
         if cache_database == "mongodb":
-            self.settings['HTTPCACHE_STORAGE'] = MONGODB_DEFAULTS['HTTPCACHE_STORAGE']
+            if self.settings['HTTPCACHE_ENABLED']:
+                self.settings['HTTPCACHE_STORAGE'] = MONGODB_DEFAULTS['HTTPCACHE_STORAGE']
         if storage_database == "mongodb":
             self.settings['ITEM_PIPELINES'] = MONGODB_DEFAULTS['ITEM_PIPELINES']
 
         if cache_database == "elasticsearch":
-            self.settings['HTTPCACHE_STORAGE'] = ELASTICSEARCH_DEFAULTS['HTTPCACHE_STORAGE']
+            if self.settings['HTTPCACHE_ENABLED']:
+                self.settings['HTTPCACHE_STORAGE'] = ELASTICSEARCH_DEFAULTS['HTTPCACHE_STORAGE']
         if storage_database == "elasticsearch":
             self.settings['ITEM_PIPELINES'] = ELASTICSEARCH_DEFAULTS['ITEM_PIPELINES']
 
@@ -68,8 +71,10 @@ class InvanaBot(object):
         elif crawler_type == "feeds":
             self.settings.update(FEEDS_CRAWLER_DEFAULTS)
 
-        if self.cache_database_uri:
-            self.settings['INVANA_BOT_SETTINGS']['HTTPCACHE_STORAGE_SETTINGS']['DATABASE_URI'] = self.cache_database_uri
+        if self.settings['HTTPCACHE_ENABLED']:
+            if self.cache_database_uri:
+                self.settings['INVANA_BOT_SETTINGS']['HTTPCACHE_STORAGE_SETTINGS'][
+                    'DATABASE_URI'] = self.cache_database_uri
 
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
@@ -86,7 +91,8 @@ class InvanaBot(object):
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start_jobs(self, jobs=None):
-        runner = CrawlerRunner()
+        runner = CrawlerRunner(self.settings)
+        # runner = CrawlerRunner()
         for job in jobs:
             spider_cls = job[0]
             spider_kwargs = job[1]

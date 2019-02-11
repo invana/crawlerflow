@@ -57,12 +57,14 @@ if __name__ == '__main__':
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
         storage_database="mongodb",
+        http_cache_enabled= False,
     )
 
     all_jobs = []
 
     for url in [
         "https://blog.scrapinghub.com",
+        "https://blog.scrapinghub.com/page/3",
         "https://blog.scrapinghub.com/page/5"
     ]:
         parser_config = crawler.process_parser(parser_config=example_config)
@@ -74,7 +76,4 @@ if __name__ == '__main__':
             context=client_info,
         )
         all_jobs.extend(jobs)
-        # print("Total crawling jobs ", len(all_jobs))
-        # crawler.start_jobs(jobs=jobs)
     crawler.start_jobs(jobs=all_jobs)
-    # crawler.process.stop()
