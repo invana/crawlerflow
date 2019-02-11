@@ -7,7 +7,9 @@ from invana_bot.spiders.websites import InvanaWebsiteSpider, InvanaWebsiteParser
 from invana_bot.spiders.feeds import RSSSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
+from invana_bot.pipelines.default import DefaultInvanaPipeline
 import re
+from invana_bot.utils.config import validate_config, process_config
 
 
 def crawl_websites(urls=None,
@@ -56,7 +58,6 @@ def crawl_website(url=None,
     :param context:
     :return:
     """
-
     ignore_urls_with_words = [] if ignore_urls_with_words is None else ignore_urls_with_words
     allow_only_with_words = [] if allow_only_with_words is None else allow_only_with_words
     extractor_options = {}

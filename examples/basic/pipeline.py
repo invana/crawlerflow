@@ -1,15 +1,6 @@
 from invana_bot import InvanaBot
 
-client_info = {
-    "domain": "scrapinghub.com",
-    "subdomain": "blog.scrapinghub.com",
-    "client_id": "invana",
-    "crawler_pipeline_id": "11223",
-    "crawler_name": "scrapinghub-1",
-
-}
-example_config = {
-    "start_url": "https://blog.scrapinghub.com",
+extractor = {
     "data_selectors": [
         {
             "id": "items",
@@ -42,38 +33,45 @@ example_config = {
             "multiple": False
         }
     ],
-    "next_page_selector": {
-        "selector": ".next-posts-link",
-        "selector_type": "css",
-        "max_pages": 2
-    }
+}
+traversal = {
+    "selector": ".next-posts-link",
+    "selector_type": "css",
+    "max_pages": 2
 
 }
+pipeline_data = {
+    "pipeline_id": "search_pipeline",
+    "pipeline": [
+        {  # single pipe
+            "pipe_id": "search-engine",
+            "start_urls": ["https://blog.scrapinghub.com"],
+            "data_extractors": [
+                # {"default": "Invana::SearchEngineExtractor"},  # invana is namespace or the developer username
+                extractor,  # invana is namespace or the developer username
+            ],  # this will be converted into data_selectors when used by API.
+            "traversals": [{
+                "traversal_type": "pagination",
+                "pagination": traversal,
+                "next_pipe_id": "blog-list"
+            }]
+        }
+    ],
+    "context": {
+        "client_id": "abc",
+        "job_id": "123"
+    }
+}
 
-print("example_config", example_config)
 if __name__ == '__main__':
     crawler = InvanaBot(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
         storage_database="mongodb",
-        http_cache_enabled= False,
     )
 
-    all_jobs = []
-    parser_config = crawler.process_parser(parser_config=example_config)
-
-    for url in [
-        "https://blog.scrapinghub.com",
-        "https://blog.scrapinghub.com/page/3",
-        "https://blog.scrapinghub.com/page/5"
-    ]:
-        jobs = crawler.crawl_websites(
-            urls=[
-                url,
-            ],
-            parser_config=parser_config,
-            context=client_info,
-        )
-        all_jobs.extend(jobs)
+    all_jobs = crawler.crawl_pipeline(
+        pipeline_data=pipeline_data
+    )
     crawler.start_jobs(jobs=all_jobs)

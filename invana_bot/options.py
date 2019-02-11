@@ -2,6 +2,7 @@ from invana_bot.parser import crawl_websites as _crawl_websites, crawl_feeds as 
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
 from invana_bot.utils.config import validate_config, process_config
+from invana_bot.pipelines.default import DefaultInvanaPipeline, DefaultInvanaPipeSpider
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
 import uuid
@@ -109,20 +110,33 @@ class InvanaBot(object):
         d.addBoth(lambda _: reactor.stop())
         reactor.run()  # the script will block here until all crawling jobs are finished
 
-    def process_parser(self, parser_config=None):
-        parser_config_cleaned = None
-        if parser_config:
-            is_valid_config = validate_config(config=parser_config)
+    def process_parser(self, extractor=None):
+        extractor_cleaned = None
+        if extractor:
+            is_valid_config = validate_config(config=extractor)
             if is_valid_config:
-                if parser_config.get("is_processed") == True:
-                    parser_config_cleaned = parser_config
-                    return parser_config_cleaned
+                if extractor.get("is_processed") == True:
+                    extractor_cleaned = extractor
+                    return extractor_cleaned
                 else:
-                    parser_config_cleaned = process_config(parser_config)
-                    parser_config_cleaned['is_processed'] = True
+                    extractor_cleaned = process_config(extractor)
+                    extractor_cleaned['is_processed'] = True
             else:
                 raise Exception("invalid parser config")
-        return parser_config_cleaned
+        return extractor_cleaned
+
+    def crawl_pipeline(self, pipeline_data=None):
+        self.setup_crawler_type_settings(crawler_type="websites")
+
+        for pipe in pipeline_data['pipeline']:
+            for extractor in pipe['data_extractors']:
+                extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
+        pipeline = DefaultInvanaPipeline(pipeline_data=pipeline_data)
+        jobs = pipeline.run()
+        return jobs
+
+    def process_parser(self, parser_config=None):
+        return process_config(parser_config)
 
     def crawl_websites(self,
                        urls=None,

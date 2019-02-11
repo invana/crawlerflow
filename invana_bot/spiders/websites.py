@@ -2,6 +2,7 @@ from .base import InvanaWebsiteSpiderBase
 from invana_bot.utils.selectors import get_selector_element
 from invana_bot.utils.url import get_urn, get_domain
 import scrapy
+from invana_bot.utils.config import validate_config, process_config
 
 
 class InvanaWebsiteSpider(InvanaWebsiteSpiderBase):
@@ -74,3 +75,4 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
 
         else:
             print("### ended", response.url, current_page_count, max_pages)
+
