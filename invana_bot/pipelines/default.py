@@ -7,9 +7,9 @@ class DefaultPipelineParser(object):
     def find_pipe(self, pipe_id=None):
         pass
 
-    def get_db(self):
+    def get_database(self):
         # TODO - get the connection details from pipeline
-        # Note - self.db
+        # Note - returns self.db_client that can be used to save the data
         pass
 
     def get_database_details(self):
@@ -26,5 +26,5 @@ class DefaultPipelineParser(object):
         pass
 
     def save(self):
-        # TODO - saves to the self.db
+        # TODO - saves to the self.db_client
         pass
