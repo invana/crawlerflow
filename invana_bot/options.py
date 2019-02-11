@@ -4,6 +4,9 @@ from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
 from invana_bot.utils.config import validate_config, process_config
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
+import uuid
+
+
 # from scrapy.utils.log import configure_logging
 
 # configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
@@ -43,6 +46,9 @@ class InvanaBot(object):
                                      storage_database=storage_database
                                      )
         print("self.settings", self.settings)
+
+    def generate_job_id(self):
+        return uuid.uuid4().hex
 
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
@@ -91,8 +97,8 @@ class InvanaBot(object):
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start_jobs(self, jobs=None):
+
         runner = CrawlerRunner(self.settings)
-        # runner = CrawlerRunner()
         for job in jobs:
             spider_cls = job[0]
             spider_kwargs = job[1]
@@ -124,10 +130,12 @@ class InvanaBot(object):
                        parser_config=None,
                        context=None
                        ):
+
         self.setup_crawler_type_settings(crawler_type="websites")
 
         self._validate_urls(urls)
-
+        if context:
+            context['job_id'] = self.generate_job_id()
         jobs = _crawl_websites(urls=urls,
                                ignore_urls_with_words=ignore_urls_with_words,
                                allow_only_with_words=allow_only_with_words,
