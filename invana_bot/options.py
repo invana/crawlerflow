@@ -3,6 +3,9 @@ from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
 from invana_bot.utils.config import validate_config, process_config
 from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerRunner
+from threading import Thread
+from twisted.internet import reactor
 
 
 class InvanaBot(object):
@@ -41,10 +44,6 @@ class InvanaBot(object):
         print("self.settings", self.settings)
         # self.is_settings_done = False
 
-    def start_process(self):
-        # self.is_settings_done = False
-        self.process = CrawlerProcess(self.settings)
-
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
 
@@ -76,8 +75,6 @@ class InvanaBot(object):
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
-        # self.is_settings_done = True
-        self.start_process()
 
     def _validate_urls(self, urls):
         if type(urls) is None:
@@ -91,12 +88,15 @@ class InvanaBot(object):
         self._validate_urls(feed_urls)
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
-    def start_jobs(self, jobs=None, stop_after_crawl=True):
-        print("start_jobs", len(jobs))
+    def start_jobs(self, jobs=None):
+        runner = CrawlerRunner()
         for job in jobs:
-            print("**job", job[0], job[1])
-            self.process.crawl(job[0], **job[1])
-        self.process.start(stop_after_crawl=stop_after_crawl)
+            spider_cls = job[0]
+            spider_kwargs = job[1]
+            runner.crawl(spider_cls, **spider_kwargs)
+        d = runner.join()
+        d.addBoth(lambda _: reactor.stop())
+        reactor.run()  # the script will block here until all crawling jobs are finished
 
     def process_parser(self, parser_config=None):
         parser_config_cleaned = None
@@ -121,7 +121,6 @@ class InvanaBot(object):
                        parser_config=None,
                        context=None
                        ):
-        # if self.is_settings_done is False:
         self.setup_crawler_type_settings(crawler_type="websites")
 
         self._validate_urls(urls)

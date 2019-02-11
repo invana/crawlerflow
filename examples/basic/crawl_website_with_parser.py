@@ -60,16 +60,18 @@ if __name__ == '__main__':
     )
 
     all_jobs = []
-    crawler.start_process()
-    for i in [3,4]:
+
+    for url in [
+        "https://blog.scrapinghub.com",
+        "https://blog.scrapinghub.com/page/5"
+    ]:
         parser_config = crawler.process_parser(parser_config=example_config)
         jobs = crawler.crawl_websites(
             urls=[
-                "https://blog.scrapinghub.com",
+                url,
             ],
             parser_config=parser_config,
             context=client_info,
         )
         all_jobs.extend(jobs)
-    print("Total crawling jobs ", len(all_jobs))
     crawler.start_jobs(jobs=all_jobs)

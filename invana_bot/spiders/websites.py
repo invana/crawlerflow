@@ -21,11 +21,16 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
     This is generic spider
     """
     name = "website_parser_spider"
+    new_page_number = 1
 
     def print_info(self, response):
         print("response.url=========,", response.url)
         print("parser=========,", self.parser_config)
         print("context=========,", self.context)
+        # print("new_page_number=========,", self.new_page_number)
+
+    def closed(self, reason):
+        print("spider closed with payload:", reason, self.parser_config)
 
     def parse(self, response):
         self.print_info(response)
@@ -69,15 +74,18 @@ class InvanaWebsiteParserSpider(InvanaWebsiteSpiderBase):
                     next_page = response.xpath(next_selector + "::attr(href)").extract_first()
                 else:
                     next_page = None
-                self.parser_config["next_page_selector"]["current_page_count"] = current_page_count + 1
+                new_page_number = current_page_count + 1
+                # new_page_number = +  1
+                self.parser_config["next_page_selector"]["current_page_count"] = new_page_number
 
-                if not "://" in next_page:
-                    next_page_url = "https://" + get_domain(response.url) + next_page
-                else:
-                    next_page_url = next_page
-                print("####==next_page_url", next_page_url, current_page_count)
-                yield response.follow(next_page_url, self.parse)
-                # yield scrapy.Request(next_page_url, callback=self.parse)
+                if next_page:
+                    if not "://" in next_page:
+                        next_page_url = "https://" + get_domain(response.url) + next_page
+                    else:
+                        next_page_url = next_page
+                    print("####==next_page_url", next_page_url, "current_page_count", current_page_count, max_pages)
+                    yield scrapy.Request(next_page_url, callback=self.parse, meta={"parser_config": self.parser_config,
+                                                                                   "context": self.context})
 
         else:
             print("### ended")

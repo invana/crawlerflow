@@ -31,5 +31,5 @@ class MongoDBPipeline(object):
         data = dict(item)
         data['updated'] = datetime.now()
         self.collection.insert(data)
-        print("Post added to MongoDB")
+        print("Item added to MongoDB")
         return item
