@@ -45,6 +45,8 @@ class InvanaBot(object):
         self.setup_database_settings(cache_database=cache_database,
                                      storage_database=storage_database
                                      )
+        self.job_id = self.generate_job_id()
+
         print("self.settings", self.settings)
 
     def generate_job_id(self):
@@ -135,7 +137,7 @@ class InvanaBot(object):
 
         self._validate_urls(urls)
         if context:
-            context['job_id'] = self.generate_job_id()
+            context['job_id'] = self.job_id
         jobs = _crawl_websites(urls=urls,
                                ignore_urls_with_words=ignore_urls_with_words,
                                allow_only_with_words=allow_only_with_words,
