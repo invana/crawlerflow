@@ -74,4 +74,7 @@ if __name__ == '__main__':
             context=client_info,
         )
         all_jobs.extend(jobs)
+        # print("Total crawling jobs ", len(all_jobs))
+        # crawler.start_jobs(jobs=jobs)
     crawler.start_jobs(jobs=all_jobs)
+    # crawler.process.stop()

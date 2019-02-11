@@ -85,7 +85,7 @@ class InvanaBot(object):
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start_jobs(self, jobs=None):
-        runner = CrawlerRunner(self.settings)
+        runner = CrawlerRunner()
         for job in jobs:
             spider_cls = job[0]
             spider_kwargs = job[1]
