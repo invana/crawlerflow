@@ -1,0 +1,2 @@
+class ExtractorBase(object):
+    pass
