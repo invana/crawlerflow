@@ -10,7 +10,7 @@ common_settings = {
 }
 
 pipeline_settings = {
-    'ITEM_PIPELINES': {'invana_bot.pipelines.mongodb.MongoDBPipeline': 1},
+    'ITEM_PIPELINES': {'invana_bot.storages.mongodb.MongoDBPipeline': 1},
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.mongodb.MongoDBCacheStorage",
 }
 

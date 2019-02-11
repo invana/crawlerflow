@@ -12,7 +12,7 @@ common_settings = {
 }
 
 pipeline_settings = {
-    'ITEM_PIPELINES': {'invana_bot.pipelines.elasticsearch.ElasticSearchPipeline': 1},
+    'ITEM_PIPELINES': {'invana_bot.storages.elasticsearch.ElasticSearchPipeline': 1},
     'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
 }
 

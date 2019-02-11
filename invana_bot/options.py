@@ -6,10 +6,7 @@ from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
 import uuid
 
-
-# from scrapy.utils.log import configure_logging
-
-# configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+from scrapy.utils.log import configure_logging
 
 
 class InvanaBot(object):
@@ -46,8 +43,11 @@ class InvanaBot(object):
                                      storage_database=storage_database
                                      )
         self.job_id = self.generate_job_id()
-
+        self.set_logger()
         print("self.settings", self.settings)
+
+    def set_logger(self):
+        configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 
     def generate_job_id(self):
         return uuid.uuid4().hex
