@@ -1,10 +1,10 @@
-from invana_bot.spiders.default import DefaultInvanaPipeSpider
+from invana_bot.spiders.default import DefaultPipeletSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_config, process_config
 
 
-class InvanaCrawlerPipe(object):
+class WebCrawlerPipelet(object):
     """
 
     pipe_data = {  # single pipe
@@ -96,18 +96,8 @@ class InvanaCrawlerPipe(object):
     def get_traversals(self):
         return self.pipe.get("traversals", [])
 
-    def get_pipeline(self):
-        return self.pipeline
-
     def get_extractors(self):
         return self.pipe.get("data_extractors", [])
-
-    def get_pipe(self, pipe_id=None):
-        pipeline = self.get_pipeline()
-        for pipe in pipeline:
-            if pipe.get("pipe_id") == pipe_id:
-                return pipe
-        return
 
     def generate_pipe_kwargs(self):
         print("pipe_application")
@@ -133,7 +123,12 @@ class InvanaCrawlerPipe(object):
         return spider_kwargs
 
 
-class DefaultInvanaPipeline(object):
+class WebCrawlerPipeline(object):
+    """
+
+
+
+    """
 
     def __init__(self, pipeline=None, job_id=None):
         self.pipeline = pipeline
@@ -148,12 +143,22 @@ class DefaultInvanaPipeline(object):
             for extractor in pipe.get('data_extractors', []):
                 extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
 
+    def get_pipelet(self, pipe_id=None):
+        pipeline = self.pipeline['pipeline']
+        for pipe in pipeline:
+            if pipe.get("pipe_id") == pipe_id:
+                return pipe
+        return
+
     def run(self):
         jobs = []
         for pipe in self.pipeline['pipeline']:
             print("pipe", pipe['pipe_id'])
-            invana_pipe = InvanaCrawlerPipe(pipe=pipe, pipeline=self.pipeline)
-            spider_cls = DefaultInvanaPipeSpider
-            spider_kwargs = invana_pipe.generate_pipe_kwargs()
-            jobs.append([spider_cls, spider_kwargs])
+            if pipe.get("start_urls"):
+                invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline)
+                spider_cls = DefaultPipeletSpider
+                spider_kwargs = invana_pipe.generate_pipe_kwargs()
+                jobs.append([spider_cls, spider_kwargs])
+            else:
+                print("Ignoring the pipelet: [{}] as it doesn't have start_urls".format(pipe["pipe_id"]))
         return jobs

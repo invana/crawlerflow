@@ -1,6 +1,6 @@
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
-from invana_bot.pipelines.default import DefaultInvanaPipeline
+from invana_bot.pipelines.default import WebCrawlerPipeline
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.crawler import CrawlerProcess
 from invana_bot.spiders.feeds import RSSSpider
@@ -131,9 +131,9 @@ class InvanaWebCrawler(InvanaCrawlerBase):
         d.addBoth(lambda _: reactor.stop())
         reactor.run()  # the script will block here until all crawling jobs are finished
 
-    def set_pipeline(self, pipeline=None):
+    def set_pipeline(self, pipeline=None, context=None):
         self.setup_crawler_type_settings(crawler_type="websites")
         job_id = self.job_id
-        pipeline = DefaultInvanaPipeline(pipeline=pipeline, job_id=job_id)
+        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=job_id)
         jobs = pipeline.run()
         return jobs

@@ -1,10 +1,10 @@
 from invana_bot import InvanaWebCrawler
 
 extractor = {
-    "extractor": "CustomContentExtractor",
+    "extractor_name": "CustomContentExtractor",
     "data_selectors": [
         {
-            "id": "items",
+            "id": "blogs",
             "selector": ".post-listing .post-item",
             "selector_attribute": "element",
             "multiple": True
@@ -14,7 +14,7 @@ extractor = {
             "selector": ".post-header h2 a",
             "selector_type": "css",
             "selector_attribute": "href",
-            "parent_selector": "items",
+            "parent_selector": "blogs",
             "multiple": False
         },
         {
@@ -22,7 +22,7 @@ extractor = {
             "selector": ".post-header h2 a",
             "selector_type": "css",
             "selector_attribute": "text",
-            "parent_selector": "items",
+            "parent_selector": "blogs",
             "multiple": False
         },
         {
@@ -30,10 +30,48 @@ extractor = {
             "selector": ".post-content",
             "selector_type": "css",
             "selector_attribute": "html",
-            "parent_selector": "items",
+            "parent_selector": "blogs",
             "multiple": False
         }
     ],
+}
+
+detail_extractor = {
+    "start_url": "https://blog.scrapinghub.com/the-crawlera-story",
+    "data_selectors": [
+        {
+            "id": "blog_detail",
+            "selector": ".blog-section",
+            "selector_attribute": "element",
+            "multiple": False
+        },
+
+        {
+            "id": "title",
+            "selector": "h1",
+            "selector_type": "css",
+            "selector_attribute": "text",
+            "parent_selector": "blog_detail",
+            "multiple": False
+        },
+        {
+            "id": "published_at",
+            "selector": ".date",
+            "selector_type": "css",
+            "selector_attribute": "text",
+            "parent_selector": "blog_detail",
+            "multiple": False
+        },
+        {
+            "id": "html_content",
+            "selector": ".post-body",
+            "selector_type": "css",
+            "selector_attribute": "html",
+            "parent_selector": "blog_detail",
+            "multiple": False
+        }
+    ],
+
 }
 
 traversal = {
@@ -57,13 +95,25 @@ pipeline_data = {
                 "traversal_type": "pagination",
                 "pagination": traversal,
                 "next_pipe_id": "blog-list"
+            }, {
+                "traversal_type": "link_from_field",
+                "link_from_field": {"extractor_name": "CustomContentExtractor", "field_name": "url"},
+                "next_pipe_id": "blog-detail"
             }]
+        },
+        {  # single pipe
+            "pipe_id": "blog-detail",
+            "data_extractors": [
+                detail_extractor,
+            ]
         }
     ],
-    "context": {
-        "client_id": "abc",
-        "job_id": "123"
-    }
+}
+context = {
+
+    "client_id": "abc",
+    "job_id": "123"
+
 }
 
 if __name__ == '__main__':
@@ -75,6 +125,7 @@ if __name__ == '__main__':
     )
 
     all_jobs = crawler.set_pipeline(
-        pipeline=pipeline_data
+        pipeline=pipeline_data,
+        context=context
     )
     crawler.start_jobs(jobs=all_jobs)
