@@ -9,5 +9,9 @@ class SameDomainLinkExtractor(ExtractorBase):
     pass
 
 
-class PaginationURLExtractor(ExtractorBase):
+class PaginationLinkExtractor(ExtractorBase):
+    pass
+
+
+class CustomLinkExtractor(ExtractorBase):
     pass
