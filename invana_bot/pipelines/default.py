@@ -4,9 +4,10 @@ from invana_bot.utils.url import get_domain
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
+from invana_bot.utils.config import validate_config, process_config
 
 
-class InvanaPipe(object):
+class InvanaCrawlerPipe(object):
     """
 
     pipe_data = {  # single pipe
@@ -139,7 +140,7 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
     """
     This is generic spider
     """
-    name = "DefaultInvanaPipeline"
+    name = "DefaultInvanaPipeSpider"
 
     def closed(self, reason):
         print("spider closed with payload:", reason, self.pipe)
@@ -212,12 +213,21 @@ class DefaultInvanaPipeline(object):
 
     def __init__(self, pipeline=None):
         self.pipeline = pipeline
+        self.validate_pipeline()
+
+    def process_parser(self, parser_config=None):
+        return process_config(parser_config)
+
+    def validate_pipeline(self):
+        for pipe in self.pipeline['pipeline']:
+            for extractor in pipe['data_extractors']:
+                extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
 
     def run(self):
         jobs = []
         for pipe in self.pipeline['pipeline']:
             print("pipe", pipe['pipe_id'])
-            invana_pipe = InvanaPipe(pipe=pipe, pipeline=self.pipeline)
+            invana_pipe = InvanaCrawlerPipe(pipe=pipe, pipeline=self.pipeline)
             spider_cls = DefaultInvanaPipeSpider
             spider_kwargs = invana_pipe.generate_pipe_kwargs()
             jobs.append([spider_cls, spider_kwargs])

@@ -55,9 +55,6 @@ pipeline_data = {
                 "pagination": traversal,
                 "next_pipe_id": "blog-list"
             }]
-        },{
-
-
         }
     ],
     "context": {

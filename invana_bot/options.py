@@ -129,15 +129,10 @@ class InvanaBot(object):
     def set_pipeline(self, pipeline=None):
         self.setup_crawler_type_settings(crawler_type="websites")
 
-        for pipe in pipeline['pipeline']:
-            for extractor in pipe['data_extractors']:
-                extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
         pipeline = DefaultInvanaPipeline(pipeline=pipeline)
         jobs = pipeline.run()
         return jobs
 
-    def process_parser(self, parser_config=None):
-        return process_config(parser_config)
 
     def crawl_websites(self,
                        urls=None,
