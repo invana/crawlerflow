@@ -36,6 +36,8 @@ class TableContentExtractor(ExtractorBase):
 
 
 class CustomContentExtractor(ExtractorBase):
+
+    ITER_KEY = "iter_count"
     # TODO - implement this
     def run(self):
         data = {}
@@ -51,11 +53,12 @@ class CustomContentExtractor(ExtractorBase):
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
                         datum[child_selector.get('id')] = _d.strip() if _d else None
-                    datum['item_no'] = item_no
+                    datum[self.ITER_KEY] = item_no
                     elements_data.append(datum)
-                print ("====+++++++++++", selector)
                 if selector.get("multiple", False) is False:
-                    data[selector.get('id')] = elements_data[0]
+                    single_data = elements_data[0]
+                    single_data.pop(self.ITER_KEY)
+                    data[selector.get('id')] =  single_data
                 else:
                     data[selector.get('id')] = elements_data
             else:

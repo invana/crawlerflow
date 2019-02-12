@@ -58,54 +58,56 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
         if None in [pipeline, pipe]:
             pipe = self.pipe
             pipeline = self.pipeline
-        data = {}
-        for extractor in pipe['data_extractors']:
-            extracted_data = self.run_extractor(response=response, extractor=extractor, )
-            data.update(extracted_data)
-        if context is not None:
-            data.update({"context": context})
-        yield data
-        for traversal in pipe.get('traversals', []):
-            print("traversal", traversal)
-            if traversal['traversal_type'] == "pagination":
-                # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
-                traversal_config = traversal['pagination']
-                max_pages = traversal_config.get("max_pages", 1)
-                current_page_count = response.meta.get('current_page_count', 1)
-                print("max_pages", max_pages, current_page_count)
-                if current_page_count < max_pages:
-                    next_selector = traversal_config.get('selector')
-                    if next_selector:
-                        if traversal_config.get('selector_type') == 'css':
-                            next_page = response.css(next_selector + "::attr(href)").extract_first()
-                        elif traversal_config.get('selector_type') == 'xpath':
-                            next_page = response.xpath(next_selector + "::attr(href)").extract_first()
-                        else:
-                            next_page = None
-                        current_page_count = current_page_count + 1
-                        if next_page:
-                            if not "://" in next_page:
-                                next_page_url = "https://" + get_domain(response.url) + next_page
+
+        if None not in [pipe, pipeline]:
+            data = {}
+            for extractor in pipe['data_extractors']:
+                extracted_data = self.run_extractor(response=response, extractor=extractor, )
+                data.update(extracted_data)
+            if context is not None:
+                data.update({"context": context})
+            yield data
+            for traversal in pipe.get('traversals', []):
+                print("traversal", traversal)
+                if traversal['traversal_type'] == "pagination":
+                    # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
+                    traversal_config = traversal['pagination']
+                    max_pages = traversal_config.get("max_pages", 1)
+                    current_page_count = response.meta.get('current_page_count', 1)
+                    print("max_pages", max_pages, current_page_count)
+                    if current_page_count < max_pages:
+                        next_selector = traversal_config.get('selector')
+                        if next_selector:
+                            if traversal_config.get('selector_type') == 'css':
+                                next_page = response.css(next_selector + "::attr(href)").extract_first()
+                            elif traversal_config.get('selector_type') == 'xpath':
+                                next_page = response.xpath(next_selector + "::attr(href)").extract_first()
                             else:
-                                next_page_url = next_page
-                            # TODO - add logics to change the extractors or call a different pipe from here.
-                            yield scrapy.Request(
-                                next_page_url, callback=self.parse,
-                                meta={"current_page_count": current_page_count}
-                            )
-            elif traversal['traversal_type'] == LINK_FROM_FIELD:
-                next_pipe_id = traversal['next_pipe_id']
-                traversal_config = traversal[LINK_FROM_FIELD]
+                                next_page = None
+                            current_page_count = current_page_count + 1
+                            if next_page:
+                                if not "://" in next_page:
+                                    next_page_url = "https://" + get_domain(response.url) + next_page
+                                else:
+                                    next_page_url = next_page
+                                # TODO - add logics to change the extractors or call a different pipe from here.
+                                yield scrapy.Request(
+                                    next_page_url, callback=self.parse,
+                                    meta={"current_page_count": current_page_count}
+                                )
+                elif traversal['traversal_type'] == LINK_FROM_FIELD:
+                    next_pipe_id = traversal['next_pipe_id']
+                    traversal_config = traversal[LINK_FROM_FIELD]
 
-                subdocument_key = self.get_subdocument_key(pipe=pipe, extractor_name=traversal_config['extractor_name'])
-                for item in data[subdocument_key]:
-                    traversal_url = item[traversal[LINK_FROM_FIELD]['field_name']]
+                    subdocument_key = self.get_subdocument_key(pipe=pipe, extractor_name=traversal_config['extractor_name'])
+                    for item in data[subdocument_key]:
+                        traversal_url = item[traversal[LINK_FROM_FIELD]['field_name']]
 
-                    print("traversal_config data", next_pipe_id, traversal_url, data)
-                    next_pipelet = self.get_pipe(pipe_id=next_pipe_id, pipeline=pipeline)
-                    yield scrapy.Request(
-                        traversal_url, callback=self.parse,
-                        meta={"pipeline": pipeline,
-                              "pipe": next_pipelet
-                              }
-                    )
+                        print("traversal_config data", next_pipe_id, traversal_url, data)
+                        next_pipelet = self.get_pipe(pipe_id=next_pipe_id, pipeline=pipeline)
+                        yield scrapy.Request(
+                            traversal_url, callback=self.parse,
+                            meta={"pipeline": pipeline,
+                                  "pipe": next_pipelet
+                                  }
+                        )

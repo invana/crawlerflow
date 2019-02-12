@@ -5,7 +5,7 @@
 ```python
 # a simple usecase to use mongodb as cache and storage db.
 
-from invana_bot import InvanaCrawler
+from invana_bot.pipelines import InvanaCrawler
 
 
 
@@ -124,5 +124,45 @@ if __name__ == '__main__':
 
 ```
 
+
+#### 5. Advanced example of settings.
+
+```python
+
+
+
+common_settings = {
+    'COMPRESSION_ENABLED': False,
+    'HTTPCACHE_ENABLED': True,
+    'LOG_LEVEL': 'INFO'
+}
+
+pipeline_settings = {
+    'ITEM_PIPELINES': {'invana_bot.storages.elasticsearch.ElasticSearchPipeline': 1},
+    'HTTPCACHE_STORAGE': "invana_bot.httpcache.elasticsearch.ESCacheStorage",
+}
+
+mongodb_settings = {
+    'INVANA_BOT_SETTINGS': {
+        'HTTPCACHE_STORAGE_SETTINGS': {
+            'DATABASE_URI': "127.0.0.1",
+            'DATABASE_NAME': "crawler_cache_db",
+            'COLLECTION_NAME': "web_link",
+            "EXPIRY_TIME": 3600
+        },
+        'ITEM_PIPELINES_SETTINGS': {
+            'DATABASE_URI': "127.0.0.1",
+            'DATABASE_NAME': "crawler_data",
+            'COLLECTION_NAME': "crawler_feeds_data"
+        }
+    }
+}
+
+common_settings.update(pipeline_settings)
+common_settings.update(mongodb_settings)
+
+
+
+```
 
 
