@@ -48,7 +48,7 @@ detail_extractor = {
 
         {
             "id": "title",
-            "selector": "h1",
+            "selector": "h1 span",
             "selector_type": "css",
             "selector_attribute": "text",
             "parent_selector": "blog_detail",
@@ -56,7 +56,14 @@ detail_extractor = {
         },
         {
             "id": "published_at",
-            "selector": ".date",
+            "selector": ".date a",
+            "selector_type": "css",
+            "selector_attribute": "text",
+            "parent_selector": "blog_detail",
+            "multiple": False
+        }, {
+            "id": "author",
+            "selector": ".author a",
             "selector_type": "css",
             "selector_attribute": "text",
             "parent_selector": "blog_detail",
