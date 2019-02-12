@@ -1,26 +1,135 @@
 from invana_bot.spiders.base import InvanaWebsiteSpiderBase
 from invana_bot.utils.selectors import get_selector_element
-from invana_bot.utils.url import get_urn, get_domain
+from invana_bot.utils.url import get_domain
 import scrapy
-from invana_bot.utils.config import validate_config, process_config
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 
 
-def process_parser(self, extractor=None):
-    extractor_cleaned = None
-    if extractor:
-        is_valid_config = validate_config(config=extractor)
-        if is_valid_config:
-            if extractor.get("is_processed") == True:
-                extractor_cleaned = extractor
-                return extractor_cleaned
-            else:
-                extractor_cleaned = process_config(extractor)
-                extractor_cleaned['is_processed'] = True
-        else:
-            raise Exception("invalid parser config")
-    return extractor_cleaned
+class InvanaPipe(object):
+    """
+
+    pipe_data = {  # single pipe
+
+        "pipe_id": "blog-list",
+        "start_urls": ["https://blog.scrapinghub.com"],
+        "data_extractors": [
+            {
+                "data_selectors": [
+                    {
+                        "id": "items",
+                        "selector": ".post-listing .post-item",
+                        "selector_attribute": "element",
+                        "multiple": True
+                    },
+                    {
+                        "id": "url",
+                        "selector": ".post-header h2 a",
+                        "selector_type": "css",
+                        "selector_attribute": "href",
+                        "parent_selector": "items",
+                        "multiple": False
+                    },
+                    {
+                        "id": "title",
+                        "selector": ".post-header h2 a",
+                        "selector_type": "css",
+                        "selector_attribute": "text",
+                        "parent_selector": "items",
+                        "multiple": False
+                    },
+                    {
+                        "id": "content",
+                        "selector": ".post-content",
+                        "selector_type": "css",
+                        "selector_attribute": "html",
+                        "parent_selector": "items",
+                        "multiple": False
+                    }
+                ],
+            }
+        ],
+        "traversals": [{
+            "traversal_type": "pagination",
+            "pagination": {
+                "selector": ".next-posts-link",
+                "selector_type": "css",
+                "max_pages": 2
+            },
+        }]
+
+    }
+
+    context = {
+        "client_id": "something"
+    }
+
+    """
+
+    def __init__(self, pipe=None, pipeline=None, context=None):
+        """
+
+        :param pipe: single unit of crawling
+        :param pipeline: set of units combined to create a flow
+        :param context: any extra information user want to send to the crawled data.
+        """
+        self.pipe = pipe
+        self.pipeline = pipeline
+        self.context = context
+        self.validate_pipe()
+
+    def validate_pipe(self):
+        must_have_keys = ["pipe_id", "start_urls", "data_extractors"]
+        optional_keys = ["traversals"]
+        for key in must_have_keys:
+            if key not in self.pipe.keys():
+                raise Exception(
+                    "invalid pipe data, should have the following keys; {}".format(",".join(must_have_keys)))
+
+    def validate_traversal(self):
+        pass  # TODO - implement this
+
+    def validate_extractor(self):
+        pass  # TODO - implement this
+
+    def get_traversals(self):
+        return self.pipe.get("traversals", [])
+
+    def get_pipeline(self):
+        return self.pipeline
+
+    def get_extractors(self):
+        return self.pipe.get("data_extractors", [])
+
+    def get_pipe(self, pipe_id=None):
+        pipeline = self.get_pipeline()
+        for pipe in pipeline:
+            if pipe.get("pipe_id") == pipe_id:
+                return pipe
+        return
+
+    def generate_pipe_kwargs(self):
+        print("pipe_application")
+        domains = []
+
+        for url in self.pipe['start_urls']:
+            domain = url.split("://")[1].split("/")[0]  # TODO - clean this
+            domains.append(domain)
+
+        extractor = LinkExtractor()
+        rules = [
+            Rule(extractor, follow=True)  # TODO - add regex types of needed.
+        ]
+
+        spider_kwargs = {
+            "start_urls": self.pipe['start_urls'],
+            "allowed_domains": domains,
+            "rules": rules,
+            "pipe": self.pipe,
+            "pipeline": self.pipeline,
+            "context": self.context
+        }
+        return spider_kwargs
 
 
 class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
@@ -32,7 +141,7 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
     def closed(self, reason):
         print("spider closed with payload:", reason, self.pipe)
 
-    def run_extractor(self, response=None, extractor=None, ):
+    def run_extractor(self, response=None, extractor=None):
         context = self.context
         data = {}
         data['url'] = response.url
@@ -87,44 +196,26 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
                                 next_page_url = "https://" + get_domain(response.url) + next_page
                             else:
                                 next_page_url = next_page
+                            # TODO - add logics to change the extractors or call a different pipe from here.
                             yield scrapy.Request(
                                 next_page_url, callback=self.parse,
                                 meta={"current_page_count": current_page_count}
                             )
+            elif traversal['traversal_type'] == "something_else":
+                pass
 
 
 class DefaultInvanaPipeline(object):
 
-    def __init__(self, pipeline_data=None):
-        self.pipeline_data = pipeline_data
-
-    def create_pipe(self, pipe=None):
-        print("pipe_application")
-        domains = []
-        for url in pipe['start_urls']:
-            domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-            domains.append(domain)
-
-        extractor = LinkExtractor()
-        rules = [
-            Rule(extractor, follow=True)
-        ]
-
-        context = self.pipeline_data['context']
-        spider_kwargs = {
-            "start_urls": pipe['start_urls'],
-            "allowed_domains": domains,
-            "rules": rules,
-            "pipe": pipe,
-            "context": context
-        }
-        return spider_kwargs
+    def __init__(self, pipeline=None):
+        self.pipeline = pipeline
 
     def run(self):
         jobs = []
-        for pipe in self.pipeline_data['pipeline']:
+        for pipe in self.pipeline['pipeline']:
             print("pipe", pipe['pipe_id'])
+            invana_pipe = InvanaPipe(pipe=pipe, pipeline=self.pipeline)
             spider_cls = DefaultInvanaPipeSpider
-            spider_kwargs = self.create_pipe(pipe=pipe)
+            spider_kwargs = invana_pipe.generate_pipe_kwargs()
             jobs.append([spider_cls, spider_kwargs])
         return jobs

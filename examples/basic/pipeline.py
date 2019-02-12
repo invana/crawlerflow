@@ -44,7 +44,7 @@ pipeline_data = {
     "pipeline_id": "search_pipeline",
     "pipeline": [
         {  # single pipe
-            "pipe_id": "search-engine",
+            "pipe_id": "blog-list",
             "start_urls": ["https://blog.scrapinghub.com"],
             "data_extractors": [
                 # {"default": "Invana::SearchEngineExtractor"},  # invana is namespace or the developer username
@@ -53,7 +53,7 @@ pipeline_data = {
             "traversals": [{
                 "traversal_type": "pagination",
                 "pagination": traversal,
-                "next_pipe_id": "blog-list"
+                # "next_pipe_id": "blog-list"
             }]
         }
     ],
@@ -72,6 +72,6 @@ if __name__ == '__main__':
     )
 
     all_jobs = crawler.crawl_pipeline(
-        pipeline_data=pipeline_data
+        pipeline=pipeline_data
     )
     crawler.start_jobs(jobs=all_jobs)

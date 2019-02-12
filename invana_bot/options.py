@@ -125,13 +125,13 @@ class InvanaBot(object):
                 raise Exception("invalid parser config")
         return extractor_cleaned
 
-    def crawl_pipeline(self, pipeline_data=None):
+    def crawl_pipeline(self, pipeline=None):
         self.setup_crawler_type_settings(crawler_type="websites")
 
-        for pipe in pipeline_data['pipeline']:
+        for pipe in pipeline['pipeline']:
             for extractor in pipe['data_extractors']:
                 extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
-        pipeline = DefaultInvanaPipeline(pipeline_data=pipeline_data)
+        pipeline = DefaultInvanaPipeline(pipeline=pipeline)
         jobs = pipeline.run()
         return jobs
 
