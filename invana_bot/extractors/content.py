@@ -11,7 +11,6 @@ class ParagraphsExtractor(ExtractorBase):
     # TODO - implement this
     def run(self):
         data = {}
-        print ("====================")
         paragraphs_data = []
         elements = self.response.css("p").extract()
         for el in elements:
