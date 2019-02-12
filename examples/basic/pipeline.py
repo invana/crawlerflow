@@ -53,8 +53,11 @@ pipeline_data = {
             "traversals": [{
                 "traversal_type": "pagination",
                 "pagination": traversal,
-                # "next_pipe_id": "blog-list"
+                "next_pipe_id": "blog-list"
             }]
+        },{
+
+
         }
     ],
     "context": {
@@ -71,7 +74,7 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    all_jobs = crawler.crawl_pipeline(
+    all_jobs = crawler.set_pipeline(
         pipeline=pipeline_data
     )
     crawler.start_jobs(jobs=all_jobs)

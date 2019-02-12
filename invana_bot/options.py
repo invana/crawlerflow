@@ -21,7 +21,7 @@ class InvanaBot(object):
         'TELNETCONSOLE_PORT': None
 
     }
-    process = None
+    runner = None
 
     def __init__(self,
                  cache_database=None,
@@ -45,6 +45,7 @@ class InvanaBot(object):
                                      )
         self.job_id = self.generate_job_id()
         self.set_logger()
+
         print("self.settings", self.settings)
 
     def set_logger(self):
@@ -100,13 +101,13 @@ class InvanaBot(object):
         _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
 
     def start_jobs(self, jobs=None):
-
-        runner = CrawlerRunner(self.settings)
+        if self.runner is None:
+            self.runner = CrawlerRunner(self.settings)
         for job in jobs:
             spider_cls = job[0]
             spider_kwargs = job[1]
-            runner.crawl(spider_cls, **spider_kwargs)
-        d = runner.join()
+            self.runner.crawl(spider_cls, **spider_kwargs)
+        d = self.runner.join()
         d.addBoth(lambda _: reactor.stop())
         reactor.run()  # the script will block here until all crawling jobs are finished
 
@@ -125,7 +126,7 @@ class InvanaBot(object):
                 raise Exception("invalid parser config")
         return extractor_cleaned
 
-    def crawl_pipeline(self, pipeline=None):
+    def set_pipeline(self, pipeline=None):
         self.setup_crawler_type_settings(crawler_type="websites")
 
         for pipe in pipeline['pipeline']:

@@ -75,7 +75,10 @@ class InvanaPipe(object):
         """
         self.pipe = pipe
         self.pipeline = pipeline
-        self.context = context
+        if context:
+            self.context = context
+        else:
+            self.context = self.pipeline.get("context")
         self.validate_pipe()
 
     def validate_pipe(self):
