@@ -16,7 +16,7 @@ def process_config(config=None):
     processed_config_dict = {}
     parent_selectors = []
     new_config_selectors = []
-    for selector in config['data_selectors']:
+    for selector in config.get('data_selectors', []):
         if selector.get('selector_attribute') == 'element':
             parent_selectors.append(selector)
 
@@ -35,7 +35,7 @@ def process_config(config=None):
     """
     process the elements with no root selectors
     """
-    for selector in config['data_selectors']:
+    for selector in config.get('data_selectors', []):
         if selector.get('parent_selector') is None and selector.get('selector_attribute') != 'element':
             new_config_selectors.append(selector)
 

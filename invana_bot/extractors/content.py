@@ -9,7 +9,16 @@ class MetaTagsExtractor(ExtractorBase):
 
 class ParagraphsExtractor(ExtractorBase):
     # TODO - implement this
-    pass
+    def run(self):
+        data = {}
+        print ("====================")
+        paragraphs_data = []
+        elements = self.response.css("p").extract()
+        for el in elements:
+            paragraphs_data.append(el)
+        data[self.__class__.__name__] = paragraphs_data
+
+        return data
 
 
 class HeadingsExtractor(ExtractorBase):

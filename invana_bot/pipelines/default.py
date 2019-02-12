@@ -145,7 +145,7 @@ class DefaultInvanaPipeline(object):
 
     def validate_pipeline(self):
         for pipe in self.pipeline['pipeline']:
-            for extractor in pipe['data_extractors']:
+            for extractor in pipe.get('data_extractors', []):
                 extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
 
     def run(self):

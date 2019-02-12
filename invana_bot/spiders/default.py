@@ -1,6 +1,6 @@
 from .base import InvanaWebsiteSpiderBase
 from invana_bot.utils.url import get_domain
-from invana_bot.extractors.content import CustomContentExtractor
+from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor
 import scrapy
 
 
@@ -14,19 +14,26 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
         print("spider closed with payload:", reason, self.pipe)
 
     def run_extractor(self, response=None, extractor=None):
-        context = self.context
-        extractor_object = CustomContentExtractor(response=response, extractor=extractor)
+        extractor_name = extractor.get("extractor_name")
+        if extractor_name in [None, "CustomContentExtractor"]:
+            extractor_object = CustomContentExtractor(response=response, extractor=extractor)
+        elif extractor_name == "ParagraphsExtractor":
+            extractor_object = ParagraphsExtractor(response=response, extractor=extractor)
+        else:
+            return
         data = extractor_object.run()
-        if context is not None:
-            data.update({"context": context})
+        print ("========", extractor_name, data)
         return data
 
     def parse(self, response=None):
         pipe = self.pipe
+        context = self.context
         data = {}
         for extractor in pipe['data_extractors']:
             extracted_data = self.run_extractor(response=response, extractor=extractor, )
             data.update(extracted_data)
+        if context is not None:
+            data.update({"context": context})
         yield data
         for traversal in pipe['traversals']:
             print("traversal", traversal)

@@ -1,6 +1,7 @@
 from invana_bot import InvanaWebCrawler
 
 extractor = {
+    "extractor": "CustomContentExtractor",
     "data_selectors": [
         {
             "id": "items",
@@ -34,6 +35,7 @@ extractor = {
         }
     ],
 }
+
 traversal = {
     "selector": ".next-posts-link",
     "selector_type": "css",
@@ -47,8 +49,9 @@ pipeline_data = {
             "pipe_id": "blog-list",
             "start_urls": ["https://blog.scrapinghub.com"],
             "data_extractors": [
-                # {"default": "Invana::SearchEngineExtractor"},  # invana is namespace or the developer username
                 extractor,  # invana is namespace or the developer username
+                {"extractor_name": "ParagraphsExtractor", },  # invana is namespace or the developer username
+
             ],  # this will be converted into data_selectors when used by API.
             "traversals": [{
                 "traversal_type": "pagination",
