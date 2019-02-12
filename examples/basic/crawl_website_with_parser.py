@@ -1,4 +1,4 @@
-from invana_bot import InvanaBot
+from invana_bot import InvanaCrawler
 
 client_info = {
     "domain": "scrapinghub.com",
@@ -52,7 +52,7 @@ example_config = {
 
 print("example_config", example_config)
 if __name__ == '__main__':
-    crawler = InvanaBot(
+    crawler = InvanaCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",

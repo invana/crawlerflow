@@ -1,16 +1,16 @@
-# InvanaBot UseCases
+# InvanaCrawler UseCases
 
 #### 1. UseCase I - Crawling a website
 
 ```python
 # a simple usecase to use mongodb as cache and storage db.
 
-from invana_bot import InvanaBot
+from invana_bot import InvanaCrawler
 
 
 
 if __name__ == '__main__':
-    crawler = InvanaBot(
+    crawler = InvanaCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="127.0.0.1",
         cache_database="mongodb",
@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
 ```python
 
-from invana_bot import InvanaBot
+from invana_bot import InvanaCrawler
 
 
 example_parser_config = {
@@ -78,7 +78,7 @@ example_parser_config = {
 
 }
 
-crawler = InvanaBot(
+crawler = InvanaCrawler(
     cache_database_uri="mongodb://127.0.0.1",
     storage_database_uri="127.0.0.1",
     cache_database="mongodb",
@@ -106,10 +106,10 @@ crawler.crawl_websites(urls=["https://blog.scrapinghub.com", ],
 ####4. UseCase 2: Crawling the feeds
 
 ```python
-from invana_bot import InvanaBot
+from invana_bot import InvanaCrawler
 
 if __name__ == '__main__':
-    crawler = InvanaBot(
+    crawler = InvanaCrawler(
         cache_database_uri="127.0.0.1",
         storage_database_uri="127.0.0.1",
         cache_database="mongodb",

@@ -1,15 +1,16 @@
-from invana_bot.parser import crawl_feeds as _crawl_feeds
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
-from invana_bot.pipelines.default import DefaultInvanaPipeline, DefaultInvanaPipeSpider
-from scrapy.crawler import CrawlerRunner
+from invana_bot.pipelines.default import DefaultInvanaPipeline
+from scrapy.crawler import CrawlerRunner, CrawlerProcess
+from scrapy.crawler import CrawlerProcess
+from invana_bot.spiders.feeds import RSSSpider
 from twisted.internet import reactor
 import uuid
 
 from scrapy.utils.log import configure_logging
 
 
-class InvanaBot(object):
+class InvanaCrawlerBase(object):
     """
 
 
@@ -94,10 +95,30 @@ class InvanaBot(object):
         if len(urls) is 0:
             raise Exception("urls length should be atleast one.")
 
+
+class InvanaFeedCrawler(InvanaCrawlerBase):
+
     def crawl_feeds(self, feed_urls=None):
         self.setup_crawler_type_settings(crawler_type="feeds")
         self._validate_urls(feed_urls)
-        _crawl_feeds(feed_urls=feed_urls, settings=self.settings)
+
+        process = CrawlerProcess(self.settings)
+        allowed_domains = []
+        for feed_url in feed_urls:
+            domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
+            allowed_domains.append(domain)
+
+        process.crawl(RSSSpider,
+                      start_urls=feed_urls,
+                      )
+        process.start()
+
+
+class InvanaWebCrawler(InvanaCrawlerBase):
+    """
+    Split the bot into website crawler, feeds crawler, api crawler,
+
+    """
 
     def start_jobs(self, jobs=None):
         if self.runner is None:

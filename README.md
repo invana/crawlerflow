@@ -28,9 +28,9 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 ## Usage
 
 ```python
-from invana_bot import InvanaBot
+from invana_bot import InvanaWebCrawler
 
-crawler = InvanaBot(
+crawler = InvanaCrawler(
     cache_database_uri="mongodb://127.0.0.1",
     storage_database_uri="mongodb://127.0.0.1",
     cache_database="mongodb",
@@ -60,7 +60,7 @@ crawler.crawl_feeds(
 **3. Crawl and extract data from rss/atom feeds:** This will extract the data from the rss/atom feeds of the site you may want to follow.
 
 **4. Seperate Cache and Storage Database Support**: There is difference in importance of the data for caching and storage, so
-InvanaBot allows developer to implement seperate databases for caching and storage, where developer can use mongodb
+InvanaCrawler allows developer to implement seperate databases for caching and storage, where developer can use mongodb
 for caching the crawled data, and storing the actual extracted data into elasticsearch, which can work as a instant search engine.
 
 **5. Transformers**: Built-in data transformers to run on top the data like cleaning the data, categorize the data based on NLP and more.

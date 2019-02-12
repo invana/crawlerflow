@@ -1,7 +1,7 @@
-from invana_bot import InvanaBot
+from invana_bot import InvanaCrawler
 
 if __name__ == '__main__':
-    crawler = InvanaBot(
+    crawler = InvanaCrawler(
         cache_database_uri="127.0.0.1",
         storage_database_uri="127.0.0.1",
         cache_database="mongodb",

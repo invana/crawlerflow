@@ -1,4 +1,4 @@
-from invana_bot import InvanaBot
+from invana_bot import InvanaWebCrawler
 
 extractor = {
     "data_selectors": [
@@ -64,7 +64,7 @@ pipeline_data = {
 }
 
 if __name__ == '__main__':
-    crawler = InvanaBot(
+    crawler = InvanaWebCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
