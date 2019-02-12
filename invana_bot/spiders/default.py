@@ -24,7 +24,6 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
         else:
             return
         data = extractor_object.run()
-        print("========", extractor_name, data)
         return data
 
     def get_pipe(self, pipeline=None, pipe_id=None):
@@ -68,13 +67,11 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                 data.update({"context": context})
             yield data
             for traversal in pipe.get('traversals', []):
-                print("traversal", traversal)
                 if traversal['traversal_type'] == "pagination":
                     # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
                     traversal_config = traversal['pagination']
                     max_pages = traversal_config.get("max_pages", 1)
                     current_page_count = response.meta.get('current_page_count', 1)
-                    print("max_pages", max_pages, current_page_count)
                     if current_page_count < max_pages:
                         next_selector = traversal_config.get('selector')
                         if next_selector:
@@ -102,8 +99,6 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                     subdocument_key = self.get_subdocument_key(pipe=pipe, extractor_name=traversal_config['extractor_name'])
                     for item in data[subdocument_key]:
                         traversal_url = item[traversal[LINK_FROM_FIELD]['field_name']]
-
-                        print("traversal_config data", next_pipe_id, traversal_url, data)
                         next_pipelet = self.get_pipe(pipe_id=next_pipe_id, pipeline=pipeline)
                         yield scrapy.Request(
                             traversal_url, callback=self.parse,
