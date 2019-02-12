@@ -211,8 +211,9 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
 
 class DefaultInvanaPipeline(object):
 
-    def __init__(self, pipeline=None):
+    def __init__(self, pipeline=None, job_id=None):
         self.pipeline = pipeline
+        self.job_id = job_id
         self.validate_pipeline()
 
     def process_parser(self, parser_config=None):

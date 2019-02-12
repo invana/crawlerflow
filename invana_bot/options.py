@@ -1,7 +1,6 @@
-from invana_bot.parser import crawl_websites as _crawl_websites, crawl_feeds as _crawl_feeds
+from invana_bot.parser import crawl_feeds as _crawl_feeds
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
-from invana_bot.utils.config import validate_config, process_config
 from invana_bot.pipelines.default import DefaultInvanaPipeline, DefaultInvanaPipeSpider
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
@@ -111,49 +110,9 @@ class InvanaBot(object):
         d.addBoth(lambda _: reactor.stop())
         reactor.run()  # the script will block here until all crawling jobs are finished
 
-    def process_parser(self, extractor=None):
-        extractor_cleaned = None
-        if extractor:
-            is_valid_config = validate_config(config=extractor)
-            if is_valid_config:
-                if extractor.get("is_processed") == True:
-                    extractor_cleaned = extractor
-                    return extractor_cleaned
-                else:
-                    extractor_cleaned = process_config(extractor)
-                    extractor_cleaned['is_processed'] = True
-            else:
-                raise Exception("invalid parser config")
-        return extractor_cleaned
-
     def set_pipeline(self, pipeline=None):
         self.setup_crawler_type_settings(crawler_type="websites")
-
-        pipeline = DefaultInvanaPipeline(pipeline=pipeline)
+        job_id = self.job_id
+        pipeline = DefaultInvanaPipeline(pipeline=pipeline, job_id=job_id)
         jobs = pipeline.run()
-        return jobs
-
-
-    def crawl_websites(self,
-                       urls=None,
-                       ignore_urls_with_words=None,
-                       allow_only_with_words=None,
-                       follow=True,
-                       parser_config=None,
-                       context=None
-                       ):
-
-        self.setup_crawler_type_settings(crawler_type="websites")
-
-        self._validate_urls(urls)
-        if context:
-            context['job_id'] = self.job_id
-        jobs = _crawl_websites(urls=urls,
-                               ignore_urls_with_words=ignore_urls_with_words,
-                               allow_only_with_words=allow_only_with_words,
-                               follow=follow,
-                               parser_config=parser_config,
-                               context=context
-                               )
-
         return jobs
