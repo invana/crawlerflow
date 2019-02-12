@@ -23,10 +23,11 @@ class DefaultInvanaPipeSpider(InvanaWebsiteSpiderBase):
 
     def parse(self, response=None):
         pipe = self.pipe
+        data = {}
         for extractor in pipe['data_extractors']:
-            data = self.run_extractor(response=response, extractor=extractor, )
-            yield data
-
+            extracted_data = self.run_extractor(response=response, extractor=extractor, )
+            data.update(extracted_data)
+        yield data
         for traversal in pipe['traversals']:
             print("traversal", traversal)
             if traversal['traversal_type'] == "pagination":

@@ -29,8 +29,6 @@ class TableContentExtractor(ExtractorBase):
 
 class CustomContentExtractor(ExtractorBase):
     # TODO - implement this
-    # NOTE - this works as the html extractor with the config
-
     def run(self):
         data = {}
         data['url'] = self.response.url
