@@ -53,7 +53,8 @@ class CustomContentExtractor(ExtractorBase):
                         datum[child_selector.get('id')] = _d.strip() if _d else None
                     datum['item_no'] = item_no
                     elements_data.append(datum)
-                if selector.get("is_multiple", False):
+                print ("====+++++++++++", selector)
+                if selector.get("multiple", False) is False:
                     data[selector.get('id')] = elements_data[0]
                 else:
                     data[selector.get('id')] = elements_data
