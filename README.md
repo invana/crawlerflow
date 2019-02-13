@@ -19,12 +19,9 @@ Look at the `examples/` folder for basic and advanced implementations.
 
 ```bash
 
-pip install invana-bot
-
-or 
 
 pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
-
+# This project is under constant development and might brake any previous implementation.
 
 ```
 
