@@ -40,7 +40,6 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
         :param pipe:
         :return:
         """
-        print("get_subdocument_key", extractor_name, pipe)
         for extractor in pipe['data_extractors']:
             if extractor.get("extractor_name") == extractor_name:
                 for selector in extractor.get('data_selectors', []):

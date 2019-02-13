@@ -100,7 +100,6 @@ class WebCrawlerPipelet(object):
         return self.pipe.get("data_extractors", [])
 
     def generate_pipe_kwargs(self):
-        print("pipe_application")
         domains = []
 
         for url in self.pipe['start_urls']:
@@ -153,12 +152,16 @@ class WebCrawlerPipeline(object):
     def run(self):
         jobs = []
         for pipe in self.pipeline['pipeline']:
-            print("pipe", pipe['pipe_id'])
             if pipe.get("start_urls"):
+                print("Starting the pipelet: [{}]".format(pipe['pipe_id']))
+
                 invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline)
                 spider_cls = DefaultPipeletSpider
                 spider_kwargs = invana_pipe.generate_pipe_kwargs()
                 jobs.append([spider_cls, spider_kwargs])
             else:
-                print("Ignoring the pipelet: [{}] as it doesn't have start_urls".format(pipe["pipe_id"]))
+                print(
+                    "Ignoring initiating the pipelet: [{}] as it doesn't "
+                    "have start_urls; must be next step of other pipeline".format(
+                        pipe["pipe_id"]))
         return jobs

@@ -46,8 +46,6 @@ class InvanaCrawlerBase(object):
         self.job_id = self.generate_job_id()
         self.set_logger()
 
-        print("self.settings", self.settings)
-
     def set_logger(self):
         configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 

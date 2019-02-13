@@ -12,7 +12,6 @@ def validate_config(config=None):
 
 
 def process_config(config=None):
-    print("process_config", config)
     processed_config_dict = {}
     parent_selectors = []
     new_config_selectors = []

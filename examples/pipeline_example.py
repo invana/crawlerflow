@@ -74,7 +74,7 @@ detail_extractor_selectors = [
     }
 ]
 
-traversal = {
+pagination_traversal = {
     "selector": ".next-posts-link",
     "selector_type": "css",
     "max_pages": 2
@@ -98,7 +98,7 @@ pipeline_data = {
             ],
             "traversals": [{
                 "traversal_type": "pagination",
-                "pagination": traversal,
+                "pagination": pagination_traversal,
                 "next_pipe_id": "blog-list"
             }, {
                 "traversal_type": "link_from_field",
