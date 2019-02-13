@@ -75,8 +75,6 @@ class WebCrawlerPipelet(object):
         self.pipeline = pipeline
         if context:
             self.context = context
-        else:
-            self.context = self.pipeline.get("context")
         self.validate_pipe()
 
     def validate_pipe(self):
@@ -129,9 +127,10 @@ class WebCrawlerPipeline(object):
 
     """
 
-    def __init__(self, pipeline=None, job_id=None):
+    def __init__(self, pipeline=None, job_id=None, context=None):
         self.pipeline = pipeline
         self.job_id = job_id
+        self.context = context
         self.validate_pipeline()
 
     def process_parser(self, parser_config=None):
@@ -155,7 +154,7 @@ class WebCrawlerPipeline(object):
             if pipe.get("start_urls"):
                 print("Starting the pipelet: [{}]".format(pipe['pipe_id']))
 
-                invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline)
+                invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline, context=self.context)
                 spider_cls = DefaultPipeletSpider
                 spider_kwargs = invana_pipe.generate_pipe_kwargs()
                 jobs.append([spider_cls, spider_kwargs])

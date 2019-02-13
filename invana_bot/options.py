@@ -132,6 +132,6 @@ class InvanaWebCrawler(InvanaCrawlerBase):
     def set_pipeline(self, pipeline=None, context=None):
         self.setup_crawler_type_settings(crawler_type="websites")
         job_id = self.job_id
-        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=job_id)
+        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=job_id, context=context)
         jobs = pipeline.run()
         return jobs
