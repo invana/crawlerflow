@@ -6,6 +6,7 @@ from scrapy.crawler import CrawlerProcess
 from invana_bot.spiders.feeds import RSSSpider
 from twisted.internet import reactor
 import uuid
+from datetime import datetime
 
 from scrapy.utils.log import configure_logging
 
@@ -132,6 +133,10 @@ class InvanaWebCrawler(InvanaCrawlerBase):
     def set_pipeline(self, pipeline=None, context=None):
         self.setup_crawler_type_settings(crawler_type="websites")
         job_id = self.job_id
+        if context is None:
+            context = {}
+        context['job_id'] = self.job_id
+        context['job_started'] = datetime.now()
         pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=job_id, context=context)
         jobs = pipeline.run()
         return jobs

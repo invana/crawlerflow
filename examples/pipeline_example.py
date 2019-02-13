@@ -119,8 +119,9 @@ pipeline_data = {
     ],
 }
 context = {
-    "job_start_time": "2019-1-1",
-    "job_id": "123"
+    "extra_info": "2019-1-1 something",
+    "author": "Ravi@Invana",
+
 }
 
 if __name__ == '__main__':
