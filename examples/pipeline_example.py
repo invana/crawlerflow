@@ -82,10 +82,10 @@ pagination_traversal = {
 }
 pipeline_data = {
     "pipeline_id": "search_pipeline",
+    "start_urls": ["https://blog.scrapinghub.com"],
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
-            "start_urls": ["https://blog.scrapinghub.com"],
             "data_extractors": [
                 {
                     "extractor_name": "CustomContentExtractor",

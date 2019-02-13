@@ -78,7 +78,7 @@ class WebCrawlerPipelet(object):
         self.validate_pipe()
 
     def validate_pipe(self):
-        must_have_keys = ["pipe_id", "start_urls", "data_extractors"]
+        must_have_keys = ["pipe_id", "data_extractors"]
         optional_keys = ["traversals"]
         for key in must_have_keys:
             if key not in self.pipe.keys():
@@ -100,7 +100,7 @@ class WebCrawlerPipelet(object):
     def generate_pipe_kwargs(self):
         domains = []
 
-        for url in self.pipe['start_urls']:
+        for url in self.pipeline['start_urls']:
             domain = url.split("://")[1].split("/")[0]  # TODO - clean this
             domains.append(domain)
 
@@ -110,7 +110,7 @@ class WebCrawlerPipelet(object):
         ]
 
         spider_kwargs = {
-            "start_urls": self.pipe['start_urls'],
+            "start_urls": self.pipeline['start_urls'],
             "allowed_domains": domains,
             "rules": rules,
             "pipe": self.pipe,
@@ -150,17 +150,10 @@ class WebCrawlerPipeline(object):
 
     def run(self):
         jobs = []
-        for pipe in self.pipeline['pipeline']:
-            if pipe.get("start_urls"):
-                print("Starting the pipelet: [{}]".format(pipe['pipe_id']))
+        pipe = self.pipeline['pipeline'][0]
+        invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline, context=self.context)
+        spider_cls = DefaultPipeletSpider
+        spider_kwargs = invana_pipe.generate_pipe_kwargs()
+        jobs.append([spider_cls, spider_kwargs])
 
-                invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline, context=self.context)
-                spider_cls = DefaultPipeletSpider
-                spider_kwargs = invana_pipe.generate_pipe_kwargs()
-                jobs.append([spider_cls, spider_kwargs])
-            else:
-                print(
-                    "Ignoring initiating the pipelet: [{}] as it doesn't "
-                    "have start_urls; must be next step of other pipeline".format(
-                        pipe["pipe_id"]))
         return jobs
