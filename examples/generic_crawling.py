@@ -1,13 +1,23 @@
 from invana_bot import InvanaWebCrawler
 
 pipeline_data = {
-    "pipeline_id": "genetic_crawling_pipeline",
-    "start_urls": ["https://coderplex.org/learn/"],
+    "pipeline_id": "generic_crawling_pipeline",
+    "start_urls": ["https://selenium-python.readthedocs.io"],
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
-            "data_extractors": [
-
+            "data_extractors": [{
+                "extractor_name": "CustomContentExtractor",
+                "data_selectors": [
+                    {
+                        "id": "main_content",
+                        "selector": ".body",
+                        "selector_type": "css",
+                        "selector_attribute": "html",
+                        "multiple": False
+                    }
+                ]
+            }
             ],
             "traversals": [{
                 "traversal_type": "same_domain",
