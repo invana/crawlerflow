@@ -1,6 +1,6 @@
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
-from invana_bot.pipelines.default import WebCrawlerPipeline
+from invana_bot.pipelines.default import WebCrawlerPipeline, WebCrawlerPipelet
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.crawler import CrawlerProcess
 from invana_bot.spiders.feeds import RSSSpider
@@ -23,6 +23,7 @@ class InvanaCrawlerBase(object):
 
     }
     runner = None
+    jobs = []
 
     def __init__(self,
                  cache_database=None,
@@ -119,6 +120,9 @@ class InvanaWebCrawler(InvanaCrawlerBase):
 
     """
 
+    def start(self):
+        self.start_jobs(jobs=self.jobs)
+
     def start_jobs(self, jobs=None):
         if self.runner is None:
             self.runner = CrawlerRunner(self.settings)
@@ -132,11 +136,12 @@ class InvanaWebCrawler(InvanaCrawlerBase):
 
     def set_pipeline(self, pipeline=None, context=None):
         self.setup_crawler_type_settings(crawler_type="websites")
-        job_id = self.job_id
         if context is None:
             context = {}
         context['job_id'] = self.job_id
         context['job_started'] = datetime.now()
-        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=job_id, context=context)
+        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=self.job_id, context=context)
         jobs = pipeline.run()
+        self.jobs.extend(jobs)
         return jobs
+

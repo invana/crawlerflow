@@ -1,7 +1,6 @@
 from invana_bot.spiders.default import DefaultPipeletSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
-from invana_bot.utils.config import validate_config, process_config
 
 
 class WebCrawlerPipelet(object):
@@ -64,7 +63,8 @@ class WebCrawlerPipelet(object):
 
     """
 
-    def __init__(self, pipe=None, pipeline=None, context=None):
+    def __init__(self, pipe=None, start_urls=None, job_id=None,
+                 pipeline=None, context=None):
         """
 
         :param pipe: single unit of crawling
@@ -72,7 +72,9 @@ class WebCrawlerPipelet(object):
         :param context: any extra information user want to send to the crawled data.
         """
         self.pipe = pipe
+        self.job_id = job_id
         self.pipeline = pipeline
+        self.start_urls = start_urls
         if context:
             self.context = context
         self.validate_pipe()
@@ -100,7 +102,7 @@ class WebCrawlerPipelet(object):
     def generate_pipe_kwargs(self):
         domains = []
 
-        for url in self.pipeline['start_urls']:
+        for url in self.start_urls:
             domain = url.split("://")[1].split("/")[0]  # TODO - clean this
             domains.append(domain)
 
@@ -110,7 +112,7 @@ class WebCrawlerPipelet(object):
         ]
 
         spider_kwargs = {
-            "start_urls": self.pipeline['start_urls'],
+            "start_urls": self.start_urls,
             "allowed_domains": domains,
             "rules": rules,
             "pipe": self.pipe,
@@ -118,6 +120,11 @@ class WebCrawlerPipelet(object):
             "context": self.context
         }
         return spider_kwargs
+
+    def run(self):
+        spider_cls = DefaultPipeletSpider
+        spider_kwargs = self.generate_pipe_kwargs()
+        return spider_cls, spider_kwargs
 
 
 class WebCrawlerPipeline(object):
@@ -131,15 +138,6 @@ class WebCrawlerPipeline(object):
         self.pipeline = pipeline
         self.job_id = job_id
         self.context = context
-        self.validate_pipeline()
-
-    def process_parser(self, parser_config=None):
-        return process_config(parser_config)
-
-    def validate_pipeline(self):
-        for pipe in self.pipeline['pipeline']:
-            for extractor in pipe.get('data_extractors', []):
-                extractor['data_selectors'] = self.process_parser(extractor)['data_selectors']
 
     def get_pipelet(self, pipe_id=None):
         pipeline = self.pipeline['pipeline']
@@ -151,9 +149,12 @@ class WebCrawlerPipeline(object):
     def run(self):
         jobs = []
         pipe = self.pipeline['pipeline'][0]
-        invana_pipe = WebCrawlerPipelet(pipe=pipe, pipeline=self.pipeline, context=self.context)
-        spider_cls = DefaultPipeletSpider
-        spider_kwargs = invana_pipe.generate_pipe_kwargs()
-        jobs.append([spider_cls, spider_kwargs])
+        invana_pipe = WebCrawlerPipelet(pipe=pipe,
+                                        start_urls=self.pipeline['start_urls'],
+                                        job_id=self.job_id,
+                                        pipeline=self.pipeline,
+                                        context=self.context)
+        job = invana_pipe.run()
+        jobs.append(job)
 
         return jobs
