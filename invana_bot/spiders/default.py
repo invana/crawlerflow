@@ -1,7 +1,7 @@
 from .base import InvanaWebsiteSpiderBase
 from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor
 import scrapy
-from invana_bot.utils.url import get_domain
+from invana_bot.utils.url import get_domain, get_absolute_url
 
 TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
@@ -114,6 +114,7 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                     filtered_urls = []
                     current_domain = get_domain(response.url)
                     for url in all_urls:
+                        url = get_absolute_url(url=url, origin_url=response.url)
                         if get_domain(url) == current_domain:
                             filtered_urls.append(url)
 

@@ -2,7 +2,7 @@ from invana_bot import InvanaWebCrawler
 
 pipeline_data = {
     "pipeline_id": "genetic_crawling_pipeline",
-    "start_urls": ["https://coderplex.org/"],
+    "start_urls": ["https://coderplex.org/learn/"],
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
