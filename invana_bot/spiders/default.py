@@ -2,6 +2,7 @@ from .base import InvanaWebsiteSpiderBase
 from invana_bot.utils.url import get_domain
 from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor
 import scrapy
+from invana_bot.utils.url import get_urn, get_domain
 
 LINK_FROM_FIELD = "link_from_field"
 
@@ -64,6 +65,8 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                 data.update(extracted_data)
             if context is not None:
                 data.update({"context": context})
+            data['url'] = response.url
+            data['domain'] = get_domain(response.url)
             yield data
             for traversal in pipe.get('traversals', []):
                 if traversal['traversal_type'] == "pagination":
