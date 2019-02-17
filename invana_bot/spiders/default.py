@@ -112,6 +112,7 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                 elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
                     all_urls = response.css("a::attr(href)").extract()
                     filtered_urls = []
+                    all_urls = list(set(all_urls))
                     current_domain = get_domain(response.url)
                     for url in all_urls:
                         url = get_absolute_url(url=url, origin_url=response.url)
