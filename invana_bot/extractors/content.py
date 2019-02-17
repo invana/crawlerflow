@@ -63,5 +63,5 @@ class CustomContentExtractor(ExtractorBase):
                     data[selector.get('id')] = elements_data
             else:
                 _d = get_selector_element(self.response, selector)
-                data[selector.get('id')] = _d.strip() if _d else None
+                data[selector.get('id')] = _d
         return data
