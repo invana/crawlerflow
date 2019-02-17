@@ -2,8 +2,9 @@ def clean_data(elems=None, selector=None):
     if selector.get('multiple'):
         data_cleaned = []
         data = elems.extract()
-        for i,datum in enumerate(data):
-            data_cleaned[i] = datum.strip() if datum else None
+        for i, datum in enumerate(data):
+            if datum:
+                data_cleaned.append(datum.strip())
         return data_cleaned
     else:
         data = elems.extract_first()
