@@ -117,7 +117,7 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                         url = get_absolute_url(url=url, origin_url=response.url)
                         if get_domain(url) == current_domain:
                             filtered_urls.append(url)
-
+                    filtered_urls = list(set(filtered_urls))
                     # max_pages = traversal.get("max_pages", 100)
                     #  implementing max_pages is difficult cos it keeps adding
                     # new 100 pages in each thread.
