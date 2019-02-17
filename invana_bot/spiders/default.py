@@ -1,10 +1,10 @@
 from .base import InvanaWebsiteSpiderBase
-from invana_bot.utils.url import get_domain
 from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor
 import scrapy
-from invana_bot.utils.url import get_urn, get_domain
+from invana_bot.utils.url import get_domain
 
-LINK_FROM_FIELD = "link_from_field"
+TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
+TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
 
 class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
@@ -94,17 +94,37 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
                                     next_page_url, callback=self.parse,
                                     meta={"current_page_count": current_page_count}
                                 )
-                elif traversal['traversal_type'] == LINK_FROM_FIELD:
+                elif traversal['traversal_type'] == TRAVERSAL_LINK_FROM_FIELD:
                     next_pipe_id = traversal['next_pipe_id']
-                    traversal_config = traversal[LINK_FROM_FIELD]
+                    traversal_config = traversal[TRAVERSAL_LINK_FROM_FIELD]
 
-                    subdocument_key = self.get_subdocument_key(pipe=pipe, extractor_name=traversal_config['extractor_name'])
+                    subdocument_key = self.get_subdocument_key(pipe=pipe,
+                                                               extractor_name=traversal_config['extractor_name'])
                     for item in data[subdocument_key]:
-                        traversal_url = item[traversal[LINK_FROM_FIELD]['field_name']]
+                        traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['field_name']]
                         next_pipelet = self.get_pipe(pipe_id=next_pipe_id, pipeline=pipeline)
                         yield scrapy.Request(
                             traversal_url, callback=self.parse,
                             meta={"pipeline": pipeline,
                                   "pipe": next_pipelet
                                   }
+                        )
+                elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
+                    all_urls = response.css("a::attr(href)").extract()
+                    filtered_urls = []
+                    current_domain = get_domain(response.url)
+                    for url in all_urls:
+                        if get_domain(url) == current_domain:
+                            filtered_urls.append(url)
+
+                    # max_pages = traversal.get("max_pages", 100)
+                    #  implementing max_pages is difficult cos it keeps adding
+                    # new 100 pages in each thread.
+                    current_page_count = response.meta.get('current_page_count', 1)
+                    for url in filtered_urls:
+                        current_page_count = current_page_count + 1
+
+                        yield scrapy.Request(
+                            url, callback=self.parse,
+                            meta={"current_page_count": current_page_count}
                         )
