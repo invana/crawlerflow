@@ -138,8 +138,9 @@ class InvanaWebCrawler(InvanaCrawlerBase):
         self.setup_crawler_type_settings(crawler_type="websites")
         if context is None:
             context = {}
-        context['job_id'] = self.job_id
-        context['job_started'] = datetime.now()
+        if 'job_id' not in context.keys():
+            context['job_id'] = self.job_id
+            context['job_started'] = datetime.now()
         pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=self.job_id, context=context)
         jobs = pipeline.run()
         self.jobs.extend(jobs)
