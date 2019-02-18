@@ -57,10 +57,10 @@ class InvanaCrawlerBase(object):
     def setup_database_settings(self, cache_database=None, storage_database=None,
                                 ):
 
-        if cache_database not in ["mongodb", "elasticsearch"]:
+        if cache_database and cache_database not in ["mongodb", "elasticsearch"]:
             raise Exception("we only support {} as cache_database".format(",".join(SUPPORTED_DATABASES)))
 
-        if storage_database not in ["mongodb", "elasticsearch"]:
+        if storage_database and storage_database not in ["mongodb", "elasticsearch"]:
             raise Exception("we only support {} as storage_database ".format(",".join(SUPPORTED_DATABASES)))
 
         if cache_database == "mongodb":
