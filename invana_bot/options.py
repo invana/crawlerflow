@@ -28,6 +28,9 @@ class InvanaCrawlerBase(object):
     def __init__(self,
                  cache_database=None,
                  storage_database=None,
+                 cache_database_name=None,
+                 storage_database_name=None,
+
                  cache_database_uri=None,
                  storage_database_uri=None,
                  http_cache_enabled=True,
@@ -45,6 +48,8 @@ class InvanaCrawlerBase(object):
         self.setup_database_settings(cache_database=cache_database,
                                      storage_database=storage_database
                                      )
+        self.cache_database_name = cache_database_name
+        self.storage_database_name = storage_database_name
         self.job_id = self.generate_job_id()
         self.set_logger()
 
@@ -85,9 +90,15 @@ class InvanaCrawlerBase(object):
             if self.cache_database_uri:
                 self.settings['INVANA_BOT_SETTINGS']['HTTPCACHE_STORAGE_SETTINGS'][
                     'DATABASE_URI'] = self.cache_database_uri
+            if self.cache_database_name:
+                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS'][
+                    'DATABASE_URI'] = self.cache_database_name
 
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
+
+        if self.storage_database_name:
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_name
 
     def _validate_urls(self, urls):
         if type(urls) is None:
@@ -145,4 +156,3 @@ class InvanaWebCrawler(InvanaCrawlerBase):
         jobs = pipeline.run()
         self.jobs.extend(jobs)
         return jobs
-
