@@ -92,13 +92,13 @@ class InvanaCrawlerBase(object):
                     'DATABASE_URI'] = self.cache_database_uri
             if self.cache_database_name:
                 self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS'][
-                    'DATABASE_URI'] = self.cache_database_name
+                    'DATABASE_NAME'] = self.cache_database_name
 
         if self.storage_database_uri:
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
         if self.storage_database_name:
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_name
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'] = self.storage_database_name
 
     def _validate_urls(self, urls):
         if type(urls) is None:
