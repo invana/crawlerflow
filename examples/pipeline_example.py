@@ -1,4 +1,6 @@
-from invana_bot import InvanaWebCrawler
+from invana_bot.crawlers.generic import InvanaWebCrawler
+from invana_bot.schedulers.generic import InvanaJobScheduler
+from invana_bot.pipelines.process import process_pipeline_config
 
 list_extractor_selectors = [
     {
@@ -132,8 +134,12 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    all_jobs = crawler.set_pipeline(
+    pipeline_data = process_pipeline_config(pipeline=pipeline_data)
+
+    all_jobs = crawler.create_jobs(
         pipeline=pipeline_data,
         context=context
     )
-    crawler.start_jobs(jobs=all_jobs)
+
+    scheduler = InvanaJobScheduler(settings=crawler.get_settings(), jobs=crawler.get_jobs())
+    scheduler.start_jobs(jobs=all_jobs)

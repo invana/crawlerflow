@@ -125,34 +125,4 @@ class InvanaFeedCrawler(InvanaCrawlerBase):
         process.start()
 
 
-class InvanaWebCrawler(InvanaCrawlerBase):
-    """
-    Split the bot into website crawler, feeds crawler, api crawler,
 
-    """
-
-    def start(self):
-        self.start_jobs(jobs=self.jobs)
-
-    def start_jobs(self, jobs=None):
-        if self.runner is None:
-            self.runner = CrawlerRunner(self.settings)
-        for job in jobs:
-            spider_cls = job[0]
-            spider_kwargs = job[1]
-            self.runner.crawl(spider_cls, **spider_kwargs)
-        d = self.runner.join()
-        d.addBoth(lambda _: reactor.stop())
-        reactor.run()  # the script will block here until all crawling jobs are finished
-
-    def set_pipeline(self, pipeline=None, context=None):
-        self.setup_crawler_type_settings(crawler_type="websites")
-        if context is None:
-            context = {}
-        if 'job_id' not in context.keys():
-            context['job_id'] = self.job_id
-            context['job_started'] = datetime.now()
-        pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=self.job_id, context=context)
-        jobs = pipeline.run()
-        self.jobs.extend(jobs)
-        return jobs
