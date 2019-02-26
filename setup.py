@@ -18,7 +18,9 @@ setup(name='invana-bot',
           'invana_bot.spiders',
           'invana_bot.storages',
           'invana_bot.utils',
+          'invana_bot.crawlers',
+          'invana_bot.schedulers',
       ],
-      install_requires=['Scrapy==1.5.0', 'pysolr==3.7.0', 'pymongo==3.6.1', 'elasticsearch-dsl==6.1.0',
+      install_requires=['Scrapy==1.5.0', 'pymongo==3.7.2', 'elasticsearch-dsl==6.1.0',
                         "feedparser==5.2.1"]
       )
