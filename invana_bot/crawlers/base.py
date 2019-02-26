@@ -98,13 +98,20 @@ class InvanaCrawlerBase(object):
             self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_URI'] = self.storage_database_uri
 
         if self.storage_database_name:
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'] = self.storage_database_name
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS'][
+                'DATABASE_NAME'] = self.storage_database_name
 
     def _validate_urls(self, urls):
         if type(urls) is None:
             raise Exception("urls should be list type.")
         if len(urls) is 0:
             raise Exception("urls length should be atleast one.")
+
+    def get_settings(self):
+        return self.settings
+
+    def get_jobs(self):
+        return self.jobs
 
 
 class InvanaFeedCrawler(InvanaCrawlerBase):
@@ -123,6 +130,3 @@ class InvanaFeedCrawler(InvanaCrawlerBase):
                       start_urls=feed_urls,
                       )
         process.start()
-
-
-

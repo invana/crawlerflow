@@ -21,8 +21,4 @@ class InvanaWebCrawler(InvanaCrawlerBase):
         self.jobs.extend(jobs)
         return jobs
 
-    def get_settings(self):
-        return self.settings
 
-    def get_jobs(self):
-        return self.jobs
