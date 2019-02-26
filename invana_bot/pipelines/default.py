@@ -124,7 +124,7 @@ class WebCrawlerPipelet(object):
     def run(self):
         spider_cls = DefaultPipeletSpider
         spider_kwargs = self.generate_pipe_kwargs()
-        return spider_cls, spider_kwargs
+        return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
 
 
 class WebCrawlerPipeline(object):
@@ -147,7 +147,6 @@ class WebCrawlerPipeline(object):
         return
 
     def run(self):
-        jobs = []
         pipe = self.pipeline['pipeline'][0]
         invana_pipe = WebCrawlerPipelet(pipe=pipe,
                                         start_urls=self.pipeline['start_urls'],
@@ -155,6 +154,4 @@ class WebCrawlerPipeline(object):
                                         pipeline=self.pipeline,
                                         context=self.context)
         job = invana_pipe.run()
-        jobs.append(job)
-
-        return jobs
+        return job

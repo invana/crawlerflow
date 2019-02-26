@@ -23,7 +23,6 @@ class InvanaCrawlerBase(object):
 
     }
     runner = None
-    jobs = []
 
     def __init__(self,
                  cache_database=None,
@@ -109,9 +108,6 @@ class InvanaCrawlerBase(object):
 
     def get_settings(self):
         return self.settings
-
-    def get_jobs(self):
-        return self.jobs
 
 
 class InvanaFeedCrawler(InvanaCrawlerBase):

@@ -40,7 +40,7 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    all_jobs = crawler.create_jobs(
+    all_jobs = crawler.create_job(
         pipeline=pipeline_data,
         context=context
     )

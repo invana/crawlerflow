@@ -9,7 +9,7 @@ class InvanaWebCrawler(InvanaCrawlerBase):
 
     """
 
-    def create_jobs(self, pipeline=None, context=None):
+    def create_job(self, pipeline=None, context=None):
         self.setup_crawler_type_settings(crawler_type="websites")
         if context is None:
             context = {}
@@ -17,8 +17,7 @@ class InvanaWebCrawler(InvanaCrawlerBase):
             context['job_id'] = self.job_id
             context['job_started'] = datetime.now()
         pipeline = WebCrawlerPipeline(pipeline=pipeline, job_id=self.job_id, context=context)
-        jobs = pipeline.run()
-        self.jobs.extend(jobs)
-        return jobs
+        job = pipeline.run()
+        return job
 
 

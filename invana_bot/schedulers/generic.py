@@ -13,7 +13,7 @@ class InvanaJobScheduler(object):
         storage_database="mongodb",
     )
 
-    all_jobs = crawler.create_jobs(
+    all_jobs = crawler.create_job(
         pipeline=pipeline_data,
         context=context
     )
@@ -27,9 +27,8 @@ class InvanaJobScheduler(object):
     jobs = []
     runner = None
 
-    def __init__(self, settings=None, jobs=None):
+    def __init__(self, settings=None):
         self.settings = settings
-        self.jobs = jobs if jobs else []
 
     def start(self):
         self.start_jobs(jobs=self.jobs)
@@ -38,8 +37,8 @@ class InvanaJobScheduler(object):
         if self.runner is None:
             self.runner = CrawlerRunner(self.settings)
         for job in jobs:
-            spider_cls = job[0]
-            spider_kwargs = job[1]
+            spider_cls = job['spider_cls']
+            spider_kwargs = job['spider_kwargs']
             self.runner.crawl(spider_cls, **spider_kwargs)
         d = self.runner.join()
         d.addBoth(lambda _: reactor.stop())
