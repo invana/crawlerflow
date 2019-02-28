@@ -167,13 +167,13 @@ if __name__ == '__main__':
 
     pipeline_data = process_pipeline_config(pipeline=pipeline_data)
 
-    all_jobs = crawler.create_job(
+    all_job = crawler.create_job(
         pipeline=pipeline_data,
         context=context
     )
 
-    scheduler = InvanaJobScheduler(settings=crawler.get_settings(), jobs=crawler.get_jobs())
-    scheduler.start_jobs(jobs=all_jobs)
+    scheduler = InvanaJobScheduler(settings=crawler.get_settings())
+    scheduler.start_jobs(jobs=[all_job])
 
 
 ```
