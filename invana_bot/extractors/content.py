@@ -31,8 +31,23 @@ class MainContentExtractor(ExtractorBase):
 
 
 class TableContentExtractor(ExtractorBase):
-    # TODO - implement this
-    pass
+    def run(self):
+        data = {}
+        data['url'] = self.response.url
+        tables = []
+        for table in self.response.css("table"):
+            table_data = []
+            table_headers = [th.extract() for th in table.css("thead tr th::text")]
+            print("table_headers", table_headers)
+            for row in table.css("tbody tr"):
+                row_data = [td.extract() for td in row.css("td::text")]
+                row_dict = dict(zip(table_headers, row_data))
+                table_data.append(row_dict)
+            print("table_data", table_data)
+            tables.append(table_data)
+        data['tables'] = tables
+        print(tables)
+        return data
 
 
 class CustomContentExtractor(ExtractorBase):

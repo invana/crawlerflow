@@ -1,5 +1,5 @@
 from .base import InvanaWebsiteSpiderBase
-from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor
+from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor, TableContentExtractor
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 
@@ -20,6 +20,8 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
         extractor_name = extractor.get("extractor_name")
         if extractor_name in [None, "CustomContentExtractor"]:
             extractor_object = CustomContentExtractor(response=response, extractor=extractor)
+        elif extractor_name == "TableContentExtractor":
+            extractor_object = TableContentExtractor(response=response, extractor=extractor)
         elif extractor_name == "ParagraphsExtractor":
             extractor_object = ParagraphsExtractor(response=response, extractor=extractor)
         else:
