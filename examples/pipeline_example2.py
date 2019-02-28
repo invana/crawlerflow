@@ -12,7 +12,6 @@ pipeline_data = {
                 {
                     "extractor_name": "TableContentExtractor"
                 },
-
             ],
         }
     ]
