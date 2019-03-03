@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='invana-bot',
-      version='a1.0',
+      version='0.0.0a',
       description='A batteries included crawler framework built on top of scrapy for scale and intelligent crawling.',
       author='Ravi Raja Merugu',
       author_email='rrmerugu@gmail.com',
