@@ -21,6 +21,8 @@ setup(name='invana-bot',
           'invana_bot.crawlers',
           'invana_bot.schedulers',
       ],
-      install_requires=['Scrapy==1.5.0', 'pymongo==3.7.2', 'elasticsearch-dsl==6.1.0',
-                        "feedparser==5.2.1"]
+      install_requires=['Scrapy==1.6.0',
+                        'pymongo',
+                        "feedparser==5.2.1"
+                        ]
       )
