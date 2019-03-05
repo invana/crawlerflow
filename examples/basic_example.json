@@ -7,7 +7,11 @@
     "parsers": [
       {
         "parser_id": "site_list",
-        "data_extractors": [],
+        "data_extractors": [
+          {
+            "extractor_name": "ParagraphsExtractor"
+          }
+        ],
         "traversals": [
           {
             "traversal_type": "same_domain",
