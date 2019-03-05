@@ -18,15 +18,15 @@ class InvanaWebCrawler(InvanaCrawlerBase):
         if 'job_id' not in context.keys():
             context['job_id'] = self.job_id
             context['job_started'] = datetime.now()
-        pipeline = CTIRunner(cti_config=cti_config, job_id=self.job_id, context=context)
-        job = pipeline.run()
+        cti_runner = CTIRunner(cti_config=cti_config, job_id=self.job_id, context=context)
+        job = cti_runner.run()
         return job
 
     def start_jobs(self, jobs=None):
         if self.runner is None:
             self.runner = CrawlerRunner(self.settings)
         for job in jobs:
-            print (job)
+            print(job)
             spider_cls = job['spider_cls']
             spider_kwargs = job['spider_kwargs']
             self.runner.crawl(spider_cls, **spider_kwargs)

@@ -1,20 +1,22 @@
 {
   "cti_id": "invanalab-xyz",
-  "crawlers": [
-    {
-      "parser_id": "blog-list",
-      "start_urls": [
-        "https://blog.scrapinghub.com"
-      ],
-      "data_extractors": [],
-      "traversals": [
-        {
-          "traversal_type": "same_domain",
-          "next_pipe_id": "blog-list"
-        }
-      ]
-    }
-  ],
+  "crawlers": {
+    "start_urls": [
+      "https://blog.scrapinghub.com"
+    ],
+    "parsers": [
+      {
+        "parser_id": "blog-list",
+        "data_extractors": [],
+        "traversals": [
+          {
+            "traversal_type": "same_domain",
+            "next_parser_id": "blog-list"
+          }
+        ]
+      }
+    ]
+  },
   "transformations": [
   ],
   "indexes": [

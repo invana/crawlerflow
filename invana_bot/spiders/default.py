@@ -1,4 +1,4 @@
-from .base import InvanaWebsiteSpiderBase
+from .base import WebSpiderBase
 from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor, TableContentExtractor
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
@@ -7,14 +7,14 @@ TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
 
-class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
+class DefaultParserSpider(WebSpiderBase):
     """
     This is generic spider
     """
-    name = "DefaultPipeletSpider"
+    name = "DefaultParserSpider"
 
     def closed(self, reason):
-        print("spider closed with payload:", reason, self.pipe)
+        print("spider closed with payload:", reason, self.parser)
 
     def run_extractor(self, response=None, extractor=None):
         extractor_name = extractor.get("extractor_name")
@@ -52,12 +52,12 @@ class DefaultPipeletSpider(InvanaWebsiteSpiderBase):
 
     def parse(self, response=None):
 
-        pipe = response.meta.get("pipe")
+        pipe = response.meta.get("parser")
         pipeline = response.meta.get("pipeline")
         context = self.context
 
         if None in [pipeline, pipe]:
-            pipe = self.pipe
+            pipe = self.parser
             pipeline = self.pipeline
 
         data = {}

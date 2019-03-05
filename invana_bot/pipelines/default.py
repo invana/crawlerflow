@@ -1,9 +1,9 @@
-from invana_bot.spiders.default import DefaultPipeletSpider
+from invana_bot.spiders.default import DefaultParserSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 
 
-class WebCrawlerPipelet(object):
+class WebCrawlerParser(object):
     """
 
     pipe_data = {  # single pipe
@@ -63,7 +63,7 @@ class WebCrawlerPipelet(object):
 
     """
 
-    def __init__(self, pipe=None, start_urls=None, job_id=None,
+    def __init__(self, parser=None, start_urls=None, job_id=None,
                  pipeline=None, context=None):
         """
 
@@ -71,7 +71,7 @@ class WebCrawlerPipelet(object):
         :param pipeline: set of units combined to create a flow
         :param context: any extra information user want to send to the crawled data.
         """
-        self.pipe = pipe
+        self.parser = parser
         self.job_id = job_id
         self.crawlers = pipeline
         self.start_urls = start_urls
@@ -83,7 +83,7 @@ class WebCrawlerPipelet(object):
         must_have_keys = ["parser_id", "data_extractors"]
         optional_keys = ["traversals"]
         for key in must_have_keys:
-            if key not in self.pipe.keys():
+            if key not in self.parser.keys():
                 raise Exception(
                     "invalid pipe data, should have the following keys; {}".format(",".join(must_have_keys)))
 
@@ -94,10 +94,10 @@ class WebCrawlerPipelet(object):
         pass  # TODO - implement this
 
     def get_traversals(self):
-        return self.pipe.get("traversals", [])
+        return self.parser.get("traversals", [])
 
     def get_extractors(self):
-        return self.pipe.get("data_extractors", [])
+        return self.parser.get("data_extractors", [])
 
     def generate_pipe_kwargs(self):
         domains = []
@@ -115,14 +115,14 @@ class WebCrawlerPipelet(object):
             "start_urls": self.start_urls,
             "allowed_domains": domains,
             "rules": rules,
-            "pipe": self.pipe,
+            "parser": self.parser,
             "pipeline": self.crawlers,
             "context": self.context
         }
         return spider_kwargs
 
     def run(self):
-        spider_cls = DefaultPipeletSpider
+        spider_cls = DefaultParserSpider
         spider_kwargs = self.generate_pipe_kwargs()
         return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
 
@@ -136,23 +136,24 @@ class CTIRunner(object):
 
     def __init__(self, cti_config=None, job_id=None, context=None):
         self.cti_config = cti_config
-        self.crawlers = self.cti_config['crawlers']
+        self.crawler_config = self.cti_config['crawlers']
+        self.parsers = self.crawler_config['parsers']
         self.job_id = job_id
         self.context = context
 
     def get_pipelet(self, pipe_id=None):
-        pipeline = self.crawlers['crawlers']
-        for pipe in pipeline:
-            if pipe.get("pipe_id") == pipe_id:
-                return pipe
+        for parser in self.parsers:
+            if parser.get("parse_id") == pipe_id:
+                return parser
         return
 
     def run(self):
-        pipe = self.crawlers[0]
-        invana_pipe = WebCrawlerPipelet(pipe=pipe,
-                                        start_urls=pipe['start_urls'],
+        initial_parser = self.parsers[0]
+        print ("initial_parser", initial_parser)
+        invana_pipe = WebCrawlerParser(parser=initial_parser,
+                                        start_urls=self.crawler_config['start_urls'],
                                         job_id=self.job_id,
-                                        pipeline=self.crawlers,
+                                        pipeline=self.parsers,
                                         context=self.context)
         job = invana_pipe.run()
         return job

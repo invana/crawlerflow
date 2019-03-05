@@ -1,6 +1,6 @@
 from invana_bot.settings import MONGODB_DEFAULTS, ELASTICSEARCH_DEFAULTS, \
     FEEDS_CRAWLER_DEFAULTS, WEBSITE_CRAWLER_DEFAULTS, SUPPORTED_DATABASES, SUPPORTED_CRAWLERS
-from invana_bot.pipelines.default import CTIRunner, WebCrawlerPipelet
+from invana_bot.pipelines.default import CTIRunner, WebCrawlerParser
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.crawler import CrawlerProcess
 from invana_bot.spiders.feeds import RSSSpider
