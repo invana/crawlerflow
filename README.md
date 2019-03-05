@@ -1,7 +1,6 @@
 # Invana Bot
 
-A batteries included crawler framework built on top of [scrapy](https://scrapy.org/)
- for generating crawling pipeline with json configs.
+A web crawler framework that can transform websites into datasets with Crawl, Transform and Index Flow. 
 
 
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
