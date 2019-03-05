@@ -1,5 +1,4 @@
 from invana_bot.crawlers.generic import InvanaWebCrawler
-from invana_bot.schedulers.generic import InvanaJobScheduler
 from invana_bot.pipelines.process import process_pipeline_config
 
 import json
@@ -19,6 +18,7 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
+    print ("cti_config", cti_config['crawlers'])
     job = crawler.create_job(
         cti_config=cti_config,
         context=context
