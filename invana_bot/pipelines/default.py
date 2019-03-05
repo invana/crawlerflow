@@ -73,14 +73,14 @@ class WebCrawlerPipelet(object):
         """
         self.pipe = pipe
         self.job_id = job_id
-        self.pipeline = pipeline
+        self.crawlers = pipeline
         self.start_urls = start_urls
         if context:
             self.context = context
         self.validate_pipe()
 
     def validate_pipe(self):
-        must_have_keys = ["pipe_id", "data_extractors"]
+        must_have_keys = ["parser_id", "data_extractors"]
         optional_keys = ["traversals"]
         for key in must_have_keys:
             if key not in self.pipe.keys():
@@ -116,7 +116,7 @@ class WebCrawlerPipelet(object):
             "allowed_domains": domains,
             "rules": rules,
             "pipe": self.pipe,
-            "pipeline": self.pipeline,
+            "pipeline": self.crawlers,
             "context": self.context
         }
         return spider_kwargs
@@ -127,31 +127,32 @@ class WebCrawlerPipelet(object):
         return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
 
 
-class WebCrawlerPipeline(object):
+class CTIRunner(object):
     """
 
 
 
     """
 
-    def __init__(self, pipeline=None, job_id=None, context=None):
-        self.pipeline = pipeline
+    def __init__(self, cti_config=None, job_id=None, context=None):
+        self.cti_config = cti_config
+        self.crawlers = self.cti_config['crawlers']
         self.job_id = job_id
         self.context = context
 
     def get_pipelet(self, pipe_id=None):
-        pipeline = self.pipeline['pipeline']
+        pipeline = self.crawlers['crawlers']
         for pipe in pipeline:
             if pipe.get("pipe_id") == pipe_id:
                 return pipe
         return
 
     def run(self):
-        pipe = self.pipeline['pipeline'][0]
+        pipe = self.crawlers[0]
         invana_pipe = WebCrawlerPipelet(pipe=pipe,
-                                        start_urls=self.pipeline['start_urls'],
+                                        start_urls=pipe['start_urls'],
                                         job_id=self.job_id,
-                                        pipeline=self.pipeline,
+                                        pipeline=self.crawlers,
                                         context=self.context)
         job = invana_pipe.run()
         return job

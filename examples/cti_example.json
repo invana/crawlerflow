@@ -1,0 +1,27 @@
+{
+  "cti_id": "invanalab-xyz",
+  "crawlers": [
+    {
+      "parser_id": "blog-list",
+      "start_urls": [
+        "https://blog.scrapinghub.com"
+      ],
+      "data_extractors": [],
+      "traversals": [
+        {
+          "traversal_type": "same_domain",
+          "next_pipe_id": "blog-list"
+        }
+      ]
+    }
+  ],
+  "transformations": [
+  ],
+  "indexes": [
+    {
+      "db_connection_uri": "mongodb://127.0.0.1"
+    }
+  ],
+  "callbacks": [
+  ]
+}

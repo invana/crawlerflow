@@ -1,0 +1,27 @@
+from invana_bot.crawlers.generic import InvanaWebCrawler
+from invana_bot.schedulers.generic import InvanaJobScheduler
+from invana_bot.pipelines.process import process_pipeline_config
+
+import json
+
+cti_config = json.load(open("./cti_example.json"))
+context = {
+    "extra_info": "2019-1-1 something",
+    "author": "Ravi@Invana",
+
+}
+
+if __name__ == '__main__':
+    crawler = InvanaWebCrawler(
+        cache_database_uri="mongodb://127.0.0.1",
+        storage_database_uri="mongodb://127.0.0.1",
+        cache_database="mongodb",
+        storage_database="mongodb",
+    )
+
+    job = crawler.create_job(
+        cti_config=cti_config,
+        context=context
+    )
+    print("all_jobs", job)
+    crawler.start_jobs(jobs=[job])
