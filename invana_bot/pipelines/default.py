@@ -64,7 +64,7 @@ class WebCrawlerParser(object):
     """
 
     def __init__(self, parser=None, start_urls=None, job_id=None,
-                 pipeline=None, context=None):
+                 all_parsers=None, context=None):
         """
 
         :param pipe: single unit of crawling
@@ -73,7 +73,7 @@ class WebCrawlerParser(object):
         """
         self.parser = parser
         self.job_id = job_id
-        self.crawlers = pipeline
+        self.all_parsers = all_parsers
         self.start_urls = start_urls
         if context:
             self.context = context
@@ -116,7 +116,7 @@ class WebCrawlerParser(object):
             "allowed_domains": domains,
             "rules": rules,
             "parser": self.parser,
-            "pipeline": self.crawlers,
+            "all_parsers": self.all_parsers,
             "context": self.context
         }
         return spider_kwargs
@@ -149,11 +149,11 @@ class CTIRunner(object):
 
     def run(self):
         initial_parser = self.parsers[0]
-        print ("initial_parser", initial_parser)
+        print("initial_parser", initial_parser)
         invana_pipe = WebCrawlerParser(parser=initial_parser,
-                                        start_urls=self.crawler_config['start_urls'],
-                                        job_id=self.job_id,
-                                        pipeline=self.parsers,
-                                        context=self.context)
+                                       start_urls=self.crawler_config['start_urls'],
+                                       job_id=self.job_id,
+                                       all_parsers=self.parsers,
+                                       context=self.context)
         job = invana_pipe.run()
         return job
