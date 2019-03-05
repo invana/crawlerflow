@@ -3,13 +3,12 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 
 
-class WebCrawlerParser(object):
+class ParserCrawler(object):
     """
 
     pipe_data = {  # single pipe
 
-        "pipe_id": "blog-list",
-        "start_urls": ["https://blog.scrapinghub.com"],
+        "parser_id": "blog-list",
         "data_extractors": [
             {
                 "data_selectors": [
@@ -67,8 +66,8 @@ class WebCrawlerParser(object):
                  all_parsers=None, context=None):
         """
 
-        :param pipe: single unit of crawling
-        :param pipeline: set of units combined to create a flow
+        :param parser: single unit of crawling
+        :param all_parsers: set of units combined to create a flow
         :param context: any extra information user want to send to the crawled data.
         """
         self.parser = parser
@@ -85,7 +84,7 @@ class WebCrawlerParser(object):
         for key in must_have_keys:
             if key not in self.parser.keys():
                 raise Exception(
-                    "invalid pipe data, should have the following keys; {}".format(",".join(must_have_keys)))
+                    "invalid parser data, should have the following keys; {}".format(",".join(must_have_keys)))
 
     def validate_traversal(self):
         pass  # TODO - implement this
@@ -150,10 +149,12 @@ class CTIRunner(object):
     def run(self):
         initial_parser = self.parsers[0]
         print("initial_parser", initial_parser)
-        invana_pipe = WebCrawlerParser(parser=initial_parser,
-                                       start_urls=self.crawler_config['start_urls'],
-                                       job_id=self.job_id,
-                                       all_parsers=self.parsers,
-                                       context=self.context)
-        job = invana_pipe.run()
-        return job
+        parser_crawler = ParserCrawler(
+            job_id=self.job_id,
+            start_urls=self.crawler_config['start_urls'],
+            parser=initial_parser,
+            all_parsers=self.parsers,
+            context=self.context
+        )
+        cti_job = parser_crawler.run()
+        return cti_job
