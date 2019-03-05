@@ -1,13 +1,10 @@
 from invana_bot.crawlers.generic import InvanaWebCrawler
-from invana_bot.pipelines.process import process_pipeline_config
-
 import json
 
 cti_config = json.load(open("./cti_example.json"))
 context = {
     "extra_info": "2019-1-1 something",
-    "author": "Ravi@Invana",
-
+    "author": "Ravi@Invana"
 }
 
 if __name__ == '__main__':
@@ -18,7 +15,7 @@ if __name__ == '__main__':
         storage_database="mongodb",
     )
 
-    print ("cti_config", cti_config['crawlers'])
+    print("cti_config", cti_config['crawlers'])
     job = crawler.create_job(
         cti_config=cti_config,
         context=context
