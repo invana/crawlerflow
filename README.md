@@ -1,6 +1,7 @@
 # Invana Bot
 
-A web crawler framework that can transform websites into datasets with Crawl, Transform and Index Flow. 
+A web crawler framework that can transform websites into datasets with Crawl, Transform and Index 
+with json configurations. 
 
 
 It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
