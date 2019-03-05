@@ -1,0 +1,80 @@
+{
+  "cti_id": "invanalab-xyz",
+  "crawlers": {
+    "start_urls": [
+      "https://blog.scrapinghub.com"
+    ],
+    "parsers": [
+      {
+        "parser_id": "blog-list",
+        "data_extractors": [
+          {
+            "extractor_name": "CustomContentExtractor",
+            "data_selectors": [
+              {
+                "id": "blogs",
+                "selector": ".post-listing .post-item",
+                "selector_attribute": "element",
+                "multiple": true,
+                "child_selectors": [
+                  {
+                    "id": "url",
+                    "selector": ".post-header h2 a",
+                    "selector_type": "css",
+                    "selector_attribute": "href",
+                    "parent_selector": "blogs",
+                    "multiple": false
+                  },
+                  {
+                    "id": "title",
+                    "selector": ".post-header h2 a",
+                    "selector_type": "css",
+                    "selector_attribute": "text",
+                    "parent_selector": "blogs",
+                    "multiple": false
+                  },
+                  {
+                    "id": "content",
+                    "selector": ".post-content",
+                    "selector_type": "css",
+                    "selector_attribute": "html",
+                    "parent_selector": "blogs",
+                    "multiple": false
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "traversals": [
+          {
+            "traversal_type": "pagination",
+            "pagination": {
+              "selector": ".next-posts-link",
+              "selector_type": "css",
+              "max_pages": 20
+            },
+            "next_parser_id": "blog-list"
+          },
+          {
+            "traversal_type": "link_from_field",
+            "link_from_field": {
+              "extractor_name": "CustomContentExtractor",
+              "field_name": "url"
+            },
+            "next_parser_id": "blog-detail"
+          }
+        ]
+      }
+    ]
+  },
+  "transformations": [
+  ],
+  "indexes": [
+    {
+      "db_connection_uri": "mongodb://127.0.0.1"
+    }
+  ],
+  "callbacks": [
+  ]
+}

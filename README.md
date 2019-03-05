@@ -134,11 +134,11 @@ pipeline_data = {
             "traversals": [{
                 "traversal_type": "pagination",
                 "pagination": traversal,
-                "next_pipe_id": "blog-list"
+                "next_parser_id": "blog-list"
             }, {
                 "traversal_type": "link_from_field",
                 "link_from_field": {"extractor_name": "CustomContentExtractor", "field_name": "url"},
-                "next_pipe_id": "blog-detail"
+                "next_parser_id": "blog-detail"
             }]
         },
         {

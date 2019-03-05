@@ -21,7 +21,7 @@ pipeline_data = {
             ],
             "traversals": [{
                 "traversal_type": "same_domain",
-                "next_pipe_id": "blog-list"
+                "next_parser_id": "blog-list"
             }]
         }
     ],

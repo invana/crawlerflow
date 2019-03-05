@@ -1,7 +1,7 @@
 from invana_bot.crawlers.generic import InvanaWebCrawler
 import json
 
-cti_config = json.load(open("./cti_example.json"))
+cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
 context = {
     "extra_info": "2019-1-1 something",
     "author": "Ravi@Invana"
