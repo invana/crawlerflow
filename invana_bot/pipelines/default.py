@@ -140,12 +140,6 @@ class CTIRunner(object):
         self.job_id = job_id
         self.context = context
 
-    def get_pipelet(self, pipe_id=None):
-        for parser in self.parsers:
-            if parser.get("parse_id") == pipe_id:
-                return parser
-        return
-
     def run(self):
         initial_parser = self.parsers[0]
         print("initial_parser", initial_parser)
