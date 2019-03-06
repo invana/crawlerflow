@@ -12,7 +12,6 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
     """
 
     def create_job(self, cti_config=None, context=None):
-        self.setup_crawler_type_settings(crawler_type="websites")
         if context is None:
             context = {}
         if 'job_id' not in context.keys():
