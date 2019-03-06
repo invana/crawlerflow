@@ -16,7 +16,7 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
 
 ## Features
 
-1. Parsers in the form of json configuration.
+1. crawlers in the form of json configuration.
 
 2. Define traversals from one parser to another.
 
@@ -58,18 +58,18 @@ cti_config = {
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "parsers": [
+    "crawlers": [
       {
-        "parser_id": "site_list",
-        "data_extractors": [
+        "crawler_id": "site_list",
+        "parsers": [
           {
-            "extractor_name": "ParagraphsExtractor"
+            "parser_name": "ParagraphsExtractor"
           }
         ],
         "traversals": [
           {
             "traversal_type": "same_domain",
-            "next_parser_id": "site_list"
+            "next_crawler_id": "site_list"
           }
         ]
       }

@@ -4,12 +4,12 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "parsers": [
+    "crawlers": [
       {
-        "parser_id": "blog-list",
-        "data_extractors": [
+        "crawler_id": "blog-list",
+        "parsers": [
           {
-            "extractor_name": "CustomContentExtractor",
+            "parser_name": "CustomContentExtractor",
             "data_selectors": [
               {
                 "id": "blogs",
@@ -49,7 +49,7 @@
         "traversals": [
           {
             "traversal_type": "same_domain",
-            "next_parser_id": "blog-list"
+            "next_crawler_id": "blog-list"
           }
         ]
       }

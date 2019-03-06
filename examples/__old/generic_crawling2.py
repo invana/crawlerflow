@@ -6,8 +6,8 @@ pipeline_data = {
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
-            "data_extractors": [{
-                "extractor_name": "CustomContentExtractor",
+            "parsers": [{
+                "parser_name": "CustomContentExtractor",
                 "data_selectors": [
                     {
                         "id": "main_content",
@@ -21,7 +21,7 @@ pipeline_data = {
             ],
             "traversals": [{
                 "traversal_type": "same_domain",
-                "next_parser_id": "blog-list"
+                "next_crawler_id": "blog-list"
             }]
         }
     ],

@@ -8,9 +8,9 @@ pipeline_data = {
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
-            "data_extractors": [
+            "parsers": [
                 {
-                    "extractor_name": "TableContentExtractor"
+                    "parser_name": "TableContentExtractor"
                 },
             ],
         }

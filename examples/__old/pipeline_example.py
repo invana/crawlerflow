@@ -88,31 +88,31 @@ pipeline_data = {
     "pipeline": [
         {  # single pipe
             "pipe_id": "blog-list",
-            "data_extractors": [
+            "parsers": [
                 {
-                    "extractor_name": "CustomContentExtractor",
+                    "parser_name": "CustomContentExtractor",
                     "data_selectors": list_extractor_selectors
                 },
                 {
-                    "extractor_name": "ParagraphsExtractor"
+                    "parser_name": "ParagraphsExtractor"
                 },
 
             ],
             "traversals": [{
                 "traversal_type": "pagination",
                 "pagination": pagination_traversal,
-                "next_parser_id": "blog-list"
+                "next_crawler_id": "blog-list"
             }, {
                 "traversal_type": "link_from_field",
-                "link_from_field": {"extractor_name": "CustomContentExtractor", "field_name": "url"},
-                "next_parser_id": "blog-detail"
+                "link_from_field": {"parser_name": "CustomContentExtractor", "field_name": "url"},
+                "next_crawler_id": "blog-detail"
             }]
         },
         {
             "pipe_id": "blog-detail",
-            "data_extractors": [
+            "parsers": [
                 {
-                    "extractor_name": "CustomContentExtractor",
+                    "parser_name": "CustomContentExtractor",
                     "data_selectors": detail_extractor_selectors
                 },
 

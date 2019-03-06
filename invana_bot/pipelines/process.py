@@ -5,11 +5,11 @@ def process_pipe(parser_config=None):
     return process_config(parser_config)
 
 
-def process_pipeline_config(parsers=None):
-    print("parsers", parsers)
+def process_pipeline_config(crawlers=None):
+    print("crawlers", crawlers)
     # TODO - validate the config too
-    for parser in parsers:
-        for extractor in parser.get('data_extractors', []):
+    for crawler in crawlers:
+        for extractor in crawler.get('parsers', []):
             extractor['data_selectors'] = process_pipe(extractor)['data_selectors']
-    print("parsers", parsers)
-    return parsers
+    print("crawlers", crawlers)
+    return crawlers
