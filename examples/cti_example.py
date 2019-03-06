@@ -1,4 +1,4 @@
-from invana_bot.crawlers.generic import InvanaWebCrawler
+from invana_bot.crawlers.generic import InvanaBotWebCrawler
 import json
 
 cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
@@ -8,7 +8,7 @@ context = {
 }
 
 if __name__ == '__main__':
-    crawler = InvanaWebCrawler(
+    crawler = InvanaBotWebCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",

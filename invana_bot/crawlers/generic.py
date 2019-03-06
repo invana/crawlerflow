@@ -1,11 +1,11 @@
-from .base import InvanaWebCrawlerBase
+from .base import InvanaBotWebCrawlerBase
 from invana_bot.pipelines.default import CTIRunner
 from datetime import datetime
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
 
 
-class InvanaWebCrawler(InvanaWebCrawlerBase):
+class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
     """
     Split the bot into website crawler, feeds crawler, api crawler,
 

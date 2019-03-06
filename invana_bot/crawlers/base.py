@@ -11,7 +11,7 @@ from datetime import datetime
 from scrapy.utils.log import configure_logging
 
 
-class InvanaWebCrawlerBase(object):
+class InvanaBotWebCrawlerBase(object):
     """
 
 
@@ -110,7 +110,7 @@ class InvanaWebCrawlerBase(object):
         return self.settings
 
 
-class InvanaFeedCrawler(InvanaWebCrawlerBase):
+class InvanaFeedCrawler(InvanaBotWebCrawlerBase):
 
     def crawl_feeds(self, feed_urls=None):
         self.setup_crawler_type_settings(crawler_type="feeds")

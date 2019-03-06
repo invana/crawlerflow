@@ -30,7 +30,7 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 ```python
 
 
-from invana_bot.crawlers.generic import InvanaWebCrawler
+from invana_bot.crawlers.generic import InvanaBotWebCrawler
 
 
 cti_config = {
@@ -72,7 +72,7 @@ context = {
 }
 
 if __name__ == '__main__':
-    crawler = InvanaWebCrawler(
+    crawler = InvanaBotWebCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",
