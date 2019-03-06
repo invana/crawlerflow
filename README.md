@@ -52,7 +52,7 @@ from invana_bot.crawlers.generic import InvanaBotWebCrawler
 from invana_bot.settings import DEFAULT_SETTINGS
 
 
-cti_config = {
+cti_manifest = {
   "cti_id": "invanalabs_xyz",
   "init_data": {
     "start_urls": [
@@ -98,7 +98,7 @@ if __name__ == '__main__':
         settings=DEFAULT_SETTINGS
     )
     job = crawler.create_job(
-        cti_config=cti_config,
+        cti_manifest=cti_manifest,
         context=context
     )
     crawler.start_jobs(jobs=[job])

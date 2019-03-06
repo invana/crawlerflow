@@ -11,13 +11,13 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
 
     """
 
-    def create_job(self, cti_config=None, context=None):
+    def create_job(self, cti_manifest=None, context=None):
         if context is None:
             context = {}
         if 'job_id' not in context.keys():
             context['job_id'] = self.job_id
             context['job_started'] = datetime.now()
-        cti_runner = CTIRunner(cti_config=cti_config, job_id=self.job_id, context=context)
+        cti_runner = CTIRunner(cti_manifest=cti_manifest, job_id=self.job_id, context=context)
         job = cti_runner.run()
         return job
 

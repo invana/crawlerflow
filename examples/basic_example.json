@@ -2,7 +2,7 @@
   "cti_id": "invanalabs_xyz",
   "init_data": {
     "start_urls": [
-      "https://blog.invanalabs.ai"
+      "https://blog.scrapinghub.com"
     ],
     "crawler_id": "site_list"
   },

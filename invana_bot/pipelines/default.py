@@ -134,20 +134,20 @@ class CTIRunner(object):
 
     """
 
-    def __init__(self, cti_config=None, job_id=None, context=None):
-        self.cti_config = cti_config
-        self.crawlers = self.cti_config['crawlers']
+    def __init__(self, cti_manifest=None, job_id=None, context=None):
+        self.cti_manifest = cti_manifest
+        self.crawlers = self.cti_manifest['crawlers']
         self.job_id = job_id
         self.context = context
 
     def run(self):
-        validate_cti_config(config=self.cti_config)
-        initial_crawler = get_crawler_from_list(crawler_id=self.cti_config['init_data']['crawler_id'],
+        validate_cti_config(config=self.cti_manifest)
+        initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_data']['crawler_id'],
                                                 crawlers=self.crawlers)
         print("initial_crawler", initial_crawler)
         parser_crawler = ParserCrawler(
             job_id=self.job_id,
-            start_urls=self.cti_config['init_data']['start_urls'],
+            start_urls=self.cti_manifest['init_data']['start_urls'],
             current_crawler=initial_crawler,
             crawlers=self.crawlers,
             context=self.context

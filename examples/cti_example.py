@@ -4,7 +4,7 @@ import json
 
 # cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
 # cti_config = json.load(open("./cti_example_same_domain_traversal.json"))
-cti_config = json.load(open("./basic_example.json"))
+cti_manifest = json.load(open("./basic_example.json"))
 context = {
     "job_id": "123",
     "author": "https://github.com/rrmerugu",
@@ -16,9 +16,9 @@ if __name__ == '__main__':
         settings=DEFAULT_SETTINGS
     )
 
-    print("cti_config", cti_config['crawlers'])
+    print("cti_manifest", cti_manifest['crawlers'])
     job = crawler.create_job(
-        cti_config=cti_config,
+        cti_manifest=cti_manifest,
         context=context
     )
     print("all_jobs", job)
