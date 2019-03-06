@@ -68,9 +68,9 @@ class ParserCrawler(object):
                  crawlers=None, context=None):
         """
 
-        :param parser: single unit of crawling
-        :param crawlers: set of units combined to create a flow
-        :param context: any extra information user want to send to the crawled data.
+        :param current_crawler: single crawler in the CTI flow
+        :param crawlers: all the crawlers in the CTI flow
+        :param context: any extra information user want to send to the crawled data or carry forward.
         """
         self.current_crawler = current_crawler
         self.job_id = job_id
@@ -139,8 +139,6 @@ class CTIRunner(object):
         self.crawlers = self.cti_config['crawlers']
         self.job_id = job_id
         self.context = context
-
-    # def get_initial_parser(self):
 
     def run(self):
         validate_cti_config(config=self.cti_config)

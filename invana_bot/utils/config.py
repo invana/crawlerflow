@@ -12,7 +12,13 @@ def validate_config(config=None):
 
 
 def validate_cti_config(config=None):
-    print("ok")
+    required_keys = ['cti_id', 'init_data', 'crawlers']
+    for key_ in required_keys:
+        if key_ not in config.keys():
+            raise InvalidCrawlerConfig(
+                "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
+    # TODO - validate all the data_selectors data aswell
+    return True
 
 
 def process_config(config=None):

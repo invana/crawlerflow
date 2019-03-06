@@ -2,10 +2,13 @@ from invana_bot.crawlers.generic import InvanaBotWebCrawler
 from invana_bot.settings import DEFAULT_SETTINGS
 import json
 
-cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
+# cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
+# cti_config = json.load(open("./cti_example_same_domain_traversal.json"))
+cti_config = json.load(open("./basic_example.json"))
 context = {
-    "extra_info": "2019-1-1 something",
-    "author": "Ravi@Invana"
+    "job_id": "123",
+    "author": "https://github.com/rrmerugu",
+    "description": "Crawler that scrapes invanalabs xyz"
 }
 
 if __name__ == '__main__':

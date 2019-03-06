@@ -1,31 +1,33 @@
 {
-  "cti_id": "invanalabs-xyz",
-  "crawlers": {
+  "cti_id": "invanalabs_xyz",
+  "init_data": {
     "start_urls": [
-      "https://blog.scrapinghub.com"
+      "https://blog.invanalabs.ai"
     ],
-    "crawlers": [
-      {
-        "crawler_id": "site_list",
-        "parsers": [
-          {
-            "parser_name": "ParagraphsExtractor"
-          }
-        ],
-        "traversals": [
-          {
-            "traversal_type": "same_domain",
-            "next_crawler_id": "site_list"
-          }
-        ]
-      }
-    ]
+    "crawler_id": "site_list"
   },
+  "crawlers": [
+    {
+      "crawler_id": "site_list",
+      "parsers": [
+        {
+          "parser_name": "ParagraphsExtractor"
+        }
+      ],
+      "traversals": [
+        {
+          "traversal_type": "same_domain",
+          "next_crawler_id": "site_list"
+        }
+      ]
+    }
+  ],
   "transformations": [
   ],
   "indexes": [
     {
-      "db_connection_uri": "mongodb://127.0.0.1"
+      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_collection_name": "invanalabs_xyz"
     }
   ],
   "callbacks": [

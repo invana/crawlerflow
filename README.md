@@ -54,27 +54,28 @@ from invana_bot.settings import DEFAULT_SETTINGS
 
 cti_config = {
   "cti_id": "invanalabs_xyz",
-  "crawlers": {
+  "init_data": {
     "start_urls": [
-      "https://blog.scrapinghub.com"
+      "https://blog.invanalabs.ai"
     ],
-    "crawlers": [
-      {
-        "crawler_id": "site_list",
-        "parsers": [
-          {
-            "parser_name": "ParagraphsExtractor"
-          }
-        ],
-        "traversals": [
-          {
-            "traversal_type": "same_domain",
-            "next_crawler_id": "site_list"
-          }
-        ]
-      }
-    ]
+    "crawler_id": "site_list"
   },
+  "crawlers": [
+    {
+      "crawler_id": "site_list",
+      "parsers": [
+        {
+          "parser_name": "ParagraphsExtractor"
+        }
+      ],
+      "traversals": [
+        {
+          "traversal_type": "same_domain",
+          "next_crawler_id": "site_list"
+        }
+      ]
+    }
+  ],
   "transformations": [
   ],
   "indexes": [
