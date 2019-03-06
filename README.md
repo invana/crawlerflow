@@ -87,10 +87,9 @@ cti_config = {
   ]
 }
 context = {
-    "job_start_time": "2019-1-1",
     "job_id": "123",
     "author": "https://github.com/rrmerugu",
-    "description": "Crawler that scraped invanalabs xyz"
+    "description": "Crawler that scrapes invanalabs xyz"
 }
 
 if __name__ == '__main__':
