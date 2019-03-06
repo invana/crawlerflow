@@ -54,32 +54,24 @@
           "pagination": {
             "selector": ".next-posts-link",
             "selector_type": "css",
-            "max_pages": 20
+            "max_pages": 1
           },
           "next_crawler_id": "blog-list"
-        },
-        {
-          "traversal_type": "link_from_field",
-          "link_from_field": {
-            "parser_name": "CustomContentExtractor",
-            "field_name": "url"
-          },
-          "next_crawler_id": "blog-detail"
         }
       ]
     }
   ],
   "transformations": [
     {
-      "transformation_id": "blog_list_transformation",
-      "transformation_cls": "<lamba function>"
+      "transformation_id": "blog_list_transformation"
     }
   ],
   "indexes": [
     {
       "transformation_id": "blog_list_transformation",
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
-      "db_collection_name": "invanalabs_xyz"
+      "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "collection_name": "blogs_list",
+      "unique_key": "url"
     }
   ],
   "callbacks": [

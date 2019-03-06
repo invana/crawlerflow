@@ -3,6 +3,11 @@ from scrapy.linkextractors import LinkExtractor
 from invana_bot.utils.crawlers import get_crawler_from_list
 from invana_bot.utils.config import validate_cti_config
 from scrapy.spiders import Rule
+import copy
+from pymongo import MongoClient
+from transformers.transforms import OTManager
+from transformers.executors import ReadFromMongo
+from invana_bot.transformers.mongodb import WriteToMongoDB
 
 
 class ParserCrawler(object):
@@ -64,8 +69,12 @@ class ParserCrawler(object):
 
     """
 
-    def __init__(self, current_crawler=None, start_urls=None, job_id=None,
-                 crawlers=None, context=None):
+    def __init__(self,
+                 current_crawler=None,
+                 start_urls=None,
+                 job_id=None,
+                 crawlers=None,
+                 context=None):
         """
 
         :param current_crawler: single crawler in the CTI flow
@@ -100,7 +109,7 @@ class ParserCrawler(object):
     def get_extractors(self):
         return self.current_crawler.get("parsers", [])
 
-    def generate_pipe_kwargs(self):
+    def generate_crawler_kwargs(self):
         domains = []
 
         for url in self.start_urls:
@@ -124,7 +133,7 @@ class ParserCrawler(object):
 
     def run(self):
         spider_cls = DefaultParserSpider
-        spider_kwargs = self.generate_pipe_kwargs()
+        spider_kwargs = self.generate_crawler_kwargs()
         return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
 
 
@@ -134,13 +143,17 @@ class CTIRunner(object):
 
     """
 
-    def __init__(self, cti_manifest=None, job_id=None, context=None):
+    def __init__(self, cti_manifest=None, settings=None, job_id=None, context=None):
         self.cti_manifest = cti_manifest
+        self.settings = settings
         self.crawlers = self.cti_manifest['crawlers']
         self.job_id = job_id
         self.context = context
 
     def run(self):
+        return self.crawl()
+
+    def crawl(self):
         validate_cti_config(config=self.cti_manifest)
         initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_data']['crawler_id'],
                                                 crawlers=self.crawlers)
@@ -153,4 +166,53 @@ class CTIRunner(object):
             context=self.context
         )
         cti_job = parser_crawler.run()
+
         return cti_job
+
+    @staticmethod
+    def get_index(transformation_id=None, indexes=None):
+        for _index in indexes:
+            if _index['transformation_id'] == transformation_id:
+                return _index
+
+    def index_data(self, index=None, results_cleaned=None):
+        collection_name = index['collection_name']
+        unique_key_field = index['unique_key']
+        mongo_executor = WriteToMongoDB(
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
+            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
+            collection_name,
+            unique_key_field,
+            docs=results_cleaned)
+        mongo_executor.connect()
+        mongo_executor.write()
+
+    def transform(self):
+        from invana_bot.transformers.default import default_transformer
+        print("transformer started")
+        print("self.cti_manifest['transformations']", self.cti_manifest['transformations'])
+        for transformation in self.cti_manifest['transformations']:
+            print("transformation", transformation)
+            transformation_id = transformation['transformation_id']
+            transformation_fn = transformation.get('transformation_fn')
+            if transformation_fn is None:
+                transformation_fn = default_transformer
+
+            transformation_index_config = self.get_index(transformation_id=transformation_id,
+                                                         indexes=self.cti_manifest['indexes'])
+            mongo_executor = ReadFromMongo(
+                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
+                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
+                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['COLLECTION_NAME'],
+                query={"context.job_id": self.job_id}
+            )
+            mongo_executor.connect()
+            ops = []
+            ot_manager = OTManager(ops).process(mongo_executor)
+            results = ot_manager.results
+            results_cleaned = transformation_fn(results)
+            self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
+
+            print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
+
+        print("transformer ended")

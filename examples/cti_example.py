@@ -4,9 +4,9 @@ import json
 
 # cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
 # cti_config = json.load(open("./cti_example_same_domain_traversal.json"))
-cti_manifest = json.load(open("./basic_example.json"))
+cti_manifest = json.load(open("./eti_full.json"))
 context = {
-    "job_id": "123",
+    # "job_id": "123",
     "author": "https://github.com/rrmerugu",
     "description": "Crawler that scrapes invanalabs xyz"
 }
@@ -21,5 +21,5 @@ if __name__ == '__main__':
         cti_manifest=cti_manifest,
         context=context
     )
-    print("all_jobs", job)
-    crawler.start_jobs(jobs=[job])
+    print("job", job)
+    crawler.start_job(job=job)

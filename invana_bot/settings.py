@@ -7,13 +7,13 @@ DEFAULT_SETTINGS = {
 
     'INVANA_BOT_SETTINGS': {
         'HTTPCACHE_STORAGE_SETTINGS': {
-            'DATABASE_URI': "127.0.0.1",
+            'CONNECTION_URI': "127.0.0.1",
             'DATABASE_NAME': "crawler_cache_db",
             'COLLECTION_NAME': "web_link",
             "EXPIRY_TIME": 3600
         },
         'ITEM_PIPELINES_SETTINGS': {
-            'DATABASE_URI': "127.0.0.1",
+            'CONNECTION_URI': "127.0.0.1",
             'DATABASE_NAME': "crawler_data",
             'COLLECTION_NAME': "website_data"
         }

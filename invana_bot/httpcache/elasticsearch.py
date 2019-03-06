@@ -21,13 +21,13 @@ class ESCacheStorage(object):
     es_settings = {
         'INVANA_BOT_SETTINGS': {
             'HTTPCACHE_STORAGE_SETTINGS': {
-                'DATABASE_URI': "127.0.0.1",
+                'CONNECTION_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_cache_db",
                 'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
-                'DATABASE_URI': "127.0.0.1",
+                'CONNECTION_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_data",
                 'COLLECTION_NAME': "crawler_feeds_data"
             }
@@ -52,20 +52,20 @@ class ESCacheStorage(object):
 
     def __init__(self, settings):
 
-        self.database_uri = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
-            "DATABASE_URI", None)
+        self.CONNECTION_URI = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "CONNECTION_URI", None)
         self.database_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "DATABASE_NAME", None)
         self.cache_expiry_time = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "EXPIRY_TIME", None)
         self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "COLLECTION_NAME", None)
-        connections.create_connection(hosts=[self.database_uri])
+        connections.create_connection(hosts=[self.CONNECTION_URI])
         self.WebLink = self.setup_collection()
         self.WebLink.init()
 
     def open_spider(self, spider):
-        logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.database_uri},
+        logger.debug("Using elastic cache storage with index name %(database)s" % {'database': self.CONNECTION_URI},
                      extra={'spider': spider})
 
     def close_spider(self, spider):
