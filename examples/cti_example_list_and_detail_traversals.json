@@ -1,9 +1,11 @@
 {
   "cti_id": "invanalab-xyz",
-  "start_urls": [
-    "https://blog.scrapinghub.com"
-  ],
-  "start_crawler_id": "blog-list",
+  "init_data": {
+    "start_urls": [
+      "https://blog.scrapinghub.com"
+    ],
+    "crawler_id": "blog-list"
+  },
   "crawlers": [
     {
       "crawler_id": "blog-list",
@@ -75,6 +77,5 @@
     }
   ],
   "callbacks": [
-
   ]
 }

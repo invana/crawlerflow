@@ -1,5 +1,7 @@
 from invana_bot.spiders.default import DefaultParserSpider
 from scrapy.linkextractors import LinkExtractor
+from invana_bot.utils.crawlers import get_crawler_from_list
+from invana_bot.utils.config import validate_cti_config
 from scrapy.spiders import Rule
 
 
@@ -130,7 +132,6 @@ class CTIRunner(object):
     """
 
 
-
     """
 
     def __init__(self, cti_config=None, job_id=None, context=None):
@@ -142,11 +143,13 @@ class CTIRunner(object):
     # def get_initial_parser(self):
 
     def run(self):
-        initial_crawler = self.crawlers[0]
+        validate_cti_config(config=self.cti_config)
+        initial_crawler = get_crawler_from_list(crawler_id=self.cti_config['init_data']['crawler_id'],
+                                                crawlers=self.crawlers)
         print("initial_crawler", initial_crawler)
         parser_crawler = ParserCrawler(
             job_id=self.job_id,
-            start_urls=self.cti_config['start_urls'],
+            start_urls=self.cti_config['init_data']['start_urls'],
             current_crawler=initial_crawler,
             crawlers=self.crawlers,
             context=self.context

@@ -2,7 +2,7 @@ from .base import WebSpiderBase
 from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor, TableContentExtractor
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
-
+from invana_bot.utils.crawlers import get_crawler_from_list
 TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
@@ -30,12 +30,7 @@ class DefaultParserSpider(WebSpiderBase):
         data = extractor_object.run()
         return data
 
-    @staticmethod
-    def get_parser_from_list(crawlers=None, crawler_id=None):
-        for parser in crawlers:
-            if parser.get("crawler_id") == crawler_id:
-                return parser
-        return
+
 
     @staticmethod
     def get_subdocument_key(parser=None, parser_name=None):
@@ -109,7 +104,7 @@ class DefaultParserSpider(WebSpiderBase):
                 )
                 for item in data[subdocument_key]:
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['field_name']]
-                    next_parser = self.get_parser_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                    next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                     yield scrapy.Request(
                         traversal_url, callback=self.parse,
                         meta={"crawlers": crawlers,

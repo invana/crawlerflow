@@ -11,6 +11,10 @@ def validate_config(config=None):
     return True
 
 
+def validate_cti_config(config=None):
+    print("ok")
+
+
 def process_config(config=None):
     processed_config_dict = {}
     parent_selectors = []
