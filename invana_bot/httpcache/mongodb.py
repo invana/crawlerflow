@@ -2,10 +2,10 @@ from __future__ import print_function
 import logging
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
-from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
+from scrapy.utils.python import to_bytes
 import pymongo
 from scrapy.http.headers import Headers
-from invana_bot.utils.url import get_urn, get_domain
+from invana_bot.utils.url import get_domain
 
 logger = logging.getLogger(__name__)
 

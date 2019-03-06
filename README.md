@@ -11,7 +11,7 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
 
-[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support)
+[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support) | [**Documentation**](/docs/index.md)
 
 
 ## Features
