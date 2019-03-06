@@ -1,13 +1,14 @@
 # Invana Bot
 
-A web crawler framework that can transform websites into datasets with Crawl, Transform and Index workflow. 
+A web crawler framework that can transform websites into datasets with Crawl, 
+Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
+ as default database for caching and storage.
 
 
 [![Build Status](https://travis-ci.org/invanalabs/invana-bot.svg?branch=master)](https://travis-ci.org/invanalabs/invana-bot) 
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
 
-InvanaBot uses [MongoDB](https://www.mongodb.com/) as default database for caching and storage.
 
 
 ## Install
