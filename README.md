@@ -1,19 +1,14 @@
 # Invana Bot
 
-A web crawler framework that can transform websites into datasets with Crawl, Transform and Index 
-with json configurations. 
-
-
-It can use [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/products/elasticsearch) 
-and <del>[Solr](http://lucene.apache.org/solr/)</del> databases to cache the requests and 
-also extract the data using parser configs 
-and save them.
+A web crawler framework that can transform websites into datasets with Crawl, Transform and Index workflow. 
 
 
 [![Build Status](https://travis-ci.org/invanalabs/invana-bot.svg?branch=master)](https://travis-ci.org/invanalabs/invana-bot) 
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
-Look at the `examples/` folder for basic and advanced implementations.
+
+InvanaBot uses [MongoDB](https://www.mongodb.com/) as default database for caching and storage.
+
 
 ## Install
 
@@ -31,6 +26,7 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 
 from invana_bot.crawlers.generic import InvanaBotWebCrawler
+from invana_bot.settings import DEFAULT_SETTINGS
 
 
 cti_config = {
@@ -73,10 +69,7 @@ context = {
 
 if __name__ == '__main__':
     crawler = InvanaBotWebCrawler(
-        cache_database_uri="mongodb://127.0.0.1",
-        storage_database_uri="mongodb://127.0.0.1",
-        cache_database="mongodb",
-        storage_database="mongodb",
+        settings=DEFAULT_SETTINGS
     )
 
 

@@ -7,7 +7,7 @@ from twisted.internet import reactor
 
 class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
     """
-    Split the bot into website crawler, feeds crawler, api crawler,
+    Invana bot web crawler
 
     """
 
