@@ -5,21 +5,43 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
  as default database for caching and storage.
 
 
+**NOTE: This project is under active development**
+
 [![Build Status](https://travis-ci.org/invanalabs/invana-bot.svg?branch=master)](https://travis-ci.org/invanalabs/invana-bot) 
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
+
+[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support)
+
+
+## Features
+
+1. Parsers in the form of json configuration.
+
+2. Define traversals from one parser to another.
+
+3. Use standard extractors to scrape data like Tables, Paragraphs, Meta data of the page.
+
+4. Define custom extractors to scrapy the data in the format you want - list of objects, list of strings, or dictionaries.
+
+5. MongoDB as default Cache and Storage Database.
+
+6. Headless web browsering - supports ajax and javascript based sites like 
+single page applications(SPA) built on Angular, ReactJS or Veu
+
+7. Transform and Index - You can add your transformation logic, that can format the crawled data and index 
+into use specified storage. 
 
 
 
 ## Install
 
 ```bash
-
-
 pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 # This project is under constant development and might brake any previous implementation.
-
 ```
+
+
 
 ## Usage
 
@@ -31,7 +53,7 @@ from invana_bot.settings import DEFAULT_SETTINGS
 
 
 cti_config = {
-  "cti_id": "invanalabs-xyz",
+  "cti_id": "invanalabs_xyz",
   "crawlers": {
     "start_urls": [
       "https://blog.scrapinghub.com"
@@ -57,7 +79,8 @@ cti_config = {
   ],
   "indexes": [
     {
-      "db_connection_uri": "mongodb://127.0.0.1"
+      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_collection_name": "invanalabs_xyz"
     }
   ],
   "callbacks": [
@@ -65,15 +88,15 @@ cti_config = {
 }
 context = {
     "job_start_time": "2019-1-1",
-    "job_id": "123"
+    "job_id": "123",
+    "author": "https://github.com/rrmerugu",
+    "description": "Crawler that scraped invanalabs xyz"
 }
 
 if __name__ == '__main__':
     crawler = InvanaBotWebCrawler(
         settings=DEFAULT_SETTINGS
     )
-
-
     job = crawler.create_job(
         cti_config=cti_config,
         context=context
@@ -81,31 +104,9 @@ if __name__ == '__main__':
     crawler.start_jobs(jobs=[job])
 
 
-
 ```
 
-## Skills of the Bot
 
-**1. Crawl a site and save the page content**: Use full for gathering the data and performing analytics on the page.
+## Support
 
-**2. Crawl a site and extract the content(s)**: This will extract the specific use full content(s) inside the pages(parsing the data). 
-
-**3. Crawl and extract data from rss/atom feeds:** This will extract the data from the rss/atom feeds of the site you may want to follow.
-
-**4. Seperate Cache and Storage Database Support**: There is difference in importance of the data for caching and storage, so
-InvanaCrawler allows developer to implement seperate databases for caching and storage, where developer can use mongodb
-for caching the crawled data, and storing the actual extracted data into elasticsearch, which can work as a instant search engine.
-
-**5. Transformers**: Built-in data transformers to run on top the data like cleaning the data, categorize the data based on NLP and more.
-
-**6. Headless Browsers** [in roadmap]
-
-**7. Taking screenshots while crawling** [in roadmap] for visual crawling
-
-
-
-## License
-
-MIT License
-
-
+Feel free to [contact us](http://invanalabs.ai/contact-us/) for any further support.
