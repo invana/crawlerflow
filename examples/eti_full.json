@@ -1,14 +1,14 @@
 {
-  "cti_id": "invanalab-xyz",
+  "cti_id": "scrapinghub_blogs",
   "init_data": {
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blog-list"
+    "crawler_id": "blogs_list"
   },
   "crawlers": [
     {
-      "crawler_id": "blog-list",
+      "crawler_id": "blogs_list",
       "parsers": [
         {
           "parser_name": "CustomContentExtractor",
