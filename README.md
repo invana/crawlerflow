@@ -88,7 +88,6 @@ cti_manifest = {
   ]
 }
 context = {
-    "job_id": "123",
     "author": "https://github.com/rrmerugu",
     "description": "Crawler that scrapes invanalabs xyz"
 }
@@ -109,4 +108,6 @@ if __name__ == '__main__':
 
 ## Support
 
-Feel free to [contact us](http://invanalabs.ai/contact-us/) for any further support.
+Feel free to [contact us](http://invanalabs.ai/contact-us/) for any further support. Few features like 
+IP rotation, headless browsing, data backups, scheduling and monitoring are 
+available in [InvanaBot Cloud](http://invanalabs.ai/product/invana-bot) 

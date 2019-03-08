@@ -48,7 +48,6 @@ Example of a full features manifest.json
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "href",
-                  "parent_selector": "blogs",
                   "multiple": false
                 },
                 {
@@ -56,7 +55,6 @@ Example of a full features manifest.json
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "text",
-                  "parent_selector": "blogs",
                   "multiple": false
                 },
                 {
@@ -64,7 +62,6 @@ Example of a full features manifest.json
                   "selector": ".post-content",
                   "selector_type": "css",
                   "selector_attribute": "html",
-                  "parent_selector": "blogs",
                   "multiple": false
                 }
               ]
