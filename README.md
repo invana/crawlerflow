@@ -22,15 +22,13 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
 
 3. Use standard extractors to scrape data like Tables, Paragraphs, Meta data of the page.
 
-4. Define custom extractors to scrapy the data in the format you want - list of objects, list of strings, or dictionaries.
+4. Define custom extractors to scrapy the data in the format you want -
+ list of objects, list of strings, or dictionaries.
 
 5. MongoDB as default Cache and Storage Database.
 
-6. Headless web browsering - supports ajax and javascript based sites like 
-single page applications(SPA) built on Angular, ReactJS or Veu
-
-7. Transform and Index - You can add your transformation logic, that can format the crawled data and index 
-into use specified storage. 
+7. Transform and Index - You can add your data transformation logic, that can format 
+the crawled data into another format and index into use specified storage. 
 
 
 
