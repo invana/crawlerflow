@@ -56,7 +56,7 @@
             "selector_type": "css",
             "max_pages": 4
           },
-          "next_crawler_id": "blog-list"
+          "next_crawler_id": "blogs_list"
         }
       ]
     }
