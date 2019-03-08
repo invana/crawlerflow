@@ -210,7 +210,12 @@ class CTIRunner(object):
             ops = []
             ot_manager = OTManager(ops).process(mongo_executor)
             results = ot_manager.results
-            results_cleaned = transformation_fn(results)
+            results_cleaned__ = transformation_fn(results)
+            results_cleaned = []
+            for result in results_cleaned__:
+                if "_id" in result.keys():
+                    del result['_id']
+                results_cleaned.append(result)
             self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
 
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
