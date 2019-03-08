@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
+from invana_bot.transformers.default import default_transformer
 
 
 class ParserCrawler(object):
@@ -188,10 +189,16 @@ class CTIRunner(object):
         mongo_executor.write()
 
     def transform(self):
-        from invana_bot.transformers.default import default_transformer
         print("transformer started")
         print("self.cti_manifest['transformations']", self.cti_manifest['transformations'])
-        for transformation in self.cti_manifest['transformations']:
+
+        all_transformation = self.cti_manifest.get('transformations', [])
+        if len(all_transformation) == 0:
+            all_transformation.append({
+                "transformation_id": "default"
+            })
+
+        for transformation in all_transformation:
             print("transformation", transformation)
             transformation_id = transformation['transformation_id']
             transformation_fn = transformation.get('transformation_fn')

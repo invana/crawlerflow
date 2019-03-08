@@ -5,8 +5,23 @@ import json
 # cti_config = json.load(open("./cti_example_list_and_detail_traversals.json"))
 # cti_config = json.load(open("./cti_example_same_domain_traversal.json"))
 cti_manifest = json.load(open("./eti_full.json"))
+
+
+def transformation_fn(results):
+    results_cleaned = []
+    for result in results:
+        for blog in result.get("blogs", []):
+            results_cleaned.append(blog)
+
+    return results_cleaned
+
+
+cti_manifest['transformations'] = [{
+    "transformation_id": "default",
+    "transformation_fn": transformation_fn
+}
+]
 context = {
-    # "job_id": "123",
     "author": "https://github.com/rrmerugu",
     "description": "Crawler that scrapes invanalabs xyz"
 }

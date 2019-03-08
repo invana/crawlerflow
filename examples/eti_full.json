@@ -54,7 +54,7 @@
           "pagination": {
             "selector": ".next-posts-link",
             "selector_type": "css",
-            "max_pages": 1
+            "max_pages": 4
           },
           "next_crawler_id": "blog-list"
         }
@@ -62,13 +62,10 @@
     }
   ],
   "transformations": [
-    {
-      "transformation_id": "blog_list_transformation"
-    }
   ],
   "indexes": [
     {
-      "transformation_id": "blog_list_transformation",
+      "transformation_id": "default",
       "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
       "collection_name": "blogs_list",
       "unique_key": "url"
