@@ -22,9 +22,7 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
             context['job_started'] = datetime.now()
         cti_runner = CTIRunner(cti_manifest=cti_manifest, settings=self.settings,
                                job_id=self.job_id, context=context)
-
         job = cti_runner.crawl()
-
         return {"crawler_job": job, "cti_runner": cti_runner}
 
     def start_job(self, job=None):

@@ -188,7 +188,7 @@ class CTIRunner(object):
         mongo_executor.connect()
         mongo_executor.write()
 
-    def transform(self):
+    def transform(self, callback=None):
         print("transformer started")
         print("self.cti_manifest['transformations']", self.cti_manifest['transformations'])
 
@@ -228,3 +228,5 @@ class CTIRunner(object):
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
 
         print("transformation and indexing ended")
+        if callback is not None:
+            callback()
