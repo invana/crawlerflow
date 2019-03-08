@@ -110,4 +110,4 @@ if __name__ == '__main__':
 
 Feel free to [contact us](http://invanalabs.ai/contact-us/) for any further support. Few features like 
 IP rotation, headless browsing, data backups, scheduling and monitoring are 
-available in [InvanaBot Cloud](http://invanalabs.ai/product/invana-bot) 
+available in our [InvanaBot Cloud](http://invanalabs.ai/product/invana-bot) version.
