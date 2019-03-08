@@ -24,7 +24,6 @@
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "href",
-                  "parent_selector": "blogs",
                   "multiple": false
                 },
                 {
@@ -32,7 +31,6 @@
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "text",
-                  "parent_selector": "blogs",
                   "multiple": false
                 },
                 {
@@ -40,7 +38,6 @@
                   "selector": ".post-content",
                   "selector_type": "css",
                   "selector_attribute": "html",
-                  "parent_selector": "blogs",
                   "multiple": false
                 }
               ]
