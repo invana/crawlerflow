@@ -67,6 +67,56 @@
           "next_crawler_id": "blog-detail"
         }
       ]
+    },
+    {
+      "crawler_id": "blog-detail",
+      "parsers": [
+        {
+          "parser_name": "CustomContentExtractor",
+          "data_selectors": [
+            {
+              "id": "blog_detail",
+              "selector": ".blog-section",
+              "selector_attribute": "element",
+              "multiple": false,
+              "child_elements": [
+                {
+                  "id": "title",
+                  "selector": "h1 span",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "parent_selector": "blog_detail",
+                  "multiple": false
+                },
+                {
+                  "id": "published_at",
+                  "selector": ".date a",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "parent_selector": "blog_detail",
+                  "multiple": false
+                },
+                {
+                  "id": "author",
+                  "selector": ".author a",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "parent_selector": "blog_detail",
+                  "multiple": false
+                },
+                {
+                  "id": "html_content",
+                  "selector": ".post-body",
+                  "selector_type": "css",
+                  "selector_attribute": "html",
+                  "parent_selector": "blog_detail",
+                  "multiple": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "transformations": [

@@ -227,4 +227,4 @@ class CTIRunner(object):
 
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
 
-        print("transformer ended")
+        print("transformation and indexing ended")

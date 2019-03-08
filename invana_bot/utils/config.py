@@ -11,7 +11,29 @@ def validate_config(config=None):
     return True
 
 
+class InvanaBotConfigValidator(object):
+
+    def __int__(self, config=None):
+        self.config = config
+
+    def validate_required_fields(self):
+        required_keys = ['cti_id', 'init_data', 'crawlers']
+        for key_ in required_keys:
+            if key_ not in self.config.keys():
+                raise InvalidCrawlerConfig(
+                    "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
+        # TODO - validate all the data_selectors data aswell
+        return True
+
+    def validate_options_fields(self):
+        optional_keys = ['transformations', 'indexes', 'callback']
+
+    def validate(self):
+        self.validate_required_fields()
+
+
 def validate_cti_config(config=None):
+    optional_keys = ['transformations', 'indexes', 'callbacks']
     required_keys = ['cti_id', 'init_data', 'crawlers']
     for key_ in required_keys:
         if key_ not in config.keys():

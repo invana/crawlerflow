@@ -29,14 +29,12 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
 
     def start_job(self, job=None):
         runner = CrawlerRunner()
-
         crawler_job = job['crawler_job']
         cti_runner = job['cti_runner']
         spider_cls = crawler_job['spider_cls']
         spider_kwargs = crawler_job['spider_kwargs']
 
         def engine_stopped_callback():
-            print("================")
             fn = copy.deepcopy(cti_runner.transform)
             fn()
 

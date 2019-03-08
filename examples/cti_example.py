@@ -16,10 +16,11 @@ def transformation_fn(results):
     return results_cleaned
 
 
-cti_manifest['transformations'] = [{
-    "transformation_id": "default",
-    "transformation_fn": transformation_fn
-}
+cti_manifest['transformations'] = [
+    {
+        "transformation_id": "default",
+        "transformation_fn": transformation_fn
+    }
 ]
 context = {
     "author": "https://github.com/rrmerugu",
