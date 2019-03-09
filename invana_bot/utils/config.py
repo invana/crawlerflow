@@ -12,8 +12,17 @@ def validate_config(config=None):
 
 
 class InvanaBotConfigValidator(object):
+    CRAWLER_EXAMPLE = {
+        "crawler_id": "blogs_list",
+        "parsers": [],
+        "traversals": []
+    }
+    PARSER_EXAMPLE = {
+        "parser_name": "CustomContentExtractor",
+        "data_selectors": []
+    }
 
-    def __int__(self, config=None):
+    def __init__(self, config=None):
         self.config = config
 
     def validate_required_fields(self):
@@ -23,13 +32,129 @@ class InvanaBotConfigValidator(object):
                 raise InvalidCrawlerConfig(
                     "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
         # TODO - validate all the data_selectors data aswell
+        print("all the required fields exist")
         return True
 
     def validate_options_fields(self):
-        optional_keys = ['transformations', 'indexes', 'callback']
+        optional_keys = ['transformations', 'indexes', 'callbacks', 'context']
+
+    def validate_selector(self, selector=None):
+
+        selector_attribute = selector.get("selector_attribute")
+        if selector_attribute is None:
+            raise InvanaBotConfigValidator("field 'selector_attribute' is mandatory for selector object")
+
+        selector_keys = selector.keys()
+        if selector_attribute == "element":
+            required_fields = ["id", "selector", "child_selectors", "selector_attribute"]
+            for field in required_fields:
+                if field not in selector_keys:
+                    raise InvalidCrawlerConfig(
+                        "{} field not found in 'selector_attribute={}' type selector".format(field, selector_attribute))
+
+        else:
+            required_fields = ["id", "selector", "selector_type", "selector_attribute"]
+
+            for field in required_fields:
+                if field not in selector_keys:
+                    raise InvalidCrawlerConfig(
+                        "{} field not found in 'selector_attribute!={}' type selector".format(field,
+                                                                                              selector_attribute))
+
+    def validate_crawlers(self, crawlers=None):
+        print(crawlers)
+        crawler_required_fields = [
+            {
+                "field_name": "crawler_id",
+                "field_type": str
+            },
+            {
+                "field_name": "parsers",
+                "field_type": list
+            }
+
+        ]
+
+        required_parsers_fields = [
+            {
+                "field_name": "parser_name",
+                "field_type": str
+            }
+        ]
+
+        for crawler in crawlers:
+            crawler_config_keys = crawler.keys()
+            # check if all required keys where there.
+            for required_field in crawler_required_fields:
+                if required_field['field_name'] in crawler_config_keys:
+                    pass
+                else:
+                    raise InvalidCrawlerConfig(
+                        "required field '{}' in crawlers data not found".format(required_field['field_name']))
+
+                if type(crawler[required_field['field_name']]) is not required_field['field_type']:
+                    raise InvalidCrawlerConfig(
+                        "required field '{}' in crawlers should of '{}' data type".format(required_field['field_name'],
+                                                                                          required_field['field_type']))
+
+            self.validate_traversals(traversals=crawler.get('traversals', []))
+
+            """
+            making sure parsers data is correct
+            """
+            for required_field in required_parsers_fields:
+                for parser in crawler['parsers']:
+                    parser_config_keys = parser.keys()
+                    if required_field['field_name'] in parser_config_keys:
+                        pass
+                    else:
+                        raise InvalidCrawlerConfig(
+                            "required field '{}' in parser data not found".format(required_field['field_name']))
+
+                    if type(parser[required_field['field_name']]) is not required_field['field_type']:
+                        raise InvalidCrawlerConfig(
+                            "required field '{}' in parsers should of '{}' data type".format(
+                                required_field['field_name'],
+                                required_field['field_type']))
+
+                    if parser['parser_name'] == "CustomContentExtractor":
+                        if len(parser.get('data_selectors', [])) == 0:
+                            raise InvalidCrawlerConfig(
+                                "data_selectors should be specified when using parser_name 'CustomContentExtractor'")
+
+                    data_selectors = parser.get("data_selectors", [])
+                    for selector in data_selectors:
+                        pass  # TODO - implement data selector validations.
+                        self.validate_selector(selector=selector)
+
+    def validate_traversals(self, traversals=None):
+        crawler_optional_fields = [
+            {
+                "field_name": "traversals",
+                "field_type": list
+            }
+        ]
+        valid_traversal_types = ['pagination', 'same_domain', 'link_from_field']
+        required_types = ['traversal_type', 'traversal_type', ]
+
+        for traversal in traversals:
+            traversal_type = traversal.get("traversal_type")
+            if traversal_type not in valid_traversal_types:
+                raise InvalidCrawlerConfig("Traversal of types '{}' are accepted, where as you have "
+                                           " traversal_type '{}'".format(", ".join(valid_traversal_types),
+                                                                         traversal_type))
+
+            if traversal_type not in traversal.keys():
+                raise InvalidCrawlerConfig("Traversal of types '{}' should have '{}' key defining the"
+                                           " traversal configuration ".format(traversal_type, traversal_type))
+            next_crawler_id = traversal.get("next_crawler_id")
+
+            if next_crawler_id is None:
+                raise InvalidCrawlerConfig("Traversal should have next_crawler_id set")
 
     def validate(self):
         self.validate_required_fields()
+        self.validate_crawlers(crawlers=self.config['crawlers'])
 
 
 def validate_cti_config(config=None):

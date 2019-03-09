@@ -109,3 +109,40 @@ Example of a full features manifest.json
 }
 
 ```
+
+
+### Traversals Types
+
+
+```json
+
+{
+  "traversal_type": "pagination",
+  "pagination": {
+    "selector": ".next-posts-link",
+    "selector_type": "css",
+    "max_pages": 20
+  },
+  "next_crawler_id": "blog-list"
+}
+
+
+```
+```json
+
+{
+  "traversal_type": "same_domain",
+  "next_crawler_id": "blog-list"
+}
+```
+
+```json
+{
+  "traversal_type": "link_from_field",
+  "link_from_field": {
+    "parser_name": "CustomContentExtractor",
+    "field_name": "url"
+  },
+  "next_crawler_id": "blog-detail"
+}
+```
