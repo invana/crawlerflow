@@ -130,10 +130,12 @@ class InvanaBotConfigValidator(object):
                 raise InvalidCrawlerConfig(
                     "traversals data in the crawler '{}' should be of list type".format(crawler['crawler_id']))
 
-            self.validate_traversals(traversals=traversals, crawler=crawler)
+            self.validate_traversals(traversals=traversals, crawler=crawler, all_crawlers=crawlers)
 
-    def validate_traversals(self, traversals=None, crawler=None):
+    def validate_traversals(self, traversals=None, crawler=None, all_crawlers=None):
         valid_traversal_types = ['pagination', 'same_domain', 'link_from_field']
+
+        all_crawlers_ids = [crawler['crawler_id'] for crawler in all_crawlers]
 
         for traversal in traversals:
             traversal_type = traversal.get("traversal_type")
@@ -149,6 +151,12 @@ class InvanaBotConfigValidator(object):
 
             if next_crawler_id is None:
                 raise InvalidCrawlerConfig("All Traversals should have next_crawler_id set ")
+
+            if next_crawler_id not in all_crawlers_ids:
+                raise InvalidCrawlerConfig("You are using next_crawler_id '{}' "
+                                           "but it is not defined in the crawlers."
+                                           " Available crawler_id in the config are {}".format(next_crawler_id,
+                                                                                                 all_crawlers_ids))
 
             if traversal_type == "pagination":
                 required_fields = ['selector', 'selector_type']
