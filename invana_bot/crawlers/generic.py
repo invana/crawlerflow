@@ -33,7 +33,7 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
         spider_kwargs = crawler_job['spider_kwargs']
 
         def engine_stopped_callback():
-            fn = copy.deepcopy(cti_runner.transform)
+            fn = copy.deepcopy(cti_runner.transform_and_index)
             fn()
 
         crawler = Crawler(spider_cls, Settings(cti_runner.settings))

@@ -9,6 +9,7 @@ from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
 from invana_bot.transformers.default import default_transformer
+import requests
 
 
 class ParserCrawler(object):
@@ -192,7 +193,49 @@ class CTIRunner(object):
         mongo_executor.connect()
         mongo_executor.write()
 
-    def transform(self, callback=None):
+    def trigger_callback(self, callback_config=None):
+        callback_id = callback_config.get("callback_id")
+        print("Triggering callback_id: {}".format(callback_id))
+
+        url = callback_config.get("url")
+        request_type = callback_config.get("request_type", '').lower()
+        if request_type == "get":
+            req = requests.get(url, headers=callback_config.get("headers", {}), verify=False)
+            response = req.text
+            print("Triggered callback successfully and callback responded with message :{}".format(response))
+        elif request_type == "post":
+            req = requests.post(url, json=callback_config.get("payload", {}),
+                                headers=callback_config.get("headers", {}), verify=False)
+            response = req.text
+            print("Triggered callback successfully and callback responded with message :{}".format(response))
+
+    def callback(self):
+        all_indexes = self.cti_manifest.get('indexes', [])
+        for index in all_indexes:
+            index_id = index.get('index_id')
+            callback_config = self.get_callback_for_index(index_id=index_id)
+            print("callback_config", callback_config)
+            try:
+                self.trigger_callback(callback_config=callback_config)
+            except Exception as e:
+                print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
+                                                                          e))
+
+    def get_callback_for_index(self, index_id=None):
+        callbacks = self.cti_manifest.get("callbacks", [])
+        for callback in callbacks:
+            callback_index_id = callback.get('index_id')
+            if callback_index_id == index_id:
+                return callback
+        return
+
+    def transform_and_index(self, callback=None):
+        """
+        This function will handle both tranform and index
+
+        :param callback:
+        :return:
+        """
         print("transformer started")
         print("self.cti_manifest['transformations']", self.cti_manifest['transformations'])
 
@@ -232,5 +275,4 @@ class CTIRunner(object):
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
 
         print("transformation and indexing ended")
-        if callback is not None:
-            callback()
+        self.callback()

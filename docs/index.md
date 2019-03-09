@@ -149,3 +149,19 @@ Example of a full features manifest.json
   "next_crawler_id": "blog-detail"
 }
 ```
+
+### Callback 
+
+```json
+{
+  "callback_id": "default",
+  "index_id": "default",
+  "url": "http://localhost/api/callback",
+  "request_type": "POST",
+  "payload": {
+  },
+  "headers": {
+    "X-TOKEN": "abc123456789"
+  }
+}
+```
