@@ -97,7 +97,12 @@ class InvanaBotConfigValidator(object):
                         "required field '{}' in crawlers should of '{}' data type".format(required_field['field_name'],
                                                                                           required_field['field_type']))
 
-            self.validate_traversals(traversals=crawler.get('traversals', []))
+            traversals = crawler.get('traversals', [])
+            if type(traversals) is not list:
+                raise InvalidCrawlerConfig(
+                    "traversals data in the crawler '{}' should be of list type".format(crawler['crawler_id']))
+
+            self.validate_traversals(traversals=traversals)
 
             """
             making sure parsers data is correct
@@ -128,14 +133,7 @@ class InvanaBotConfigValidator(object):
                         self.validate_selector(selector=selector)
 
     def validate_traversals(self, traversals=None):
-        crawler_optional_fields = [
-            {
-                "field_name": "traversals",
-                "field_type": list
-            }
-        ]
         valid_traversal_types = ['pagination', 'same_domain', 'link_from_field']
-        required_types = ['traversal_type', 'traversal_type', ]
 
         for traversal in traversals:
             traversal_type = traversal.get("traversal_type")
