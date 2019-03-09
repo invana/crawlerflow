@@ -19,9 +19,7 @@ class ETIManifestManager(object):
         for tranformation in self.cti_manifest.get("transformations", []):
             method_to_call = getattr(self.eti_transformations_module, tranformation.get("transformation_fn"))
             tranformation['transformation_fn'] = method_to_call
-            print ("method_to_call", method_to_call)
 
     def get_manifest(self):
         self.import_eti_transformations()
-        print ("cti_manifest", self.cti_manifest)
         return self.cti_manifest
