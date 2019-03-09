@@ -132,6 +132,9 @@ Example of a full features manifest.json
 
 {
   "traversal_type": "same_domain",
+  "same_domain": {
+    "max_pages": 1000
+  },
   "next_crawler_id": "blog-list"
 }
 ```

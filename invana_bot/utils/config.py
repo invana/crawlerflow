@@ -130,9 +130,9 @@ class InvanaBotConfigValidator(object):
                 raise InvalidCrawlerConfig(
                     "traversals data in the crawler '{}' should be of list type".format(crawler['crawler_id']))
 
-            self.validate_traversals(traversals=traversals)
+            self.validate_traversals(traversals=traversals, crawler=crawler)
 
-    def validate_traversals(self, traversals=None):
+    def validate_traversals(self, traversals=None, crawler=None):
         valid_traversal_types = ['pagination', 'same_domain', 'link_from_field']
 
         for traversal in traversals:
@@ -143,12 +143,56 @@ class InvanaBotConfigValidator(object):
                                                                          traversal_type))
 
             if traversal_type not in traversal.keys():
-                raise InvalidCrawlerConfig("Traversal of types '{}' should have '{}' key defining the"
+                raise InvalidCrawlerConfig("Traversal of type '{}' should have '{}' key defining the"
                                            " traversal configuration ".format(traversal_type, traversal_type))
             next_crawler_id = traversal.get("next_crawler_id")
 
             if next_crawler_id is None:
-                raise InvalidCrawlerConfig("Traversal should have next_crawler_id set")
+                raise InvalidCrawlerConfig("All Traversals should have next_crawler_id set ")
+
+            if traversal_type == "pagination":
+                required_fields = ['selector', 'selector_type']
+                traversal_example = {
+                    "traversal_type": "pagination",
+                    "pagination": {
+                        "sel ector": ".next-posts-link",
+                        "selector_type": "css",
+                        "max_pages": 4
+                    },
+                    "next_crawler_id": "blogs_list"
+                }
+                for required_field in required_fields:
+                    if required_field not in traversal[traversal_type].keys():
+                        raise InvalidCrawlerConfig(
+                            "Traversal type '{}' in crawler '{}' should have the config with keys '{}' along with optional max_pages."
+                            " Example: {}"
+                            "".format(
+                                traversal_type,
+                                crawler['crawler_id'],
+                                ", ".join(required_fields), traversal_example))
+
+            elif traversal_type == "same_domain":
+                pass  # don't have any required fields.
+
+            elif traversal_type == "link_from_field":
+                traversal_example = {
+                    "traversal_type": "link_from_field",
+                    "link_from_field": {
+                        "parser_name": "CustomContentExtractor",
+                        "field_name": "url"
+                    },
+                    "next_crawler_id": "blog-detail"
+                }
+                required_fields = ['parser_name', 'field_name']
+                for required_field in required_fields:
+                    if required_field in traversal[traversal_type].keys():
+                        raise InvalidCrawlerConfig(
+                            "Traversal type '{}' in crawler '{}' should have the config "
+                            "with keys '{}' along with optional max_pages. Example: {}"
+                            "".format(
+                                traversal_type,
+                                crawler['crawler_id'],
+                                ", ".join(required_fields), traversal_example))
 
     def validate(self):
         self.validate_required_fields()
