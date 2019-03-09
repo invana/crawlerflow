@@ -155,20 +155,24 @@ class CTIRunner(object):
         return self.crawl()
 
     def crawl(self):
-        validate_cti_config(config=self.cti_manifest)
-        initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_data']['crawler_id'],
-                                                crawlers=self.crawlers)
-        print("initial_crawler", initial_crawler)
-        parser_crawler = ParserCrawler(
-            job_id=self.job_id,
-            start_urls=self.cti_manifest['init_data']['start_urls'],
-            current_crawler=initial_crawler,
-            crawlers=self.crawlers,
-            context=self.context
-        )
-        cti_job = parser_crawler.run()
+        errors = validate_cti_config(self.cti_manifest)
+        if len(errors) == 0:
 
-        return cti_job
+            initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_data']['crawler_id'],
+                                                    crawlers=self.crawlers)
+            print("initial_crawler", initial_crawler)
+            parser_crawler = ParserCrawler(
+                job_id=self.job_id,
+                start_urls=self.cti_manifest['init_data']['start_urls'],
+                current_crawler=initial_crawler,
+                crawlers=self.crawlers,
+                context=self.context
+            )
+            cti_job = parser_crawler.run()
+
+            return cti_job
+        else:
+            return None
 
     @staticmethod
     def get_index(transformation_id=None, indexes=None):

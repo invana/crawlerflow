@@ -21,15 +21,19 @@ class InvanaBotConfigValidator(object):
         "parser_name": "CustomContentExtractor",
         "data_selectors": []
     }
+    all_errors = []
 
     def __init__(self, config=None):
         self.config = config
+
+    def log_error(self, error_text):
+        self.all_errors.append(error_text)
 
     def validate_required_fields(self):
         required_keys = ['cti_id', 'init_data', 'crawlers']
         for key_ in required_keys:
             if key_ not in self.config.keys():
-                raise InvalidCrawlerConfig(
+                self.log_error(
                     "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
         # TODO - validate all the data_selectors data aswell
         print("all the required fields exist")
@@ -49,7 +53,7 @@ class InvanaBotConfigValidator(object):
             required_fields = ["id", "selector", "child_selectors", "selector_attribute"]
             for field in required_fields:
                 if field not in selector_keys:
-                    raise InvalidCrawlerConfig(
+                    self.log_error(
                         "{} field not found in 'selector_attribute={}' type selector".format(field, selector_attribute))
 
         else:
@@ -57,7 +61,7 @@ class InvanaBotConfigValidator(object):
 
             for field in required_fields:
                 if field not in selector_keys:
-                    raise InvalidCrawlerConfig(
+                    self.log_error(
                         "{} field not found in 'selector_attribute!={}' type selector".format(field,
                                                                                               selector_attribute))
 
@@ -89,11 +93,11 @@ class InvanaBotConfigValidator(object):
                 if required_field['field_name'] in crawler_config_keys:
                     pass
                 else:
-                    raise InvalidCrawlerConfig(
+                    self.log_error(
                         "required field '{}' in crawlers data not found".format(required_field['field_name']))
 
                 if type(crawler[required_field['field_name']]) is not required_field['field_type']:
-                    raise InvalidCrawlerConfig(
+                    self.log_error(
                         "required field '{}' in crawlers should of '{}' data type".format(required_field['field_name'],
                                                                                           required_field['field_type']))
 
@@ -106,18 +110,18 @@ class InvanaBotConfigValidator(object):
                     if required_field['field_name'] in parser_config_keys:
                         pass
                     else:
-                        raise InvalidCrawlerConfig(
+                        self.log_error(
                             "required field '{}' in parser data not found".format(required_field['field_name']))
 
                     if type(parser[required_field['field_name']]) is not required_field['field_type']:
-                        raise InvalidCrawlerConfig(
+                        self.log_error(
                             "required field '{}' in parsers should of '{}' data type".format(
                                 required_field['field_name'],
                                 required_field['field_type']))
 
                     if parser['parser_name'] == "CustomContentExtractor":
                         if len(parser.get('data_selectors', [])) == 0:
-                            raise InvalidCrawlerConfig(
+                            self.log_error(
                                 "data_selectors should be specified when using parser_name 'CustomContentExtractor'")
 
                     data_selectors = parser.get("data_selectors", [])
@@ -127,7 +131,7 @@ class InvanaBotConfigValidator(object):
 
             traversals = crawler.get('traversals', [])
             if type(traversals) is not list:
-                raise InvalidCrawlerConfig(
+                self.log_error(
                     "traversals data in the crawler '{}' should be of list type".format(crawler['crawler_id']))
 
             self.validate_traversals(traversals=traversals, crawler=crawler, all_crawlers=crawlers)
@@ -140,23 +144,23 @@ class InvanaBotConfigValidator(object):
         for traversal in traversals:
             traversal_type = traversal.get("traversal_type")
             if traversal_type not in valid_traversal_types:
-                raise InvalidCrawlerConfig("Traversal of types '{}' are accepted, where as you have "
-                                           " traversal_type '{}'".format(", ".join(valid_traversal_types),
-                                                                         traversal_type))
+                self.log_error("Traversal of types '{}' are accepted, where as you have "
+                               " traversal_type '{}'".format(", ".join(valid_traversal_types),
+                                                             traversal_type))
 
             if traversal_type not in traversal.keys():
-                raise InvalidCrawlerConfig("Traversal of type '{}' should have '{}' key defining the"
-                                           " traversal configuration ".format(traversal_type, traversal_type))
+                self.log_error("Traversal of type '{}' should have '{}' key defining the"
+                               " traversal configuration ".format(traversal_type, traversal_type))
             next_crawler_id = traversal.get("next_crawler_id")
 
             if next_crawler_id is None:
-                raise InvalidCrawlerConfig("All Traversals should have next_crawler_id set ")
+                self.log_error("All Traversals should have next_crawler_id set ")
 
             if next_crawler_id not in all_crawlers_ids:
-                raise InvalidCrawlerConfig("You are using next_crawler_id '{}' "
-                                           "but it is not defined in the crawlers."
-                                           " Available crawler_id in the config are {}".format(next_crawler_id,
-                                                                                               all_crawlers_ids))
+                self.log_error("You are using next_crawler_id '{}' "
+                               "but it is not defined in the crawlers."
+                               " Available crawler_id in the config are {}".format(next_crawler_id,
+                                                                                   all_crawlers_ids))
 
             if traversal_type == "pagination":
                 required_fields = ['selector', 'selector_type']
@@ -171,7 +175,7 @@ class InvanaBotConfigValidator(object):
                 }
                 for required_field in required_fields:
                     if required_field not in traversal[traversal_type].keys():
-                        raise InvalidCrawlerConfig(
+                        self.log_error(
                             "Traversal type '{}' in crawler '{}' should have the config with keys '{}' along with optional max_pages."
                             " Example: {}"
                             "".format(
@@ -194,7 +198,7 @@ class InvanaBotConfigValidator(object):
                 required_fields = ['parser_name', 'field_name']
                 for required_field in required_fields:
                     if required_field in traversal[traversal_type].keys():
-                        raise InvalidCrawlerConfig(
+                        self.log_error(
                             "Traversal type '{}' in crawler '{}' should have the config "
                             "with keys '{}' along with optional max_pages. Example: {}"
                             "".format(
@@ -207,7 +211,7 @@ class InvanaBotConfigValidator(object):
         indexes = self.config.get('indexes', [])
         if len(indexes) == 0:
             if len(transformations) > 0:
-                raise InvalidCrawlerConfig("transformations cannot be applied if indexes is not defined.")
+                self.log_error("transformations cannot be applied if indexes is not defined.")
             print("Ignoring the transformation if index")
         else:
             transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
@@ -216,8 +220,8 @@ class InvanaBotConfigValidator(object):
                 transformation_id = transformation.get("transformation_id")
                 transformation_fn = transformation.get("transformation_fn")
                 if transformation_fn is None:
-                    raise InvalidCrawlerConfig("transformation with transformation_id "
-                                               "'{}' doesn't have transformation_fn set".format(transformation_id))
+                    self.log_error("transformation with transformation_id "
+                                   "'{}' doesn't have transformation_fn set".format(transformation_id))
 
             example_index = {
                 "transformation_id": "default",
@@ -231,12 +235,12 @@ class InvanaBotConfigValidator(object):
                 transformation_id = index.get("transformation_id")
                 for required_field in index_required_fields:
                     if index.get(required_field) is None:
-                        raise InvalidCrawlerConfig("required field '{}' is missing in the index configuration."
-                                                   " Example is {} ".format(required_field, example_index))
+                        self.log_error("required field '{}' is missing in the index configuration."
+                                       " Example is {} ".format(required_field, example_index))
 
                 if transformation_id not in transformation_ids:
-                    raise InvalidCrawlerConfig("index with transformation_id '{}' has no"
-                                               " transformation defined in transformations".format(transformation_id))
+                    self.log_error("index with transformation_id '{}' has no"
+                                   " transformation defined in transformations".format(transformation_id))
 
     def validate_callback(self):
         all_index_ids = [index.get('index_id') for index in self.config.get("indexes", [])]
@@ -259,35 +263,36 @@ class InvanaBotConfigValidator(object):
             callback_id = callback.get("callback_id")
             callback_index_id = callback.get("index_id")
             if callback_id is None:
-                raise InvalidCrawlerConfig("Invalid callback configuration, callback_id cannot be None."
-                                           " Here is the example {}".format(callback_template))
+                self.log_error("Invalid callback configuration, callback_id cannot be None."
+                               " Here is the example {}".format(callback_template))
 
             if callback_index_id not in all_index_ids:
-                raise InvalidCrawlerConfig("callback is set with an index - '{}' which is not "
-                                           "defined in the indexes configuration."
-                                           "".format(callback_index_id))
+                self.log_error("callback is set with an index - '{}' which is not "
+                               "defined in the indexes configuration."
+                               "".format(callback_index_id))
 
             for required_field in callback_required_keys:
                 if callback.get(required_field) is None:
-                    raise InvalidCrawlerConfig("Required key {} missing in callback_id '{}' "
-                                               "".format(required_field, callback_id))
+                    self.log_error("Required key {} missing in callback_id '{}' "
+                                   "".format(required_field, callback_id))
 
     def validate(self):
         self.validate_required_fields()
         self.validate_crawlers(crawlers=self.config['crawlers'])
         self.validate_transformations_and_indexes()
         self.validate_callback()
+        return self.all_errors
 
 
-def validate_cti_config(config=None):
-    optional_keys = ['transformations', 'indexes', 'callbacks']
-    required_keys = ['cti_id', 'init_data', 'crawlers']
-    for key_ in required_keys:
-        if key_ not in config.keys():
-            raise InvalidCrawlerConfig(
-                "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
-    # TODO - validate all the data_selectors data aswell
-    return True
+# def validate_cti_config(config=None):
+#     optional_keys = ['transformations', 'indexes', 'callbacks']
+#     required_keys = ['cti_id', 'init_data', 'crawlers']
+#     for key_ in required_keys:
+#         if key_ not in config.keys():
+#             raise InvalidCrawlerConfig(
+#                 "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
+#     # TODO - validate all the data_selectors data aswell
+#     return True
 
 
 def process_config(config=None):
@@ -321,3 +326,9 @@ def process_config(config=None):
         new_config_selectors.append(v)
     config['data_selectors'] = new_config_selectors
     return config
+
+
+def validate_cti_config(cti_manifest):
+    validator = InvanaBotConfigValidator(config=cti_manifest)
+    errors = validator.validate()
+    return errors
