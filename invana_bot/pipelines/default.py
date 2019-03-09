@@ -211,15 +211,18 @@ class CTIRunner(object):
 
     def callback(self):
         all_indexes = self.cti_manifest.get('indexes', [])
-        for index in all_indexes:
-            index_id = index.get('index_id')
-            callback_config = self.get_callback_for_index(index_id=index_id)
-            print("callback_config", callback_config)
-            try:
-                self.trigger_callback(callback_config=callback_config)
-            except Exception as e:
-                print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
-                                                                          e))
+        if len(all_indexes) == 0:
+            print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
+        else:
+            print("Initiating, sending the callback notifications after the respective transformations ")
+            for index in all_indexes:
+                index_id = index.get('index_id')
+                callback_config = self.get_callback_for_index(index_id=index_id)
+                try:
+                    self.trigger_callback(callback_config=callback_config)
+                except Exception as e:
+                    print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
+                                                                              e))
 
     def get_callback_for_index(self, index_id=None):
         callbacks = self.cti_manifest.get("callbacks", [])
@@ -274,5 +277,7 @@ class CTIRunner(object):
 
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
 
-        print("transformation and indexing ended")
+        print("======================================================")
+        print("Successfully crawled + transformed + indexed the data.")
+        print("======================================================")
         self.callback()
