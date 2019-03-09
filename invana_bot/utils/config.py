@@ -156,7 +156,7 @@ class InvanaBotConfigValidator(object):
                 raise InvalidCrawlerConfig("You are using next_crawler_id '{}' "
                                            "but it is not defined in the crawlers."
                                            " Available crawler_id in the config are {}".format(next_crawler_id,
-                                                                                                 all_crawlers_ids))
+                                                                                               all_crawlers_ids))
 
             if traversal_type == "pagination":
                 required_fields = ['selector', 'selector_type']
@@ -202,9 +202,81 @@ class InvanaBotConfigValidator(object):
                                 crawler['crawler_id'],
                                 ", ".join(required_fields), traversal_example))
 
+    def validate_transformations_and_indexes(self):
+        transformations = self.config.get('transformations', [])
+        indexes = self.config.get('indexes', [])
+        if len(indexes) == 0:
+            if len(transformations) > 0:
+                raise InvalidCrawlerConfig("transformations cannot be applied if indexes is not defined.")
+            print("Ignoring the transformation if index")
+        else:
+            transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
+
+            for transformation in transformations:
+                transformation_id = transformation.get("transformation_id")
+                transformation_fn = transformation.get("transformation_fn")
+                if transformation_fn is None:
+                    raise InvalidCrawlerConfig("transformation with transformation_id "
+                                               "'{}' doesn't have transformation_fn set".format(transformation_id))
+
+            example_index = {
+                "transformation_id": "default",
+                "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+                "collection_name": "blogs_list",
+                "unique_key": "url"
+            }
+            # transformation_ids_in_indexes = [index.get('transformation_id') for index in indexes]
+            index_required_fields = example_index.keys()
+            for index in indexes:
+                transformation_id = index.get("transformation_id")
+                for required_field in index_required_fields:
+                    if index.get(required_field) is None:
+                        raise InvalidCrawlerConfig("required field '{}' is missing in the index configuration."
+                                                   " Example is {} ".format(required_field, example_index))
+
+                if transformation_id not in transformation_ids:
+                    raise InvalidCrawlerConfig("index with transformation_id '{}' has no"
+                                               " transformation defined in transformations".format(transformation_id))
+
+    def validate_callback(self):
+        all_index_ids = [index.get('index_id') for index in self.config.get("indexes", [])]
+
+        callback_template = {
+            "callback_id": "default",
+            "index_id": "default",
+            "url": "http://localhost/api/callback",
+            "request_type": "POST",
+            "payload": {
+            },
+            "headers": {
+                "X-TOKEN": "abc123456789"
+            }
+        }
+
+        callbacks = self.config.get("callbacks", [])
+        callback_required_keys = callback_template.keys()
+        for callback in callbacks:
+            callback_id = callback.get("callback_id")
+            callback_index_id = callback.get("index_id")
+            if callback_id is None:
+                raise InvalidCrawlerConfig("Invalid callback configuration, callback_id cannot be None."
+                                           " Here is the example {}".format(callback_template))
+
+            if callback_index_id not in all_index_ids:
+                raise InvalidCrawlerConfig("callback is set with an index - '{}' which is not "
+                                           "defined in the indexes configuration."
+                                           "".format(callback_index_id))
+
+            for required_field in callback_required_keys:
+                if callback.get(required_field) is None:
+                    raise InvalidCrawlerConfig("Required key {} missing in callback_id '{}' "
+                                               "".format(required_field, callback_id))
+
     def validate(self):
         self.validate_required_fields()
         self.validate_crawlers(crawlers=self.config['crawlers'])
+        self.validate_transformations_and_indexes()
+        self.validate_callback()
 
 
 def validate_cti_config(config=None):
