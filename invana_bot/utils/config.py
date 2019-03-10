@@ -30,7 +30,7 @@ class InvanaBotConfigValidator(object):
         self.all_errors.append(error_text)
 
     def validate_required_fields(self):
-        required_keys = ['cti_id', 'init_data', 'crawlers']
+        required_keys = ['cti_id', 'init_crawler', 'crawlers']
         for key_ in required_keys:
             if key_ not in self.config.keys():
                 self.log_error(
@@ -286,7 +286,7 @@ class InvanaBotConfigValidator(object):
 
 # def validate_cti_config(config=None):
 #     optional_keys = ['transformations', 'indexes', 'callbacks']
-#     required_keys = ['cti_id', 'init_data', 'crawlers']
+#     required_keys = ['cti_id', 'init_crawler', 'crawlers']
 #     for key_ in required_keys:
 #         if key_ not in config.keys():
 #             raise InvalidCrawlerConfig(

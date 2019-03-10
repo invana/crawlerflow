@@ -44,61 +44,41 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 ## Usage
 
 ```python
+## cti_manifest.json
+cti_manifest = {
+  "cti_id": "example_cti_flow",
+  "init_crawler": {...},
+  "crawlers": [...],
+  "transformations": [...],
+  "indexes": [...],
+  "callbacks": [...],
+  "context": {
+    "author": "https://github.com/rrmerugu",
+    "description": "Crawler that scrapes invanalabs xyz"
+  }
+}
+```
 
+```python
 
 from invana_bot.crawlers.generic import InvanaBotWebCrawler
 from invana_bot.settings import DEFAULT_SETTINGS
-
-
-cti_manifest = {
-  "cti_id": "invanalabs_xyz",
-  "init_data": {
-    "start_urls": [
-      "https://blog.invanalabs.ai"
-    ],
-    "crawler_id": "site_list"
-  },
-  "crawlers": [
-    {
-      "crawler_id": "site_list",
-      "parsers": [
-        {
-          "parser_name": "ParagraphsExtractor"
-        }
-      ],
-      "traversals": [
-        {
-          "traversal_type": "same_domain",
-          "next_crawler_id": "site_list"
-        }
-      ]
-    }
-  ],
-  "transformations": [
-  ],
-  "indexes": [
-    {
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
-      "db_collection_name": "invanalabs_xyz"
-    }
-  ],
-  "callbacks": [
-  ]
-}
-context = {
-    "author": "https://github.com/rrmerugu",
-    "description": "Crawler that scrapes invanalabs xyz"
-}
+from invana_bot.managers.manifest import ETIManifestManager
+import eti_transformations
 
 if __name__ == '__main__':
+    manifest_manager = ETIManifestManager(cti_config_path="./", eti_transformations_module=eti_transformations)
+    cti_manifest = manifest_manager.get_manifest()
     crawler = InvanaBotWebCrawler(
         settings=DEFAULT_SETTINGS
     )
+    context = cti_manifest.get("context")
     job = crawler.create_job(
         cti_manifest=cti_manifest,
         context=context
     )
-    crawler.start_jobs(jobs=[job])
+    print("job", job)
+    crawler.start_job(job=job)
 
 
 ```

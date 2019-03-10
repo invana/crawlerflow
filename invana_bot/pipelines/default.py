@@ -159,12 +159,12 @@ class CTIRunner(object):
         errors = validate_cti_config(self.cti_manifest)
         if len(errors) == 0:
 
-            initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_data']['crawler_id'],
+            initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
                                                     crawlers=self.crawlers)
             print("initial_crawler", initial_crawler)
             parser_crawler = ParserCrawler(
                 job_id=self.job_id,
-                start_urls=self.cti_manifest['init_data']['start_urls'],
+                start_urls=self.cti_manifest['init_crawler']['start_urls'],
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,
                 context=self.context

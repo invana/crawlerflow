@@ -6,7 +6,7 @@ InvanaBot operates on **Crawl => Transform => Index** workflow.
 
 ### About manifest.json:
 - **cti_id** : unique identifier used to  
-- **init_data** : json config that tells, from where the crawling should start.
+- **init_crawler** : json config that tells, from where the crawling should start.
     - **start_urls** 
 - **crawlers** : a list of json based configurations that tells how to **traverse** and **parse** 
     - **parsers** : list of json configurations that tells crawler what data should be extracted from a web page.
@@ -24,7 +24,7 @@ Example of a full features manifest.json
 
 {
   "cti_id": "invanalab_xyz",
-  "init_data": {
+  "init_crawler": {
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],

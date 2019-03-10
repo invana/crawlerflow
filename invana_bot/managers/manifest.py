@@ -1,4 +1,5 @@
 import json
+import sys
 
 
 class ETIManifestManager(object):
@@ -7,11 +8,13 @@ class ETIManifestManager(object):
 
 
     """
-    CTI_CONFIG_PATH = "./basic"
 
-    def __init__(self, cti_config_path=None, eti_transformations_module=None):
+    def __init__(self, cti_config_path=None):
+        print("cti_config_path is {}".format(cti_config_path))
         self.cti_manifest = json.load(open("{}/eti_manifest.json".format(cti_config_path)))
-        self.eti_transformations_module = eti_transformations_module
+        sys.path.append(cti_config_path)
+        import eti_transformations
+        self.eti_transformations_module = eti_transformations
         print("cti_manifest is {}".format(self.cti_manifest))
         print("eti_transformations_module is {}".format(self.eti_transformations_module))
 

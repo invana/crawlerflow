@@ -1,6 +1,6 @@
 {
   "cti_id": "invanalabs_xyz",
-  "init_data": {
+  "init_crawler": {
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],

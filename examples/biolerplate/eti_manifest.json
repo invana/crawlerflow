@@ -1,6 +1,6 @@
 {
   "cti_id": "example_cti_flow",
-  "init_data": {
+  "init_crawler": {
     "start_urls": [
       "https://example.invanalabs.com"
     ],
