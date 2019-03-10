@@ -24,11 +24,17 @@ class ETIManifestManager(object):
         print("eti_transformations_module is {}".format(self.eti_transformations_module))
 
     def validate_eti_path_and_files(self):
-        files_in_path = os.listdir(self.cti_config_path)
         errors = []
-        for required_file in self.required_files:
-            if required_file not in files_in_path:
-                errors.append("{} file not in the path {}".format(required_file, self.cti_config_path))
+
+        try:
+            files_in_path = os.listdir(self.cti_config_path)
+        except Exception as e:
+            errors.append("No such path exist {}".format(self.cti_config_path))
+            files_in_path = []
+        if errors == 0:
+            for required_file in self.required_files:
+                if required_file not in files_in_path:
+                    errors.append("{} file not in the path {}".format(required_file, self.cti_config_path))
         return errors
 
     def import_eti_transformations(self):

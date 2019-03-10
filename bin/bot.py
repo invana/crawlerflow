@@ -5,7 +5,8 @@ import os
 import sys
 import argparse
 
-sys.path.append('../')
+invana_bot_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.append("{}/../".format(invana_bot_path))
 from invana_bot.crawlers.generic import InvanaBotWebCrawler
 from invana_bot.settings import DEFAULT_SETTINGS
 from invana_bot.managers.manifest import ETIManifestManager
@@ -36,7 +37,7 @@ if __name__ == "__main__":
         crawler.start_job(job=job)
     else:
         print("==============================================================")
-        print("ERROR : The path {} doesnt have the required files and failing with the errors {}".format(
+        print("ERROR : ETI Job Failing with the errors :: {}".format(
             manifest_manager.cti_config_path,
             errors
         ))
