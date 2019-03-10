@@ -43,8 +43,8 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 ## Usage
 
-```json
-/* cti_flow/cti_manifest.json */
+```python
+## cti_flow/cti_manifest.json 
 {
   "cti_id": "example_cti_flow",
   "init_crawler": {...},
