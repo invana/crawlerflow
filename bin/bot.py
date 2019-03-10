@@ -11,9 +11,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='InvanaBot - A web crawler framework that can'
                                                  ' transform websites into datasets with Crawl, '
                                                  'Transform and Index workflow. ')
-    parser.add_argument('--path', dest='path', action='store_const',
-                        const=str, default='./',
-                        help='Path to the eti setup files (default: ./)')
+
+    parser.add_argument('--path', type=str, default='./', help='FOO!')
 
     args = parser.parse_args()
     path = os.path.abspath(args.path)
