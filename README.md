@@ -73,7 +73,7 @@ def transformation_fn(results):
 
 ```bash
 
-python3 bot.py --path ./cti_flow
+python3 bin/bot.py --path ./cti_flow
 
 ```
 
