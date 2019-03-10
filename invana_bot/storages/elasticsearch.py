@@ -15,13 +15,13 @@ class ElasticSearchPipeline(object):
     es_settings = {
         'INVANA_BOT_SETTINGS': {
             'HTTPCACHE_STORAGE_SETTINGS': {
-                'DATABASE_URI': "127.0.0.1",
+                'CONNECTION_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_cache_db",
                 'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
-                'DATABASE_URI': "127.0.0.1",
+                'CONNECTION_URI': "127.0.0.1",
                 'DATABASE_NAME': "crawler_data",
                 'COLLECTION_NAME': "crawler_feeds_data"
             }
@@ -44,20 +44,20 @@ class ElasticSearchPipeline(object):
 
         return WebLinkExtracted
 
-    def __init__(self, database_uri=None,
+    def __init__(self, CONNECTION_URI=None,
                  database_name=None,
                  collection_name=None):
-        self.database_uri = database_uri
+        self.CONNECTION_URI = CONNECTION_URI
         self.database_name = database_name
         self.collection_name = collection_name
-        connections.create_connection(hosts=[self.database_uri])
+        connections.create_connection(hosts=[self.CONNECTION_URI])
         self.WebLinkExtracted = self.setup_collection()
         self.WebLinkExtracted.init()
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            database_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('DATABASE_URI'),
+            CONNECTION_URI=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('CONNECTION_URI'),
             database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'DATABASE_NAME'),
             collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(

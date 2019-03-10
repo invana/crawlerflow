@@ -1,0 +1,36 @@
+{
+  "cti_id": "invanalabs_xyz",
+  "init_crawler": {
+    "start_urls": [
+      "https://blog.scrapinghub.com"
+    ],
+    "crawler_id": "site_list"
+  },
+  "crawlers": [
+    {
+      "crawler_id": "site_list",
+      "parsers": [
+        {
+          "parser_name": "ParagraphsExtractor"
+        }
+      ],
+      "traversals": [
+        {
+          "traversal_type": "same_domain",
+          "next_crawler_id": "site_list"
+        }
+      ]
+    }
+  ],
+  "transformations": [
+  ],
+  "indexes": [
+    {
+      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_collection_name": "invanalabs_xyz",
+      "transformation_id": "default"
+    }
+  ],
+  "callbacks": [
+  ]
+}

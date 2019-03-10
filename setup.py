@@ -20,9 +20,11 @@ setup(name='invana-bot',
           'invana_bot.utils',
           'invana_bot.crawlers',
           'invana_bot.schedulers',
+          'invana_bot.transformers'
       ],
-      install_requires=['Scrapy==1.6.0',
-                        'pymongo',
-                        "feedparser==5.2.1"
-                        ]
+      install_requires=[
+          'Scrapy==1.6.0',
+          'pymongo',
+          "feedparser==5.2.1"
+      ]
       )
