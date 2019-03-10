@@ -1,8 +1,10 @@
 from .base import WebSpiderBase
-from invana_bot.extractors.content import CustomContentExtractor, ParagraphsExtractor, TableContentExtractor
+from invana_bot.extractors.content import CustomContentExtractor, \
+    ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtractor
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 from invana_bot.utils.crawlers import get_crawler_from_list
+
 TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
@@ -23,14 +25,14 @@ class DefaultParserSpider(WebSpiderBase):
             extractor_object = CustomContentExtractor(response=response, extractor=extractor)
         elif parser_name == "TableContentExtractor":
             extractor_object = TableContentExtractor(response=response, extractor=extractor)
+        elif parser_name == "HTMLMetaTagExtractor":
+            extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor)
         elif parser_name == "ParagraphsExtractor":
             extractor_object = ParagraphsExtractor(response=response, extractor=extractor)
         else:
             return
         data = extractor_object.run()
         return data
-
-
 
     @staticmethod
     def get_subdocument_key(parser=None, parser_name=None):

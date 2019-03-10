@@ -11,7 +11,38 @@
       "crawler_id": "blogs_list",
       "parsers": [
         {
-          "parser_name": "HTMLMetaTagExtractor"
+          "parser_name": "CustomContentExtractor",
+          "data_selectors": [
+            {
+              "id": "blogs",
+              "selector": ".post-listing .post-item",
+              "selector_attribute": "element",
+              "multiple": true,
+              "child_selectors": [
+                {
+                  "id": "url",
+                  "selector": ".post-header h2 a",
+                  "selector_type": "css",
+                  "selector_attribute": "href",
+                  "multiple": false
+                },
+                {
+                  "id": "title",
+                  "selector": ".post-header h2 a",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "multiple": false
+                },
+                {
+                  "id": "content",
+                  "selector": ".post-content",
+                  "selector_type": "css",
+                  "selector_attribute": "html",
+                  "multiple": false
+                }
+              ]
+            }
+          ]
         }
       ],
       "traversals": [
