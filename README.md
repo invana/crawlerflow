@@ -84,6 +84,7 @@ Refer examples in the `examples/` folder or check [doc/index.md](docs/index.md) 
 
 ## Support
 
-Feel free to [contact us](http://invanalabs.ai/contact-us/) for any further support. Few features like 
-IP rotation, headless browsing, data backups, scheduling and monitoring are 
+Few features like IP rotation, headless browsing, data backups, scheduling and monitoring are 
 available in our [InvanaBot Cloud](http://invanalabs.ai/product/invana-bot) version.
+
+For any futher queries or dedicated support, please feel free to [contact us](http://invanalabs.ai/contact-us/)
