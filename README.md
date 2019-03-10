@@ -11,7 +11,7 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
 
-[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support) | [**Documentation**](/docs/index.md)
+[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support) | [**Documentation**](#documentation)
 
 
 ## Features
@@ -76,6 +76,10 @@ def transformation_fn(results):
 python3 bin/bot.py --path ./cti_flow
 
 ```
+
+## Documentation
+
+Refer examples in the `examples/` folder or check [doc/index.md](docs/index.md) for more details.
 
 
 ## Support
