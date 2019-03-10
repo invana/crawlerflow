@@ -2,10 +2,10 @@ from __future__ import print_function
 import logging
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
-from scrapy.utils.python import to_bytes, to_unicode, garbage_collect
+from scrapy.utils.python import to_bytes
 import pymongo
 from scrapy.http.headers import Headers
-from invana_bot.utils.url import get_urn, get_domain
+from invana_bot.utils.url import get_domain
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +22,13 @@ class MongoDBCacheStorage(object):
     mongodb_settings = {
         'INVANA_BOT_SETTINGS': {
             'HTTPCACHE_STORAGE_SETTINGS': {
-                'DATABASE_URI': "mongodb://127.0.0.1",
+                'CONNECTION_URI': "mongodb://127.0.0.1",
                 'DATABASE_NAME': "crawler_cache_db",
                 'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
-                'DATABASE_URI': "mongodb://127.0.0.1",
+                'CONNECTION_URI': "mongodb://127.0.0.1",
                 'DATABASE_NAME': "crawler_data",
                 'COLLECTION_NAME': "crawler_feeds_data"
             }
@@ -39,15 +39,15 @@ class MongoDBCacheStorage(object):
     """
 
     def __init__(self, settings):
-        self.database_uri = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
-            "DATABASE_URI", None)
+        self.CONNECTION_URI = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
+            "CONNECTION_URI", None)
         self.database_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "DATABASE_NAME", None)
         self.cache_expiry_time = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "EXPIRY_TIME", None)
         self.collection_name = settings.get('INVANA_BOT_SETTINGS', {}).get('HTTPCACHE_STORAGE_SETTINGS', {}).get(
             "COLLECTION_NAME", None)
-        self.db_client = pymongo.MongoClient(self.database_uri)
+        self.db_client = pymongo.MongoClient(self.CONNECTION_URI)
         self.db = self.db_client[self.database_name]
 
     def open_spider(self, spider):

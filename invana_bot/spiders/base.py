@@ -4,7 +4,7 @@ from scrapy.http import Request
 import os
 
 
-class InvanaWebsiteSpiderBase(CrawlSpider):
+class WebSpiderBase(CrawlSpider):
 
     def _build_request(self, rule, link):
         headers = {}

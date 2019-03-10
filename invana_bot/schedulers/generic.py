@@ -6,7 +6,7 @@ class InvanaJobScheduler(object):
     """
     This will actually schedule the jobs.
 
-    crawler = InvanaWebCrawler(
+    crawler = InvanaBotWebCrawler(
         cache_database_uri="mongodb://127.0.0.1",
         storage_database_uri="mongodb://127.0.0.1",
         cache_database="mongodb",

@@ -3,8 +3,9 @@
 from setuptools import setup
 
 setup(name='invana-bot',
-      version='0.0.0a',
-      description='A batteries included crawler framework built on top of scrapy for scale and intelligent crawling.',
+      version='0.0.0b',
+      description='A web crawler framework that can transform websites into datasets'
+                  ' with Crawl, Transform and Index workflow.',
       author='Ravi Raja Merugu',
       author_email='rrmerugu@gmail.com',
       url='https://github.com/invanalabs/invana-bot',
@@ -20,9 +21,11 @@ setup(name='invana-bot',
           'invana_bot.utils',
           'invana_bot.crawlers',
           'invana_bot.schedulers',
+          'invana_bot.transformers',
+          'invana_bot.managers'
       ],
-      install_requires=['Scrapy==1.6.0',
-                        'pymongo',
-                        "feedparser==5.2.1"
-                        ]
+      install_requires=[
+          'Scrapy==1.6.0',
+          'pymongo'
+      ]
       )

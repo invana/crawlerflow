@@ -47,6 +47,22 @@ class TableContentExtractor(ExtractorBase):
         return data
 
 
+class HTMLMetaTagExtractor(ExtractorBase):
+    def run(self):
+        data = {}
+        data['url'] = self.response.url
+        meta_data_dict = {}
+        elements = self.response.css('meta')
+        for element in elements:
+            meta_property = element.xpath("@{0}".format('property')).extract_first()
+            if meta_property:
+                meta_property = meta_property.replace(":", "__")
+                meta_data_dict[meta_property] = element.xpath("@{0}".format('content')).extract_first()
+
+        data['html_meta'] = meta_data_dict
+        return data
+
+
 class CustomContentExtractor(ExtractorBase):
     ITER_KEY = "iter_count"
 
