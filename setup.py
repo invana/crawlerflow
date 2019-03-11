@@ -29,6 +29,6 @@ setup(name='invana-bot',
           'pymongo',
           'feedparser',
           'requests',
-          'transformers'
+          'invana-transformers'
       ]
       )
