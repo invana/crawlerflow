@@ -29,6 +29,6 @@ setup(name='invana-bot',
           'pymongo',
           'feedparser',
           'requests',
-          '-e git+https://github.com/invanalabs/data-transformers#egg=transformers'
+          'git+https://github.com/invanalabs/data-transformers#egg=transformers'
       ]
       )
