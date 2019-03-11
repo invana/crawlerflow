@@ -26,6 +26,9 @@ setup(name='invana-bot',
       ],
       install_requires=[
           'Scrapy==1.6.0',
-          'pymongo'
+          'pymongo',
+          'feedparser',
+          'requests',
+          '-e git+https://github.com/invanalabs/data-transformers#egg=transformers'
       ]
       )

@@ -37,3 +37,4 @@ Twisted==17.9.0
 w3lib==1.19.0
 zope.interface==4.4.3
 -e git+https://github.com/invanalabs/data-transformers#egg=transformers
+feedparser
