@@ -73,6 +73,7 @@ class CustomContentExtractor(ExtractorBase):
         for selector in self.extractor.get('data_selectors', []):
             if selector.get('selector_attribute') == 'element' and len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
+                print ("selector.get('selector')",selector.get('selector'))
                 elements = self.response.css(selector.get('selector'))
                 elements_data = []
                 for item_no, el in enumerate(elements):

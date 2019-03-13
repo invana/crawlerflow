@@ -171,9 +171,9 @@ class CTIRunner(object):
             )
             cti_job = parser_crawler.run()
 
-            return cti_job
+            return cti_job, errors
         else:
-            return None
+            return None, errors
 
     @staticmethod
     def get_index(transformation_id=None, indexes=None):

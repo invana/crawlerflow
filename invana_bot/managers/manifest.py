@@ -16,6 +16,7 @@ class ETIManifestManager(object):
         self.cti_config_path = cti_config_path
 
     def import_files(self):
+        print ("self.cti_config_path", self.cti_config_path)
         self.cti_manifest = json.load(open("{}/eti_manifest.json".format(self.cti_config_path)))
         sys.path.append(self.cti_config_path)
         import eti_transformations

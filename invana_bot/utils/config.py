@@ -36,11 +36,13 @@ class InvanaBotConfigValidator(object):
                 self.log_error(
                     "Invalid configuration: Required Key {0} not found in the configuration".format(key_))
         # TODO - validate all the data_selectors data aswell
-        print("all the required fields exist")
+        # print("all the required fields exist")
         return True
 
-    def validate_options_fields(self):
-        optional_keys = ['transformations', 'indexes', 'callbacks', 'context']
+    # @staticmethod
+    # def validate_options_fields():
+    #     optional_keys = ['transformations', 'indexes', 'callbacks', 'context']
+    #
 
     def validate_selector(self, selector=None):
 
@@ -197,7 +199,7 @@ class InvanaBotConfigValidator(object):
                 }
                 required_fields = ['parser_name', 'field_name']
                 for required_field in required_fields:
-                    if required_field in traversal[traversal_type].keys():
+                    if required_field not in traversal[traversal_type].keys():
                         self.log_error(
                             "Traversal type '{}' in crawler '{}' should have the config "
                             "with keys '{}' along with optional max_pages. Example: {}"
