@@ -7,3 +7,4 @@ dist/
 .pytest_cache/
 .coverage
 ./examples/basic/crawl_test.py
+./__playground
