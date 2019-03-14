@@ -12,6 +12,9 @@
       "parsers": [
         {
           "parser_name": "HTMLMetaTagExtractor"
+        },
+        {
+          "parser_name": "ParagraphExtractor"
         }
       ],
       "traversals": [

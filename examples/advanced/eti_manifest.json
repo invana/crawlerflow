@@ -4,12 +4,18 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blogs_list"
+    "crawler_id": "blog_list"
   },
   "crawlers": [
     {
-      "crawler_id": "blogs_list",
+      "crawler_id": "blog_list",
       "parsers": [
+        {
+          "parser_name": "HTMLMetaTagExtractor"
+        },
+        {
+          "parser_name": "ParagraphExtractor"
+        },
         {
           "parser_name": "CustomContentExtractor",
           "data_selectors": [
@@ -53,7 +59,61 @@
             "selector_type": "css",
             "max_pages": 4
           },
-          "next_crawler_id": "blogs_list"
+          "next_crawler_id": "blog_list"
+        },
+        {
+          "traversal_type": "link_from_field",
+          "link_from_field": {
+            "parser_name": "CustomContentExtractor",
+            "field_name": "url"
+          },
+          "next_crawler_id": "blog_detail"
+        }
+      ]
+    },
+    {
+      "crawler_id": "blog_detail",
+      "parsers": [
+        {
+          "parser_name": "CustomContentExtractor",
+          "data_selectors": [
+            {
+              "id": "blog_detail",
+              "selector": ".blog-section",
+              "selector_attribute": "element",
+              "multiple": false,
+              "child_selectors": [
+                {
+                  "id": "title",
+                  "selector": "h1 span",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "multiple": false
+                },
+                {
+                  "id": "published_at",
+                  "selector": ".date a",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "multiple": false
+                },
+                {
+                  "id": "author",
+                  "selector": ".author a",
+                  "selector_type": "css",
+                  "selector_attribute": "text",
+                  "multiple": false
+                },
+                {
+                  "id": "html_content",
+                  "selector": ".post-body",
+                  "selector_type": "css",
+                  "selector_attribute": "html",
+                  "multiple": false
+                }
+              ]
+            }
+          ]
         }
       ]
     }
@@ -69,7 +129,7 @@
       "index_id": "default",
       "transformation_id": "default",
       "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
-      "collection_name": "blogs_list",
+      "collection_name": "blog_list",
       "unique_key": "url"
     }
   ],

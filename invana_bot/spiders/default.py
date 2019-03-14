@@ -30,7 +30,7 @@ class DefaultParserSpider(WebSpiderBase):
         elif parser_name == "ParagraphsExtractor":
             extractor_object = ParagraphsExtractor(response=response, extractor=extractor)
         else:
-            return
+            return {}
         data = extractor_object.run()
         return data
 
@@ -63,6 +63,8 @@ class DefaultParserSpider(WebSpiderBase):
         data = {}
         for extractor in current_crawler['parsers']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
+            # print ("++++++++++", extracted_data)
+            # if extracted_data is not None:
             data.update(extracted_data)
         if context is not None:
             data.update({"context": context})
@@ -104,6 +106,7 @@ class DefaultParserSpider(WebSpiderBase):
                     parser=current_crawler,
                     parser_name=traversal_config['parser_name']
                 )
+                print ("==========", subdocument_key, data.get(subdocument_key))
                 for item in data[subdocument_key]:
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['field_name']]
                     next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
