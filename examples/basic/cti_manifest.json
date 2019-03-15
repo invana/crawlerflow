@@ -11,10 +11,13 @@
       "crawler_id": "blogs_list",
       "parsers": [
         {
-          "parser_name": "HTMLMetaTagExtractor"
+          "parser_type": "HTMLMetaTagExtractor",
+          "parser_name": "meta_tags"
+
         },
         {
-          "parser_name": "ParagraphExtractor"
+          "parser_type": "ParagraphExtractor",
+          "parser_name": "paragraphs"
         }
       ],
       "traversals": [

@@ -24,7 +24,7 @@ class CTIManifestManager(object):
         print("cti_manifest is {}".format(self.cti_manifest))
         print("cti_transformations_module is {}".format(self.cti_transformations_module))
 
-    def validate_eti_path_and_files(self):
+    def validate_cti_path_and_files(self):
         errors = []
 
         try:
@@ -44,7 +44,7 @@ class CTIManifestManager(object):
             tranformation['transformation_fn'] = method_to_call
 
     def get_manifest(self):
-        errors = self.validate_eti_path_and_files()
+        errors = self.validate_cti_path_and_files()
         if len(errors) > 0:
             return None, errors
         self.import_files()

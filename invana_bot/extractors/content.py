@@ -1,6 +1,6 @@
 from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
-
+import json
 
 class MetaTagsExtractor(ExtractorBase):
     # TODO - implement this
@@ -43,7 +43,7 @@ class TableContentExtractor(ExtractorBase):
                 row_dict = dict(zip(table_headers, row_data))
                 table_data.append(row_dict)
             tables.append(table_data)
-        data['tables'] = tables
+        data[self.parser_name] = tables
         return data
 
 
@@ -59,7 +59,7 @@ class HTMLMetaTagExtractor(ExtractorBase):
                 meta_property = meta_property.replace(":", "__")
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('content')).extract_first()
 
-        data['html_meta'] = meta_data_dict
+        data[self.parser_name] = meta_data_dict
         return data
 
 
@@ -69,11 +69,12 @@ class CustomContentExtractor(ExtractorBase):
     # TODO - implement this
     def run(self):
         data = {}
-        data['url'] = self.response.url
+        extracted_data = {}
+        extracted_data['url'] = self.response.url
         for selector in self.extractor.get('data_selectors', []):
             if selector.get('selector_attribute') == 'element' and len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
-                print ("selector.get('selector')",selector.get('selector'))
+                print("selector.get('selector')", selector.get('selector'))
                 elements = self.response.css(selector.get('selector'))
                 elements_data = []
                 for item_no, el in enumerate(elements):
@@ -81,16 +82,19 @@ class CustomContentExtractor(ExtractorBase):
                     datum = {}
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
-                        datum[child_selector.get('id')] = _d.strip() if _d else None
+                        datum[child_selector.get('selector_id')] = _d.strip() if _d else None
                     datum[self.ITER_KEY] = item_no
                     elements_data.append(datum)
                 if selector.get("multiple", False) is False:
                     single_data = elements_data[0]
                     single_data.pop(self.ITER_KEY)
-                    data[selector.get('id')] = single_data
+                    extracted_data[selector.get('selector_id')] = single_data
                 else:
-                    data[selector.get('id')] = elements_data
+                    extracted_data[selector.get('selector_id')] = elements_data
             else:
                 _d = get_selector_element(self.response, selector)
-                data[selector.get('id')] = _d
+                extracted_data[selector.get('selector_id')] = _d
+
+        data[self.parser_name] = extracted_data
+        print("----------", data, json.dumps(data))
         return data

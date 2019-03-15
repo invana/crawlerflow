@@ -20,15 +20,20 @@ class DefaultParserSpider(WebSpiderBase):
 
     @staticmethod
     def run_extractor(response=None, extractor=None):
+        parser_type = extractor.get("parser_type")
         parser_name = extractor.get("parser_name")
-        if parser_name in [None, "CustomContentExtractor"]:
-            extractor_object = CustomContentExtractor(response=response, extractor=extractor)
-        elif parser_name == "TableContentExtractor":
-            extractor_object = TableContentExtractor(response=response, extractor=extractor)
-        elif parser_name == "HTMLMetaTagExtractor":
-            extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor)
-        elif parser_name == "ParagraphsExtractor":
-            extractor_object = ParagraphsExtractor(response=response, extractor=extractor)
+        if parser_type in [None, "CustomContentExtractor"]:
+            extractor_object = CustomContentExtractor(response=response, extractor=extractor,
+                                                      parser_name=parser_name)
+        elif parser_type == "TableContentExtractor":
+            extractor_object = TableContentExtractor(response=response, extractor=extractor,
+                                                     parser_name=parser_name or "tables")
+        elif parser_type == "HTMLMetaTagExtractor":
+            extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor,
+                                                    parser_name=parser_name or "meta_tags")
+        elif parser_type == "ParagraphsExtractor":
+            extractor_object = ParagraphsExtractor(response=response, extractor=extractor,
+                                                   parser_name=parser_name or "paragraphs")
         else:
             return {}
         data = extractor_object.run()
@@ -41,6 +46,7 @@ class DefaultParserSpider(WebSpiderBase):
 
         :param parser:
         :param parser_name:
+        :param selector_id:
         :return:
         """
         for extractor in parser['parsers']:
@@ -63,7 +69,7 @@ class DefaultParserSpider(WebSpiderBase):
         data = {}
         for extractor in current_crawler['parsers']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
-            # print ("++++++++++", extracted_data)
+            print ("++++++++++",extractor, extracted_data)
             # if extracted_data is not None:
             data.update(extracted_data)
         if context is not None:
@@ -104,11 +110,13 @@ class DefaultParserSpider(WebSpiderBase):
 
                 subdocument_key = self.get_subdocument_key(
                     parser=current_crawler,
-                    parser_name=traversal_config['parser_name']
+                    parser_name=traversal_config['parser_name'],
+                    # selector_id=traversal_config['selector_id']
                 )
-                print ("==========", subdocument_key, data.get(subdocument_key))
-                for item in data[subdocument_key]:
-                    traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['field_name']]
+                print("==========", subdocument_key, traversal_config['parser_name'],
+                      data.get(traversal_config['parser_name']).get(subdocument_key, []), data)
+                for item in data.get(traversal_config['parser_name']).get(subdocument_key, []):
+                    traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['parser_name']]
                     next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                     yield scrapy.Request(
                         traversal_url, callback=self.parse,

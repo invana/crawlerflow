@@ -11,36 +11,39 @@
       "crawler_id": "blog_list",
       "parsers": [
         {
-          "parser_name": "HTMLMetaTagExtractor"
+          "parser_type": "HTMLMetaTagExtractor",
+          "parser_name": "meta_tags"
         },
         {
-          "parser_name": "ParagraphExtractor"
+          "parser_type": "ParagraphExtractor",
+          "parser_name": "paragraphs"
         },
         {
-          "parser_name": "CustomContentExtractor",
+          "parser_type": "CustomContentExtractor",
+          "parser_name": "blog_list_parser",
           "data_selectors": [
             {
-              "id": "blogs",
+              "selector_id": "blogs",
               "selector": ".post-listing .post-item",
               "selector_attribute": "element",
               "multiple": true,
               "child_selectors": [
                 {
-                  "id": "url",
+                  "selector_id": "url",
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "href",
                   "multiple": false
                 },
                 {
-                  "id": "title",
+                  "selector_id": "title",
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "text",
                   "multiple": false
                 },
                 {
-                  "id": "content",
+                  "selector_id": "content",
                   "selector": ".post-content",
                   "selector_type": "css",
                   "selector_attribute": "html",
@@ -64,8 +67,8 @@
         {
           "traversal_type": "link_from_field",
           "link_from_field": {
-            "parser_name": "CustomContentExtractor",
-            "field_name": "url"
+            "parser_name": "blog_list_parser",
+            "selector_id": "url"
           },
           "next_crawler_id": "blog_detail"
         }
@@ -75,37 +78,38 @@
       "crawler_id": "blog_detail",
       "parsers": [
         {
-          "parser_name": "CustomContentExtractor",
+          "parser_type": "CustomContentExtractor",
+          "parser_name": "blog_detail",
           "data_selectors": [
             {
-              "id": "blog_detail",
+              "selector_id": "blog_detail",
               "selector": ".blog-section",
               "selector_attribute": "element",
               "multiple": false,
               "child_selectors": [
                 {
-                  "id": "title",
+                  "selector_id": "title",
                   "selector": "h1 span",
                   "selector_type": "css",
                   "selector_attribute": "text",
                   "multiple": false
                 },
                 {
-                  "id": "published_at",
+                  "selector_id": "published_at",
                   "selector": ".date a",
                   "selector_type": "css",
                   "selector_attribute": "text",
                   "multiple": false
                 },
                 {
-                  "id": "author",
+                  "selector_id": "author",
                   "selector": ".author a",
                   "selector_type": "css",
                   "selector_attribute": "text",
                   "multiple": false
                 },
                 {
-                  "id": "html_content",
+                  "selector_id": "html_content",
                   "selector": ".post-body",
                   "selector_type": "css",
                   "selector_attribute": "html",

@@ -11,7 +11,7 @@
       "crawler_id": "blogs_list",
       "parsers": [
         {
-          "parser_name": "ParagraphsExtractor"
+          "parser_type": "ParagraphsExtractor"
         }
       ],
       "traversals": [

@@ -35,7 +35,7 @@ Example of a full features manifest.json
       "crawler_id": "blog-list",
       "parsers": [
         {
-          "parser_name": "CustomContentExtractor",
+          "parser_type": "CustomContentExtractor",
           "data_selectors": [
             {
               "id": "blogs",
@@ -82,8 +82,8 @@ Example of a full features manifest.json
         {
           "traversal_type": "link_from_field",
           "link_from_field": {
-            "parser_name": "CustomContentExtractor",
-            "field_name": "url"
+            "parser_type": "CustomContentExtractor",
+            "parser_name": "url"
           },
           "next_crawler_id": "blog-detail"
         }
@@ -143,8 +143,8 @@ Example of a full features manifest.json
 {
   "traversal_type": "link_from_field",
   "link_from_field": {
-    "parser_name": "CustomContentExtractor",
-    "field_name": "url"
+    "parser_type": "CustomContentExtractor",
+    "parser_name": "url"
   },
   "next_crawler_id": "blog-detail"
 }

@@ -18,7 +18,7 @@
         }, 
         {
             "traversal_type": "link_from_field",
-            "link_from_field": {"parser_name": "CustomContentExtractor", "field_name": "url"},
+            "link_from_field": {"parser_type": "CustomContentExtractor", "parser_name": "url"},
             "next_crawler_id": "blog-detail"
         }, 
         {
@@ -44,7 +44,7 @@ pipeline_data = {
         {  # single pipe
             "pipe_id": "blog-list",
             "parsers": [   {
-                    "parser_name": "CustomContentExtractor",
+                    "parser_type": "CustomContentExtractor",
                     "data_selectors": [
                         {
                             "id": "main_content_html",
@@ -56,7 +56,7 @@ pipeline_data = {
                     ]
                 },
                 {
-                    "parser_name": "ParagraphsExtractor"
+                    "parser_type": "ParagraphsExtractor"
                 },
 
             ],
