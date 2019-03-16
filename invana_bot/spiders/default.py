@@ -68,8 +68,8 @@ class DefaultParserSpider(WebSpiderBase):
 
         data = {}
         for extractor in current_crawler['parsers']:
-            extracted_data = {extractor.get("parser_name") : self.run_extractor(response=response, extractor=extractor)}
-            print ("++++++++++",extractor, extracted_data)
+            extracted_data = {extractor.get("parser_name"): self.run_extractor(response=response, extractor=extractor)}
+            print("++++++++++", extractor, extracted_data)
             # if extracted_data is not None:
             data.update(extracted_data)
         if context is not None:
@@ -120,9 +120,10 @@ class DefaultParserSpider(WebSpiderBase):
                     next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                     yield scrapy.Request(
                         traversal_url, callback=self.parse,
-                        meta={"crawlers": crawlers,
-                              "current_crawler": next_parser
-                              }
+                        meta={
+                            "crawlers": crawlers,
+                            "current_crawler": next_parser
+                        }
                     )
             elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
                 all_urls = response.css("a::attr(href)").extract()
