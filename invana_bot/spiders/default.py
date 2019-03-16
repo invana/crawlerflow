@@ -68,7 +68,7 @@ class DefaultParserSpider(WebSpiderBase):
 
         data = {}
         for extractor in current_crawler['parsers']:
-            extracted_data = self.run_extractor(response=response, extractor=extractor)
+            extracted_data = {extractor.get("parser_name") : self.run_extractor(response=response, extractor=extractor)}
             print ("++++++++++",extractor, extracted_data)
             # if extracted_data is not None:
             data.update(extracted_data)
