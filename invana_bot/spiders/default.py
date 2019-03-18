@@ -40,20 +40,21 @@ class DefaultParserSpider(WebSpiderBase):
         return data
 
     @staticmethod
-    def get_subdocument_key(parser=None, parser_name=None):
+    def get_subdocument_key(crawler=None, parser_name=None):
         """
         element is the subdocument key name.
 
-        :param parser:
+        :param crawler:
         :param parser_name:
         :param selector_id:
         :return:
         """
-        for extractor in parser['parsers']:
+        print("()()", parser_name, crawler)
+        for extractor in crawler['parsers']:
             if extractor.get("parser_name") == parser_name:
                 for selector in extractor.get('data_selectors', []):
                     if selector.get('selector_attribute') == 'element':
-                        return selector.get("id")
+                        return selector.get("selector_id")
         return
 
     def parse(self, response=None):
@@ -68,10 +69,12 @@ class DefaultParserSpider(WebSpiderBase):
 
         data = {}
         for extractor in current_crawler['parsers']:
-            extracted_data = {extractor.get("parser_name"): self.run_extractor(response=response, extractor=extractor)}
-            print("++++++++++", extractor, extracted_data)
+            # extracted_data = {extractor.get("parser_name") : self.run_extractor(response=response, extractor=extractor)}
+            extracted_data = self.run_extractor(response=response, extractor=extractor)
+            print("++++++++++", extracted_data, extractor, )
             # if extracted_data is not None:
             data.update(extracted_data)
+
         if context is not None:
             data.update({"context": context})
         data['url'] = response.url
@@ -109,14 +112,12 @@ class DefaultParserSpider(WebSpiderBase):
                 traversal_config = traversal[TRAVERSAL_LINK_FROM_FIELD]
 
                 subdocument_key = self.get_subdocument_key(
-                    parser=current_crawler,
+                    crawler=current_crawler,
                     parser_name=traversal_config['parser_name'],
                     # selector_id=traversal_config['selector_id']
                 )
-                print("==========", subdocument_key, traversal_config['parser_name'],
-                      data.get(traversal_config['parser_name']).get(subdocument_key, []), data)
                 for item in data.get(traversal_config['parser_name']).get(subdocument_key, []):
-                    traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['parser_name']]
+                    traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
                     next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                     yield scrapy.Request(
                         traversal_url, callback=self.parse,

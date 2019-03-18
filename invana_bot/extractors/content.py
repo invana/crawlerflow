@@ -2,6 +2,7 @@ from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
 import json
 
+
 class MetaTagsExtractor(ExtractorBase):
     # TODO - implement this
     pass
@@ -33,7 +34,6 @@ class MainContentExtractor(ExtractorBase):
 class TableContentExtractor(ExtractorBase):
     def run(self):
         data = {}
-        data['url'] = self.response.url
         tables = []
         for table in self.response.css("table"):
             table_data = []
@@ -50,7 +50,6 @@ class TableContentExtractor(ExtractorBase):
 class HTMLMetaTagExtractor(ExtractorBase):
     def run(self):
         data = {}
-        data['url'] = self.response.url
         meta_data_dict = {}
         elements = self.response.css('meta')
         for element in elements:
@@ -70,11 +69,9 @@ class CustomContentExtractor(ExtractorBase):
     def run(self):
         data = {}
         extracted_data = {}
-        extracted_data['url'] = self.response.url
         for selector in self.extractor.get('data_selectors', []):
             if selector.get('selector_attribute') == 'element' and len(selector.get('child_selectors', [])) > 0:
                 # TODO - currently only support multiple elements strategy. what if multiple=False
-                print("selector.get('selector')", selector.get('selector'))
                 elements = self.response.css(selector.get('selector'))
                 elements_data = []
                 for item_no, el in enumerate(elements):
@@ -94,7 +91,5 @@ class CustomContentExtractor(ExtractorBase):
             else:
                 _d = get_selector_element(self.response, selector)
                 extracted_data[selector.get('selector_id')] = _d
-
         data[self.parser_name] = extracted_data
-        print("----------", data, json.dumps(data))
         return data
