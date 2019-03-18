@@ -49,7 +49,6 @@ class DefaultParserSpider(WebSpiderBase):
         :param selector_id:
         :return:
         """
-        print("()()", parser_name, crawler)
         for extractor in crawler['parsers']:
             if extractor.get("parser_name") == parser_name:
                 for selector in extractor.get('data_selectors', []):
@@ -69,10 +68,7 @@ class DefaultParserSpider(WebSpiderBase):
 
         data = {}
         for extractor in current_crawler['parsers']:
-            # extracted_data = {extractor.get("parser_name") : self.run_extractor(response=response, extractor=extractor)}
             extracted_data = self.run_extractor(response=response, extractor=extractor)
-            print("++++++++++", extracted_data, extractor, )
-            # if extracted_data is not None:
             data.update(extracted_data)
 
         if context is not None:
@@ -113,8 +109,7 @@ class DefaultParserSpider(WebSpiderBase):
 
                 subdocument_key = self.get_subdocument_key(
                     crawler=current_crawler,
-                    parser_name=traversal_config['parser_name'],
-                    # selector_id=traversal_config['selector_id']
+                    parser_name=traversal_config['parser_name']
                 )
                 for item in data.get(traversal_config['parser_name']).get(subdocument_key, []):
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
