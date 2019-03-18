@@ -4,6 +4,7 @@ from invana_bot.extractors.content import CustomContentExtractor, \
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 from invana_bot.utils.crawlers import get_crawler_from_list
+from urllib.parse import urlparse
 
 TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
@@ -113,14 +114,22 @@ class DefaultParserSpider(WebSpiderBase):
                 )
                 for item in data.get(traversal_config['parser_name']).get(subdocument_key, []):
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
-                    next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-                    yield scrapy.Request(
-                        traversal_url, callback=self.parse,
-                        meta={
-                            "crawlers": crawlers,
-                            "current_crawler": next_parser
-                        }
-                    )
+                    if traversal_url:
+                        if "://" not in traversal_url:  # TODO - fix this monkey patch
+                            url_parsed = urlparse(response.url)
+                            traversal_url = url_parsed.scheme + "://" + url_parsed.netloc + "/" + traversal_url.lstrip("/")
+
+                        next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                        yield scrapy.Request(
+                            traversal_url,
+                            callback=self.parse,
+                            meta={
+                                "crawlers": crawlers,
+                                "current_crawler": next_parser
+                            }
+                        )
+                    else:
+                        print("igoring traversal to {}".format(traversal_url))
             elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
                 all_urls = response.css("a::attr(href)").extract()
                 filtered_urls = []
