@@ -148,7 +148,7 @@ class InvanaBotConfigValidator(object):
             if traversal_type not in valid_traversal_types:
                 self.log_error("Traversal of types '{}' are accepted, where as you have "
                                " parser_name '{}'".format(", ".join(valid_traversal_types),
-                                                             traversal_type))
+                                                          traversal_type))
 
             if traversal_type not in traversal.keys():
                 self.log_error("Traversal of type '{}' should have '{}' key defining the"
@@ -278,11 +278,20 @@ class InvanaBotConfigValidator(object):
                     self.log_error("Required key {} missing in callback_id '{}' "
                                    "".format(required_field, callback_id))
 
+    def validate_settings(self):
+        settings = self.config.get("settings", {})
+        required_keys = ['download_delay', 'allowed_domains']
+        for required_key in required_keys:
+            if required_key not in settings.keys():
+                self.log_error(
+                    "required field '{}' in settings data not found".format(required_key))
+
     def validate(self):
         self.validate_required_fields()
         self.validate_crawlers(crawlers=self.config['crawlers'])
         self.validate_transformations_and_indexes()
         self.validate_callback()
+        self.validate_settings()
         return self.all_errors
 
 

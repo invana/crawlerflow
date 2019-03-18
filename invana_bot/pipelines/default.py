@@ -76,10 +76,13 @@ class ParserCrawler(object):
                  start_urls=None,
                  job_id=None,
                  crawlers=None,
-                 context=None):
+                 context=None,
+                 cti_manifest=None
+                 ):
         """
 
         :param current_crawler: single crawler in the CTI flow
+        :param cti_manifest:  CTI flow
         :param crawlers: all the crawlers in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
         """
@@ -87,6 +90,7 @@ class ParserCrawler(object):
         self.job_id = job_id
         self.crawlers = crawlers
         self.start_urls = start_urls
+        self.cti_manifest = cti_manifest
         if context:
             self.context = context
         self.validate_pipe()
@@ -112,20 +116,15 @@ class ParserCrawler(object):
         return self.current_crawler.get("parsers", [])
 
     def generate_crawler_kwargs(self):
-        domains = []
-
-        for url in self.start_urls:
-            domain = url.split("://")[1].split("/")[0]  # TODO - clean this
-            domains.append(domain)
-
         extractor = LinkExtractor()
         rules = [
             Rule(extractor, follow=True)  # TODO - add regex types of needed.
         ]
+        allowed_domains = self.cti_manifest.get("settings", {}).get('allowed_domains', [])
 
         spider_kwargs = {
             "start_urls": self.start_urls,
-            "allowed_domains": domains,
+            "allowed_domains": allowed_domains,
             "rules": rules,
             "current_crawler": self.current_crawler,
             "crawlers": self.crawlers,
@@ -167,7 +166,8 @@ class CTIRunner(object):
                 start_urls=self.cti_manifest['init_crawler']['start_urls'],
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,
-                context=self.context
+                context=self.context,
+                cti_manifest=self.cti_manifest
             )
             cti_job = parser_crawler.run()
 
