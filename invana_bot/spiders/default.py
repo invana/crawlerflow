@@ -99,11 +99,7 @@ class DefaultParserSpider(WebSpiderBase):
                                 next_page_url = "https://" + get_domain(response.url) + next_page
                             else:
                                 next_page_url = next_page
-                            print("next_page_urlnext_page_url ", next_page_url)
-
                             next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-
-                            # TODO - add logics to change the extractors or call a different parser from here.
                             yield scrapy.Request(
                                 next_page_url,
                                 callback=self.parse,
@@ -135,7 +131,7 @@ class DefaultParserSpider(WebSpiderBase):
                             callback=self.parse,
                             meta={
                                 "crawlers": crawlers,
-                                "current_crawler": next_parser
+                                "current_crawler": next_parser,
                             }
                         )
                     else:
