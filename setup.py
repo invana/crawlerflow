@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='invana-bot',
-      version='0.0.0d',
+      version='0.0.0alpha',
       description='A web crawler framework that can transform websites into datasets'
                   ' with Crawl, Transform and Index workflow.',
       author='Ravi Raja Merugu',
