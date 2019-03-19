@@ -31,7 +31,6 @@ class MongoDBPipeline(object):
             raise Exception("pymongo.MongoClient() it not called in the Pipeline, please make the connection first")
         data = dict(item)
         data['updated'] = datetime.now()
-        print (data)
         self.collection.insert(data)
-        print("Item added to MongoDB", data)
+        print("Item added to Storage", data)
         return item

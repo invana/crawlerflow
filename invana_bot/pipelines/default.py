@@ -160,7 +160,6 @@ class CTIRunner(object):
 
             initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
                                                     crawlers=self.crawlers)
-            print("initial_crawler", initial_crawler)
             parser_crawler = ParserCrawler(
                 job_id=self.job_id,
                 start_urls=self.cti_manifest['init_crawler']['start_urls'],
