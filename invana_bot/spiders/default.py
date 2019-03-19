@@ -81,6 +81,7 @@ class DefaultParserSpider(WebSpiderBase):
             if traversal['traversal_type'] == "pagination":
                 # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
                 traversal_config = traversal['pagination']
+                next_crawler_id = traversal['next_crawler_id']
                 max_pages = traversal_config.get("max_pages", 1)
                 current_page_count = response.meta.get('current_page_count', 1)
                 if current_page_count < max_pages:
@@ -98,11 +99,19 @@ class DefaultParserSpider(WebSpiderBase):
                                 next_page_url = "https://" + get_domain(response.url) + next_page
                             else:
                                 next_page_url = next_page
+                            print("next_page_urlnext_page_url ", next_page_url)
+
+                            next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+
                             # TODO - add logics to change the extractors or call a different parser from here.
                             yield scrapy.Request(
                                 next_page_url,
                                 callback=self.parse,
-                                meta={"current_page_count": current_page_count}
+                                meta={"current_page_count": current_page_count,
+                                      "current_crawler": next_parser,
+                                      "crawlers": crawlers
+
+                                      }
                             )
             elif traversal['traversal_type'] == TRAVERSAL_LINK_FROM_FIELD:
                 next_crawler_id = traversal['next_crawler_id']
@@ -117,7 +126,8 @@ class DefaultParserSpider(WebSpiderBase):
                     if traversal_url:
                         if "://" not in traversal_url:  # TODO - fix this monkey patch
                             url_parsed = urlparse(response.url)
-                            traversal_url = url_parsed.scheme + "://" + url_parsed.netloc + "/" + traversal_url.lstrip("/")
+                            traversal_url = url_parsed.scheme + "://" + url_parsed.netloc + "/" + traversal_url.lstrip(
+                                "/")
 
                         next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                         yield scrapy.Request(
@@ -144,10 +154,17 @@ class DefaultParserSpider(WebSpiderBase):
                 #  implementing max_pages is difficult cos it keeps adding
                 # new 100 pages in each thread.
                 current_page_count = response.meta.get('current_page_count', 1)
+                next_crawler_id = traversal['next_crawler_id']
+                next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+
                 for url in filtered_urls:
                     current_page_count = current_page_count + 1
 
                     yield scrapy.Request(
                         url, callback=self.parse,
-                        meta={"current_page_count": current_page_count}
+                        meta={
+                            "current_page_count": current_page_count,
+                            "current_crawler": next_parser,
+                            "crawlers": crawlers
+                        }
                     )
