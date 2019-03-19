@@ -3,8 +3,6 @@ from scrapy.linkextractors import LinkExtractor
 from invana_bot.utils.crawlers import get_crawler_from_list
 from invana_bot.utils.config import validate_cti_config
 from scrapy.spiders import Rule
-import copy
-from pymongo import MongoClient
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
@@ -15,7 +13,7 @@ import requests
 class ParserCrawler(object):
     """
 
-    pipe_data = {  # single pipe
+    crawler = {  # single pipe
 
         "crawler_id": "blog-list",
         "parsers": [
@@ -26,30 +24,6 @@ class ParserCrawler(object):
                         "selector": ".post-listing .post-item",
                         "selector_attribute": "element",
                         "multiple": True
-                    },
-                    {
-                        "id": "url",
-                        "selector": ".post-header h2 a",
-                        "selector_type": "css",
-                        "selector_attribute": "href",
-                        "parent_selector": "items",
-                        "multiple": False
-                    },
-                    {
-                        "id": "title",
-                        "selector": ".post-header h2 a",
-                        "selector_type": "css",
-                        "selector_attribute": "text",
-                        "parent_selector": "items",
-                        "multiple": False
-                    },
-                    {
-                        "id": "content",
-                        "selector": ".post-content",
-                        "selector_type": "css",
-                        "selector_attribute": "html",
-                        "parent_selector": "items",
-                        "multiple": False
                     }
                 ],
             }
@@ -65,10 +39,6 @@ class ParserCrawler(object):
 
     }
 
-    context = {
-        "client_id": "something"
-    }
-
     """
 
     def __init__(self,
@@ -77,7 +47,8 @@ class ParserCrawler(object):
                  job_id=None,
                  crawlers=None,
                  context=None,
-                 cti_manifest=None
+                 cti_manifest=None,
+                 spider_cls=None
                  ):
         """
 
@@ -91,6 +62,7 @@ class ParserCrawler(object):
         self.crawlers = crawlers
         self.start_urls = start_urls
         self.cti_manifest = cti_manifest
+        self.spider_cls = spider_cls
         if context:
             self.context = context
         self.validate_pipe()
@@ -133,7 +105,8 @@ class ParserCrawler(object):
         return spider_kwargs
 
     def run(self):
-        spider_cls = DefaultParserSpider
+        spider_cls = self.spider_cls or DefaultParserSpider
+
         spider_kwargs = self.generate_crawler_kwargs()
         return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
 
@@ -144,12 +117,13 @@ class CTIRunner(object):
 
     """
 
-    def __init__(self, cti_manifest=None, settings=None, job_id=None, context=None):
+    def __init__(self, cti_manifest=None, settings=None, job_id=None, context=None, spider_cls=None):
         self.cti_manifest = cti_manifest
         self.settings = settings
         self.crawlers = self.cti_manifest['crawlers']
         self.job_id = job_id
         self.context = context
+        self.spider_cls = spider_cls
 
     def run(self):
         return self.crawl()
@@ -158,15 +132,17 @@ class CTIRunner(object):
         errors = validate_cti_config(self.cti_manifest)
         if len(errors) == 0:
 
-            initial_crawler = get_crawler_from_list(crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
-                                                    crawlers=self.crawlers)
+            initial_crawler = get_crawler_from_list(
+                crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
+                crawlers=self.crawlers)
             parser_crawler = ParserCrawler(
                 job_id=self.job_id,
                 start_urls=self.cti_manifest['init_crawler']['start_urls'],
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,
                 context=self.context,
-                cti_manifest=self.cti_manifest
+                cti_manifest=self.cti_manifest,
+                spider_cls=self.spider_cls
             )
             cti_job = parser_crawler.run()
 

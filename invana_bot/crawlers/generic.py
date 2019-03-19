@@ -14,7 +14,7 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
 
     """
 
-    def create_job(self, cti_manifest=None, context=None):
+    def create_job(self, cti_manifest=None, context=None, spider_cls=None):
         if context is None:
             context = {}
         if 'job_id' not in context.keys():
@@ -24,11 +24,12 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
         settings_from_manifest = cti_manifest.get("settings", {})
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
-
         cti_runner = CTIRunner(cti_manifest=cti_manifest,
                                settings=actual_settings,
                                job_id=self.job_id,
-                               context=context)
+                               context=context,
+                               spider_cls=spider_cls
+                               )
         job, errors = cti_runner.crawl()
         return {"crawler_job": job, "crawler_job_errors": errors, "cti_runner": cti_runner}
 

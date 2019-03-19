@@ -154,7 +154,7 @@
     "allowed_domains": [
       "blog.scrapinghub.com"
     ],
-    "download_delay": 0
+    "download_delay": 10
   },
   "context": {
     "author": "https://github.com/rrmerugu",
