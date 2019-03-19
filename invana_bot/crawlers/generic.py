@@ -20,8 +20,15 @@ class InvanaBotWebCrawler(InvanaBotWebCrawlerBase):
         if 'job_id' not in context.keys():
             context['job_id'] = self.job_id
             context['job_started'] = datetime.now()
-        cti_runner = CTIRunner(cti_manifest=cti_manifest, settings=self.settings,
-                               job_id=self.job_id, context=context)
+
+        settings_from_manifest = cti_manifest.get("settings", {})
+        actual_settings = self.settings
+        actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
+
+        cti_runner = CTIRunner(cti_manifest=cti_manifest,
+                               settings=actual_settings,
+                               job_id=self.job_id,
+                               context=context)
         job, errors = cti_runner.crawl()
         return {"crawler_job": job, "crawler_job_errors": errors, "cti_runner": cti_runner}
 

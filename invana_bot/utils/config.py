@@ -19,6 +19,7 @@ class InvanaBotConfigValidator(object):
     }
     PARSER_EXAMPLE = {
         "parser_type": "CustomContentExtractor",
+        "parser_name": "example_parser",
         "data_selectors": []
     }
     all_errors = []
