@@ -57,6 +57,9 @@ class DefaultParserSpider(WebSpiderBase):
                         return selector.get("selector_id")
         return
 
+    def post_parse(self, response=None):
+        pass
+
     def parse(self, response=None):
 
         current_crawler = response.meta.get("current_crawler")
@@ -164,3 +167,4 @@ class DefaultParserSpider(WebSpiderBase):
                             "crawlers": crawlers
                         }
                     )
+        self.post_parse(response=response)
