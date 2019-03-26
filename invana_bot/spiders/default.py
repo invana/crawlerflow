@@ -1,6 +1,7 @@
 from .base import WebSpiderBase
 from invana_bot.extractors.content import CustomContentExtractor, \
     ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtractor
+from invana_bot.extractors.links import PaginationLinkExtractor
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 from invana_bot.utils.crawlers import get_crawler_from_list
@@ -10,11 +11,11 @@ TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
 
-class DefaultParserSpider(WebSpiderBase):
+class InvanaBotSingleSpider(WebSpiderBase):
     """
     This is generic spider
     """
-    name = "DefaultParserSpider"
+    name = "InvanaBotSingleSpider"
 
     def closed(self, reason):
         print("spider closed with payload:", reason, self.current_crawler)
@@ -29,6 +30,11 @@ class DefaultParserSpider(WebSpiderBase):
         elif parser_type == "TableContentExtractor":
             extractor_object = TableContentExtractor(response=response, extractor=extractor,
                                                      parser_name=parser_name or "tables")
+
+        elif parser_type == "PaginationLinkExtractor":
+            extractor_object = PaginationLinkExtractor(response=response, extractor=extractor,
+                                                       parser_name=parser_name or "pagination")
+
         elif parser_type == "HTMLMetaTagExtractor":
             extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor,
                                                     parser_name=parser_name or "meta_tags")
@@ -73,6 +79,7 @@ class DefaultParserSpider(WebSpiderBase):
         data = {}
         for extractor in current_crawler['parsers']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
+            print("<<<<<<<<extracted_data", extracted_data)
             data.update(extracted_data)
 
         if context is not None:
@@ -80,6 +87,15 @@ class DefaultParserSpider(WebSpiderBase):
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
         yield data
+
+        print(data.keys())
+        for this_parser in current_crawler['parsers']:
+            print(this_parser['parser_name'])
+            parser_data = data[this_parser['parser_name']]
+            if parser_data == "blog_list_parser":
+                for d in parser_data:
+                    print("==========", type(d), d)
+
         for traversal in current_crawler.get('traversals', []):
             if traversal['traversal_type'] == "pagination":
                 # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
@@ -138,7 +154,7 @@ class DefaultParserSpider(WebSpiderBase):
                             }
                         )
                     else:
-                        print("igoring traversal to {}".format(traversal_url))
+                        print("ignoring traversal to {}".format(traversal_url))
             elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
                 all_urls = response.css("a::attr(href)").extract()
                 filtered_urls = []
