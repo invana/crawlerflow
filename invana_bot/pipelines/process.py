@@ -6,7 +6,7 @@ def process_pipe(parser_config=None):
 
 
 def process_pipeline_config(crawlers=None):
-    print("crawlers", crawlers)
+    # print("crawlers", crawlers)
     # TODO - validate the config too
     for crawler in crawlers:
         for extractor in crawler.get('parsers', []):

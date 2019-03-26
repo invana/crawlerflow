@@ -16,8 +16,7 @@ class ParagraphsExtractor(ExtractorBase):
         elements = self.response.css("p").extract()
         for el in elements:
             paragraphs_data.append(el)
-        data[self.__class__.__name__] = paragraphs_data
-
+        data[self.parser_name] = paragraphs_data
         return data
 
 
