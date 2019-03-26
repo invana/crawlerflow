@@ -23,7 +23,6 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
             context['job_started'] = datetime.now()
 
         settings_from_manifest = current_crawler.get("settings", {})
-        start_urls = current_crawler.get("start_urls", [])
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
         runner = SingleCrawlerRunner(settings=actual_settings,

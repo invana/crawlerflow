@@ -79,7 +79,6 @@ class InvanaBotSingleSpider(WebSpiderBase):
         data = {}
         for extractor in current_crawler['parsers']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
-            print("<<<<<<<<extracted_data", extracted_data)
             data.update(extracted_data)
 
         if context is not None:
@@ -87,14 +86,6 @@ class InvanaBotSingleSpider(WebSpiderBase):
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
         yield data
-
-        print(data.keys())
-        for this_parser in current_crawler['parsers']:
-            print(this_parser['parser_name'])
-            parser_data = data[this_parser['parser_name']]
-            if parser_data == "blog_list_parser":
-                for d in parser_data:
-                    print("==========", type(d), d)
 
         for traversal in current_crawler.get('traversals', []):
             if traversal['traversal_type'] == "pagination":
