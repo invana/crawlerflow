@@ -307,40 +307,45 @@ class InvanaBotConfigValidator(object):
 #     return True
 
 
-def process_config(config=None):
-    processed_config_dict = {}
-    parent_selectors = []
-    new_config_selectors = []
-    for selector in config.get('data_selectors', []):
-        if selector.get('selector_attribute') == 'element':
-            parent_selectors.append(selector)
-
-    """
-    process the element root selectors (without parent_selector) which might become dictionaries
-    """
-    if len(parent_selectors) > 0:
-        for parent_selector in parent_selectors:
-            processed_config_dict[parent_selector.get('id')] = parent_selector
-            processed_config_dict[parent_selector.get('id')]['child_selectors'] = []
-
-            for selector in config['data_selectors']:
-                if selector.get('parent_selector') == parent_selector.get('id'):
-                    processed_config_dict[parent_selector.get('id')]['child_selectors'].append(selector)
-
-    """
-    process the elements with no root selectors
-    """
-    for selector in config.get('data_selectors', []):
-        if selector.get('parent_selector') is None and selector.get('selector_attribute') != 'element':
-            new_config_selectors.append(selector)
-
-    for k, v in processed_config_dict.items():
-        new_config_selectors.append(v)
-    config['data_selectors'] = new_config_selectors
-    return config
+# def process_config(config=None):
+#     processed_config_dict = {}
+#     parent_selectors = []
+#     new_config_selectors = []
+#     for selector in config.get('data_selectors', []):
+#         if selector.get('selector_attribute') == 'element':
+#             parent_selectors.append(selector)
+#
+#     """
+#     process the element root selectors (without parent_selector) which might become dictionaries
+#     """
+#     if len(parent_selectors) > 0:
+#         for parent_selector in parent_selectors:
+#             processed_config_dict[parent_selector.get('id')] = parent_selector
+#             processed_config_dict[parent_selector.get('id')]['child_selectors'] = []
+#
+#             for selector in config['data_selectors']:
+#                 if selector.get('parent_selector') == parent_selector.get('id'):
+#                     processed_config_dict[parent_selector.get('id')]['child_selectors'].append(selector)
+#
+#     """
+#     process the elements with no root selectors
+#     """
+#     for selector in config.get('data_selectors', []):
+#         if selector.get('parent_selector') is None and selector.get('selector_attribute') != 'element':
+#             new_config_selectors.append(selector)
+#
+#     for k, v in processed_config_dict.items():
+#         new_config_selectors.append(v)
+#     config['data_selectors'] = new_config_selectors
+#     return config
 
 
 def validate_cti_config(cti_manifest):
     validator = InvanaBotConfigValidator(config=cti_manifest)
     errors = validator.validate()
     return errors
+
+
+def validate_crawler_config(crawler_config):
+    # TODO - fix this validations for crawler config later.
+    return []

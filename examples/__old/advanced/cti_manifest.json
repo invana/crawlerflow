@@ -9,14 +9,38 @@
   "crawlers": [
     {
       "crawler_id": "blog_list",
+      "whitelisted_domains": [
+        "blog.scrapinghub.com"
+      ],
       "parsers": [
         {
           "parser_type": "HTMLMetaTagExtractor",
           "parser_name": "meta_tags"
         },
         {
-          "parser_type": "ParagraphExtractor",
+          "parser_type": "ParagraphsExtractor",
           "parser_name": "paragraphs"
+        },
+        {
+          "parser_type": "PaginationLinkExtractor",
+          "parser_name": "pagination",
+          "data_selectors": [
+            {
+              "selector_id": "url",
+              "selector": ".next-posts-link",
+              "selector_type": "css",
+              "selector_attribute": "href",
+              "traversals": [
+                {
+                  "crawler_id": "blog_list",
+                  "traversal_type": "pagination",
+                  "extra_settings": {
+                    "max_pages": 4
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "parser_type": "CustomContentExtractor",
@@ -33,7 +57,15 @@
                   "selector": ".post-header h2 a",
                   "selector_type": "css",
                   "selector_attribute": "href",
-                  "multiple": false
+                  "multiple": false,
+                  "traversals": [
+                    {
+                      "crawler_id": "blog_detail",
+                      "extra_settings": {
+                        "max_pages": 4
+                      }
+                    }
+                  ]
                 },
                 {
                   "selector_id": "title",
@@ -52,25 +84,6 @@
               ]
             }
           ]
-        }
-      ],
-      "traversals": [
-        {
-          "traversal_type": "pagination",
-          "pagination": {
-            "selector": ".next-posts-link",
-            "selector_type": "css",
-            "max_pages": 4
-          },
-          "next_crawler_id": "blog_list"
-        },
-        {
-          "traversal_type": "link_from_field",
-          "link_from_field": {
-            "parser_name": "blog_list_parser",
-            "selector_id": "url"
-          },
-          "next_crawler_id": "blog_detail"
         }
       ]
     },
@@ -154,7 +167,7 @@
     "allowed_domains": [
       "blog.scrapinghub.com"
     ],
-    "download_delay": 10
+    "download_delay": 0
   },
   "context": {
     "author": "https://github.com/rrmerugu",
