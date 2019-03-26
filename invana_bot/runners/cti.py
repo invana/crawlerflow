@@ -1,8 +1,7 @@
-from invana_bot.spiders.default import DefaultParserSpider
 from scrapy.linkextractors import LinkExtractor
 from invana_bot.utils.crawlers import get_crawler_from_list
+from invana_bot.runners.single import SingleCrawlerRunner
 from invana_bot.utils.config import validate_cti_config
-from scrapy.spiders import Rule
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
@@ -10,108 +9,7 @@ from invana_bot.transformers.default import default_transformer
 import requests
 
 
-class ParserCrawler(object):
-    """
-
-    crawler = {  # single pipe
-
-        "crawler_id": "blog-list",
-        "parsers": [
-            {
-                "data_selectors": [
-                    {
-                        "id": "items",
-                        "selector": ".post-listing .post-item",
-                        "selector_attribute": "element",
-                        "multiple": True
-                    }
-                ],
-            }
-        ],
-        "traversals": [{
-            "traversal_type": "pagination",
-            "pagination": {
-                "selector": ".next-posts-link",
-                "selector_type": "css",
-                "max_pages": 2
-            },
-        }]
-
-    }
-
-    """
-
-    def __init__(self,
-                 current_crawler=None,
-                 start_urls=None,
-                 job_id=None,
-                 crawlers=None,
-                 context=None,
-                 cti_manifest=None,
-                 spider_cls=None
-                 ):
-        """
-
-        :param current_crawler: single crawler in the CTI flow
-        :param cti_manifest:  CTI flow
-        :param crawlers: all the crawlers in the CTI flow
-        :param context: any extra information user want to send to the crawled data or carry forward.
-        """
-        self.current_crawler = current_crawler
-        self.job_id = job_id
-        self.crawlers = crawlers
-        self.start_urls = start_urls
-        self.cti_manifest = cti_manifest
-        self.spider_cls = spider_cls
-        if context:
-            self.context = context
-        self.validate_pipe()
-
-    def validate_pipe(self):
-        must_have_keys = ["crawler_id", "parsers"]
-        optional_keys = ["traversals"]
-        for key in must_have_keys:
-            if key not in self.current_crawler.keys():
-                raise Exception(
-                    "invalid parser data, should have the following keys; {}".format(",".join(must_have_keys)))
-
-    def validate_traversal(self):
-        pass  # TODO - implement this
-
-    def validate_extractor(self):
-        pass  # TODO - implement this
-
-    def get_traversals(self):
-        return self.current_crawler.get("traversals", [])
-
-    def get_extractors(self):
-        return self.current_crawler.get("parsers", [])
-
-    def generate_crawler_kwargs(self):
-        extractor = LinkExtractor()
-        rules = [
-            Rule(extractor, follow=True)  # TODO - add regex types of needed.
-        ]
-        allowed_domains = self.cti_manifest.get("settings", {}).get('allowed_domains', [])
-
-        spider_kwargs = {
-            "start_urls": self.start_urls,
-            "allowed_domains": allowed_domains,
-            "rules": rules,
-            "current_crawler": self.current_crawler,
-            "crawlers": self.crawlers,
-            "context": self.context
-        }
-        return spider_kwargs
-
-    def run(self):
-        spider_cls = self.spider_cls or DefaultParserSpider
-
-        spider_kwargs = self.generate_crawler_kwargs()
-        return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs}
-
-
-class CTIRunner(object):
+class CTIFlowRunner(object):
     """
 
 
@@ -135,14 +33,14 @@ class CTIRunner(object):
             initial_crawler = get_crawler_from_list(
                 crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
                 crawlers=self.crawlers)
-            parser_crawler = ParserCrawler(
+            parser_crawler = SingleCrawlerRunner(
                 job_id=self.job_id,
                 start_urls=self.cti_manifest['init_crawler']['start_urls'],
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,
                 context=self.context,
-                cti_manifest=self.cti_manifest,
-                spider_cls=self.spider_cls
+                spider_cls=self.spider_cls,
+                settings=self.settings
             )
             cti_job = parser_crawler.run()
 

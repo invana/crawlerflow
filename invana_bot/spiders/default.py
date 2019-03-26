@@ -11,11 +11,11 @@ TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
 
-class DefaultParserSpider(WebSpiderBase):
+class InvanaBotSingleSpider(WebSpiderBase):
     """
     This is generic spider
     """
-    name = "DefaultParserSpider"
+    name = "InvanaBotSingleSpider"
 
     def closed(self, reason):
         print("spider closed with payload:", reason, self.current_crawler)

@@ -3,9 +3,15 @@ from invana_bot.spiders.feeds import RSSSpider
 import uuid
 
 from scrapy.utils.log import configure_logging
+from twisted.internet import reactor
+from scrapy import signals
+from scrapy.crawler import Crawler, CrawlerRunner
+from scrapy.settings import Settings
+import copy
+from datetime import datetime
 
 
-class InvanaBotWebCrawlerBase(object):
+class CTIJobGeneratorBase(object):
     """
 
 
@@ -45,9 +51,27 @@ class InvanaBotWebCrawlerBase(object):
     def get_settings(self):
         return self.settings
 
+    def start_job(self, job=None):
+        runner = CrawlerRunner()
+        crawler_job = job['crawler_job']
+        cti_runner = job['runner']
+        spider_cls = crawler_job['spider_cls']
+        spider_kwargs = crawler_job['spider_kwargs']
+
+        def engine_stopped_callback():
+            fn = copy.deepcopy(cti_runner.transform_and_index)
+            fn()
+
+        crawler = Crawler(spider_cls, Settings(cti_runner.settings))
+        crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
+        d = runner.crawl(crawler, **spider_kwargs)
+        d.addBoth(engine_stopped_callback)
+        reactor.run()
+
+
 
 """
-class InvanaFeedCrawler(InvanaBotWebCrawlerBase):
+class InvanaFeedCrawler(CTIJobGeneratorBase):
 
     def crawl_feeds(self, feed_urls=None):
         self.setup_crawler_type_settings(crawler_type="feeds")
