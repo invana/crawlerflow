@@ -7,150 +7,41 @@ from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
 from invana_bot.transformers.default import default_transformer
 import requests
+from .base import RunnerBase
 
 
-class CTIFlowRunner(object):
+class CTIFlowRunner(RunnerBase):
     """
 
 
     """
 
     def __init__(self, cti_manifest=None, settings=None, job_id=None, context=None, spider_cls=None):
-        self.cti_manifest = cti_manifest
+        self.manifest = cti_manifest
         self.settings = settings
-        self.crawlers = self.cti_manifest['crawlers']
+        self.crawlers = self.manifest['crawlers']
         self.job_id = job_id
         self.context = context
         self.spider_cls = spider_cls
 
-    def run(self):
-        return self.crawl()
-
     def crawl(self):
-        errors = validate_cti_config(self.cti_manifest)
+        errors = validate_cti_config(self.manifest)
         if len(errors) == 0:
 
             initial_crawler = get_crawler_from_list(
-                crawler_id=self.cti_manifest['init_crawler']['crawler_id'],
+                crawler_id=self.manifest['init_crawler']['crawler_id'],
                 crawlers=self.crawlers)
-            parser_crawler = SingleCrawlerRunner(
+            initial_crawler['start_urls'] = self.manifest['init_crawler']['start_urls']
+            crawler_runner = SingleCrawlerRunner(
                 job_id=self.job_id,
-                start_urls=self.cti_manifest['init_crawler']['start_urls'],
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,
                 context=self.context,
                 spider_cls=self.spider_cls,
                 settings=self.settings
             )
-            cti_job = parser_crawler.run()
+            cti_job = crawler_runner.run()
 
             return cti_job, errors
         else:
             return None, errors
-
-    @staticmethod
-    def get_index(transformation_id=None, indexes=None):
-        for _index in indexes:
-            if _index['transformation_id'] == transformation_id:
-                return _index
-
-    def index_data(self, index=None, results_cleaned=None):
-        collection_name = index['collection_name']
-        unique_key_field = index['unique_key']
-        mongo_executor = WriteToMongoDB(
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
-            collection_name,
-            unique_key_field,
-            docs=results_cleaned)
-        mongo_executor.connect()
-        mongo_executor.write()
-
-    def trigger_callback(self, callback_config=None):
-        callback_id = callback_config.get("callback_id")
-        print("Triggering callback_id: {}".format(callback_id))
-
-        url = callback_config.get("url")
-        request_type = callback_config.get("request_type", '').lower()
-        if request_type == "get":
-            req = requests.get(url, headers=callback_config.get("headers", {}), verify=False)
-            response = req.text
-            print("Triggered callback successfully and callback responded with message :{}".format(response))
-        elif request_type == "post":
-            req = requests.post(url, json=callback_config.get("payload", {}),
-                                headers=callback_config.get("headers", {}), verify=False)
-            response = req.text
-            print("Triggered callback successfully and callback responded with message :{}".format(response))
-
-    def callback(self):
-        all_indexes = self.cti_manifest.get('indexes', [])
-        if len(all_indexes) == 0:
-            print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
-        else:
-            print("Initiating, sending the callback notifications after the respective transformations ")
-            for index in all_indexes:
-                index_id = index.get('index_id')
-                callback_config = self.get_callback_for_index(index_id=index_id)
-                try:
-                    self.trigger_callback(callback_config=callback_config)
-                except Exception as e:
-                    print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
-                                                                              e))
-
-    def get_callback_for_index(self, index_id=None):
-        callbacks = self.cti_manifest.get("callbacks", [])
-        for callback in callbacks:
-            callback_index_id = callback.get('index_id')
-            if callback_index_id == index_id:
-                return callback
-        return
-
-    def transform_and_index(self, callback=None):
-        """
-        This function will handle both tranform and index
-
-        :param callback:
-        :return:
-        """
-        print("transformer started")
-        print("self.cti_manifest['transformations']", self.cti_manifest['transformations'])
-
-        all_transformation = self.cti_manifest.get('transformations', [])
-        if len(all_transformation) == 0:
-            all_transformation.append({
-                "transformation_id": "default"
-            })
-
-        for transformation in all_transformation:
-            print("transformation", transformation)
-            transformation_id = transformation['transformation_id']
-            transformation_fn = transformation.get('transformation_fn')
-            if transformation_fn is None:
-                transformation_fn = default_transformer
-
-            transformation_index_config = self.get_index(transformation_id=transformation_id,
-                                                         indexes=self.cti_manifest['indexes'])
-            mongo_executor = ReadFromMongo(
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['COLLECTION_NAME'],
-                query={"context.job_id": self.job_id}
-            )
-            mongo_executor.connect()
-            ops = []
-            ot_manager = OTManager(ops).process(mongo_executor)
-            results = ot_manager.results
-            results_cleaned__ = transformation_fn(results)
-            results_cleaned = []
-            for result in results_cleaned__:
-                if "_id" in result.keys():
-                    del result['_id']
-                results_cleaned.append(result)
-            self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
-
-            print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
-
-        print("======================================================")
-        print("Successfully crawled + transformed + indexed the data.")
-        print("======================================================")
-        self.callback()

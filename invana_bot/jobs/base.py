@@ -8,7 +8,6 @@ from scrapy import signals
 from scrapy.crawler import Crawler, CrawlerRunner
 from scrapy.settings import Settings
 import copy
-from datetime import datetime
 
 
 class CTIJobGeneratorBase(object):

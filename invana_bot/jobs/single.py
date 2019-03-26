@@ -28,7 +28,6 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
         runner = SingleCrawlerRunner(settings=actual_settings,
                                      current_crawler=current_crawler,
-                                     start_urls=start_urls,
                                      job_id=self.job_id,
                                      context=context,
                                      spider_cls=spider_cls)
