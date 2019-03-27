@@ -85,6 +85,7 @@ class InvanaBotSingleSpider(WebSpiderBase):
             data.update({"context": context})
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
+        data['context']['crawler_id'] = current_crawler['crawler_id']
         yield data
 
         for traversal in current_crawler.get('traversals', []):
