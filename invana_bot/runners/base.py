@@ -79,13 +79,8 @@ class RunnerBase(object):
         :return:
         """
         print("transformer started")
-        print("self.manifest['transformations']", self.manifest['transformations'])
 
         all_transformation = self.manifest.get('transformations', [])
-        if len(all_transformation) == 0:
-            all_transformation.append({
-                "transformation_id": "default"
-            })
 
         for transformation in all_transformation:
             print("transformation", transformation)
