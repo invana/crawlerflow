@@ -105,10 +105,15 @@ class RunnerBase(object):
             for result in results_cleaned__:
                 if "_id" in result.keys():
                     del result['_id']
+                if "context" in result.keys():
+                    result['context']['job_id'] = self.job_id
+                else:
+                    result['context'] = {'job_id': self.job_id}
+
                 results_cleaned.append(result)
             self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
 
-            print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
+            print("Total results_cleaned count of job {} is {}".format(self.job_id, results_cleaned.__len__()))
 
         print("======================================================")
         print("Successfully crawled + transformed + indexed the data.")
