@@ -31,7 +31,7 @@ if __name__ == "__main__":
         cti_manifest, errors = manifest_manager.get_manifest()
         if len(errors) == 0:
             crawler_job_generator = CTIJobGenerator(
-                settings=DEFAULT_SETTINGS
+                settings=DEFAULT_SETTINGS,
             )
             context = cti_manifest.get("context")
             job = crawler_job_generator.create_job(

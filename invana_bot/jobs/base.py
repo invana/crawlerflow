@@ -24,13 +24,17 @@ class CTIJobGeneratorBase(object):
     runner = None
 
     def __init__(self,
+                 job_id=None,
                  settings=None,
                  **kwargs):
 
         if settings is None:
             raise Exception("settings should be set")
         self.settings = settings
-        self.job_id = self.generate_job_id()
+        if job_id is None:
+            self.job_id = self.generate_job_id()
+        else:
+            self.job_id = job_id
         self.set_logger()
 
     @staticmethod
