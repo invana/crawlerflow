@@ -87,8 +87,6 @@ class RunnerBase(object):
             print("transformation", transformation)
             transformation_id = transformation['transformation_id']
             transformation_fn = transformation.get('transformation_fn')
-            if transformation_fn is None:
-                transformation_fn = default_transformer
 
             transformation_index_config = self.get_index(transformation_id=transformation_id,
                                                          indexes=self.manifest['indexes'])
