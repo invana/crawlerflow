@@ -7,6 +7,7 @@ from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
 from invana_bot.transformers.default import default_transformer
 import requests
+from twisted.internet import reactor
 
 
 class RunnerBase(object):
@@ -48,7 +49,7 @@ class RunnerBase(object):
             response = req.text
             print("Triggered callback successfully and callback responded with message :{}".format(response))
 
-    def callback(self):
+    def callback(self, callback_fn=None):
         all_indexes = self.manifest.get('indexes', [])
         if len(all_indexes) == 0:
             print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
@@ -63,6 +64,11 @@ class RunnerBase(object):
                     except Exception as e:
                         print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
                                                                                   e))
+
+        if callback_fn is None:
+            reactor.stop()
+        else:
+            callback_fn()
 
     def get_callback_for_index(self, index_id=None):
         callbacks = self.manifest.get("callbacks", [])
@@ -118,6 +124,4 @@ class RunnerBase(object):
         print("======================================================")
         print("Successfully crawled + transformed + indexed the data.")
         print("======================================================")
-        self.callback()
-        if callback_fn:
-            callback_fn()
+        self.callback(callback_fn=callback_fn)

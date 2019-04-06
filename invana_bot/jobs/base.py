@@ -62,15 +62,15 @@ class CTIJobGeneratorBase(object):
         spider_kwargs = crawler_job['spider_kwargs']
 
         def engine_stopped_callback():
-            fn = copy.deepcopy(cti_runner.transform_and_index)
-            fn()
+            # fn = copy.deepcopy(cti_runner.transform_and_index)
+            # fn()
+            cti_runner.transform_and_index()
 
         crawler = Crawler(spider_cls, Settings(cti_runner.settings))
         crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
         d = runner.crawl(crawler, **spider_kwargs)
-        d.addBoth(engine_stopped_callback)
+        # d.addBoth(engine_stopped_callback)
         reactor.run()
-
 
 
 """
