@@ -9,11 +9,11 @@ crawlers:
   - blog.scrapinghub.com
   parsers:
   - parser_type: HTMLMetaTagExtractor
-    parser_name: meta_tags
+    parser_id: meta_tags
   - parser_type: ParagraphExtractor
-    parser_name: paragraphs
+    parser_id: paragraphs
   - parser_type: CustomContentExtractor
-    parser_name: blog_list_parser
+    parser_id: blog_list_parser
     data_selectors:
     - selector_id: blogs
       selector: ".post-listing .post-item"
@@ -44,13 +44,13 @@ crawlers:
     next_crawler_id: blog_list
   - traversal_type: link_from_field
     link_from_field:
-      parser_name: blog_list_parser
+      parser_id: blog_list_parser
       selector_id: url
     next_crawler_id: blog_detail
 - crawler_id: blog_detail
   parsers:
   - parser_type: CustomContentExtractor
-    parser_name: blog_detail
+    parser_id: blog_detail
     data_selectors:
     - selector_id: blog_detail
       selector: ".blog-section"

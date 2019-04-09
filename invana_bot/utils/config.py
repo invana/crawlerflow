@@ -19,7 +19,7 @@ class InvanaBotConfigValidator(object):
     }
     PARSER_EXAMPLE = {
         "parser_type": "CustomContentExtractor",
-        "parser_name": "example_parser",
+        "parser_id": "example_parser",
         "data_selectors": []
     }
     all_errors = []
@@ -72,11 +72,11 @@ class InvanaBotConfigValidator(object):
         print(crawlers)
         crawler_required_fields = [
             {
-                "parser_name": "crawler_id",
+                "parser_id": "crawler_id",
                 "field_type": str
             },
             {
-                "parser_name": "parsers",
+                "parser_id": "parsers",
                 "field_type": list
             }
 
@@ -84,7 +84,7 @@ class InvanaBotConfigValidator(object):
 
         required_parsers_fields = [
             {
-                "parser_name": "parser_type",
+                "parser_id": "parser_type",
                 "field_type": str
             }
         ]
@@ -93,15 +93,15 @@ class InvanaBotConfigValidator(object):
             crawler_config_keys = crawler.keys()
             # check if all required keys where there.
             for required_field in crawler_required_fields:
-                if required_field['parser_name'] in crawler_config_keys:
+                if required_field['parser_id'] in crawler_config_keys:
                     pass
                 else:
                     self.log_error(
-                        "required field '{}' in crawlers data not found".format(required_field['parser_name']))
+                        "required field '{}' in crawlers data not found".format(required_field['parser_id']))
 
-                if type(crawler[required_field['parser_name']]) is not required_field['field_type']:
+                if type(crawler[required_field['parser_id']]) is not required_field['field_type']:
                     self.log_error(
-                        "required field '{}' in crawlers should of '{}' data type".format(required_field['parser_name'],
+                        "required field '{}' in crawlers should of '{}' data type".format(required_field['parser_id'],
                                                                                           required_field['field_type']))
 
             """
@@ -110,16 +110,16 @@ class InvanaBotConfigValidator(object):
             for required_field in required_parsers_fields:
                 for parser in crawler['parsers']:
                     parser_config_keys = parser.keys()
-                    if required_field['parser_name'] in parser_config_keys:
+                    if required_field['parser_id'] in parser_config_keys:
                         pass
                     else:
                         self.log_error(
-                            "required field '{}' in parser data not found".format(required_field['parser_name']))
+                            "required field '{}' in parser data not found".format(required_field['parser_id']))
 
-                    if type(parser[required_field['parser_name']]) is not required_field['field_type']:
+                    if type(parser[required_field['parser_id']]) is not required_field['field_type']:
                         self.log_error(
                             "required field '{}' in parsers should of '{}' data type".format(
-                                required_field['parser_name'],
+                                required_field['parser_id'],
                                 required_field['field_type']))
 
                     if parser['parser_type'] == "CustomContentExtractor":
@@ -148,7 +148,7 @@ class InvanaBotConfigValidator(object):
             traversal_type = traversal.get("traversal_type")
             if traversal_type not in valid_traversal_types:
                 self.log_error("Traversal of types '{}' are accepted, where as you have "
-                               " parser_name '{}'".format(", ".join(valid_traversal_types),
+                               " parser_id '{}'".format(", ".join(valid_traversal_types),
                                                           traversal_type))
 
             if traversal_type not in traversal.keys():
@@ -193,12 +193,12 @@ class InvanaBotConfigValidator(object):
                 traversal_example = {
                     "traversal_type": "link_from_field",
                     "link_from_field": {
-                        "parser_name": "blog_list_parser",
+                        "parser_id": "blog_list_parser",
                         "selector_id": "url"
                     },
                     "next_crawler_id": "blog-detail"
                 }
-                required_fields = ['parser_name', 'selector_id']
+                required_fields = ['parser_id', 'selector_id']
                 for required_field in required_fields:
                     if required_field not in traversal[traversal_type].keys():
                         self.log_error(

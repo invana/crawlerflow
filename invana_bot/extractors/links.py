@@ -17,7 +17,7 @@ class PaginationLinkExtractor(ExtractorBase):
         for selector in self.extractor.get('data_selectors', []):
             _d = get_selector_element(self.response, selector)
             extracted_data[selector.get('selector_id')] = _d
-        data[self.parser_name] = extracted_data
+        data[self.parser_id] = extracted_data
         return data
 
 

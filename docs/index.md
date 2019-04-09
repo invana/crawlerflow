@@ -83,7 +83,7 @@ Example of a full features manifest.json
           "traversal_type": "link_from_field",
           "link_from_field": {
             "parser_type": "CustomContentExtractor",
-            "parser_name": "url"
+            "parser_id": "url"
           },
           "next_crawler_id": "blog-detail"
         }
@@ -144,7 +144,7 @@ Example of a full features manifest.json
   "traversal_type": "link_from_field",
   "link_from_field": {
     "parser_type": "CustomContentExtractor",
-    "parser_name": "url"
+    "parser_id": "url"
   },
   "next_crawler_id": "blog-detail"
 }

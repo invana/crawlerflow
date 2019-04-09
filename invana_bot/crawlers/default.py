@@ -23,41 +23,41 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
     @staticmethod
     def run_extractor(response=None, extractor=None):
         parser_type = extractor.get("parser_type")
-        parser_name = extractor.get("parser_name")
+        parser_id = extractor.get("parser_id")
         if parser_type in [None, "CustomContentExtractor"]:
             extractor_object = CustomContentExtractor(response=response, extractor=extractor,
-                                                      parser_name=parser_name)
+                                                      parser_id=parser_id)
         elif parser_type == "TableContentExtractor":
             extractor_object = TableContentExtractor(response=response, extractor=extractor,
-                                                     parser_name=parser_name or "tables")
+                                                     parser_id=parser_id or "tables")
 
         elif parser_type == "PaginationLinkExtractor":
             extractor_object = PaginationLinkExtractor(response=response, extractor=extractor,
-                                                       parser_name=parser_name or "pagination")
+                                                       parser_id=parser_id or "pagination")
 
         elif parser_type == "HTMLMetaTagExtractor":
             extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor,
-                                                    parser_name=parser_name or "meta_tags")
+                                                    parser_id=parser_id or "meta_tags")
         elif parser_type == "ParagraphsExtractor":
             extractor_object = ParagraphsExtractor(response=response, extractor=extractor,
-                                                   parser_name=parser_name or "paragraphs")
+                                                   parser_id=parser_id or "paragraphs")
         else:
             return {}
         data = extractor_object.run()
         return data
 
     @staticmethod
-    def get_subdocument_key(crawler=None, parser_name=None):
+    def get_subdocument_key(crawler=None, parser_id=None):
         """
         element is the subdocument key name.
 
         :param crawler:
-        :param parser_name:
+        :param parser_id:
         :param selector_id:
         :return:
         """
         for extractor in crawler['parsers']:
-            if extractor.get("parser_name") == parser_name:
+            if extractor.get("parser_id") == parser_id:
                 for selector in extractor.get('data_selectors', []):
                     if selector.get('selector_attribute') == 'element':
                         return selector.get("selector_id")
@@ -126,9 +126,9 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
                 subdocument_key = self.get_subdocument_key(
                     crawler=current_crawler,
-                    parser_name=traversal_config['parser_name']
+                    parser_id=traversal_config['parser_id']
                 )
-                for item in data.get(traversal_config['parser_name']).get(subdocument_key, []):
+                for item in data.get(traversal_config['parser_id']).get(subdocument_key, []):
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
                     if traversal_url:
                         if "://" not in traversal_url:  # TODO - fix this monkey patch
