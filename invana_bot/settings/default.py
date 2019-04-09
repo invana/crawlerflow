@@ -19,3 +19,9 @@ DEFAULT_SETTINGS = {
         }
     }
 }
+
+
+class Settings(object):
+
+    def __init__(self, settings=None, **kwargs):
+        self.settings = settings
