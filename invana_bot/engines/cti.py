@@ -1,12 +1,6 @@
-from scrapy.linkextractors import LinkExtractor
 from invana_bot.utils.crawlers import get_crawler_from_list
 from invana_bot.engines.single import SingleCrawlerRunnerEngine
 from invana_bot.utils.config import validate_cti_config
-from transformers.transforms import OTManager
-from transformers.executors import ReadFromMongo
-from invana_bot.transformers.mongodb import WriteToMongoDB
-from invana_bot.transformers.default import default_transformer
-import requests
 from .base import RunnerEngineBase
 
 

@@ -1,10 +1,7 @@
 from invana_bot.crawlers.default import InvanaBotSingleWebCrawler
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
-from transformers.transforms import OTManager
-from transformers.executors import ReadFromMongo
-from invana_bot.transformers.default import default_transformer
 from .base import RunnerEngineBase
 
 

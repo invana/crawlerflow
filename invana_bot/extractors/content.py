@@ -1,6 +1,5 @@
 from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
-import json
 
 
 class MetaTagsExtractor(ExtractorBase):
