@@ -81,9 +81,14 @@ transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
 indexes:
-- index_id: default
+- index_id: primary_db
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  collection_name: blog_list
+  unique_key: url
+- index_id: secondary_db
+  transformation_id: default
+  connection_uri: mongodb://127.0.0.2/crawlers_data_index
   collection_name: blog_list
   unique_key: url
 callbacks:
