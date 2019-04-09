@@ -1,4 +1,4 @@
-from invana_bot.crawlers.default import InvanaBotSingleSpider
+from invana_bot.crawlers.default import InvanaBotSingleWebCrawler
 from scrapy.spiders import CrawlSpider, Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
@@ -49,7 +49,7 @@ SingleCrawlerRunnerEngine
                  job_id=None,
                  crawlers=None,
                  context=None,
-                 spider_cls=None,
+                 crawler_cls=None,
                  settings=None
                  ):
         """
@@ -63,7 +63,7 @@ SingleCrawlerRunnerEngine
         self.job_id = job_id
         self.crawlers = crawlers
         self.settings = settings
-        self.spider_cls = spider_cls
+        self.crawler_cls = crawler_cls
         if context:
             self.context = context
 
@@ -104,7 +104,7 @@ SingleCrawlerRunnerEngine
         ]
         allowed_domains = self.manifest.get("settings", {}).get('allowed_domains', [])
 
-        spider_kwargs = {
+        crawler_kwargs = {
             "start_urls": self.manifest['start_urls'],
             "allowed_domains": allowed_domains,
             "rules": rules,
@@ -112,10 +112,10 @@ SingleCrawlerRunnerEngine
             "crawlers": self.crawlers,
             "context": self.context
         }
-        return spider_kwargs
+        return crawler_kwargs
 
     def run(self):
-        spider_cls = self.spider_cls or InvanaBotSingleSpider
+        crawler_cls = self.crawler_cls or InvanaBotSingleWebCrawler
 
-        spider_kwargs = self.generate_crawler_kwargs()
-        return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs, "spider_settings": self.settings}
+        crawler_kwargs = self.generate_crawler_kwargs()
+        return {"crawler_cls": crawler_cls, "crawler_kwargs": crawler_kwargs, "spider_settings": self.settings}

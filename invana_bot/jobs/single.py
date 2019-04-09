@@ -12,7 +12,7 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
     def create_job(self,
                    current_crawler=None,
                    context=None,
-                   spider_cls=None):
+                   crawler_cls=None):
         if context is None:
             context = {}
         if 'job_id' not in context.keys():
@@ -26,6 +26,6 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
                                      current_crawler=current_crawler,
                                      job_id=self.job_id,
                                      context=context,
-                                     spider_cls=spider_cls)
+                                     crawler_cls=crawler_cls)
         job, errors = runner.crawl()
         return {"crawler_job": job, "crawler_job_errors": errors, "runner": runner}

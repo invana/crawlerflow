@@ -1,4 +1,4 @@
-from .base import WebSpiderBase
+from .base import WebCrawlerBase
 from invana_bot.extractors.content import CustomContentExtractor, \
     ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtractor
 from invana_bot.extractors.links import PaginationLinkExtractor
@@ -11,11 +11,11 @@ TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
 
-class InvanaBotSingleSpider(WebSpiderBase):
+class InvanaBotSingleWebCrawler(WebCrawlerBase):
     """
     This is generic spider
     """
-    name = "InvanaBotSingleSpider"
+    name = "InvanaBotSingleWebCrawler"
 
     def closed(self, reason):
         print("spider closed with payload:", reason, self.current_crawler)

@@ -54,17 +54,17 @@ class CTIJobGeneratorBase(object):
         runner = CrawlerRunner()
         crawler_job = job['crawler_job']
         cti_runner = job['runner']
-        spider_cls = crawler_job['spider_cls']
-        spider_kwargs = crawler_job['spider_kwargs']
+        crawler_cls = crawler_job['crawler_cls']
+        crawler_kwargs = crawler_job['crawler_kwargs']
 
         def engine_stopped_callback():
             cti_runner.transform_and_index()
 
-        crawler = Crawler(spider_cls, Settings(cti_runner.settings))
+        crawler = Crawler(crawler_cls, Settings(cti_runner.settings))
         crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
-        runner.crawl(crawler, **spider_kwargs)
+        runner.crawl(crawler, **crawler_kwargs)
         """
-        d = runner.crawl(crawler, **spider_kwargs)
+        d = runner.crawl(crawler, **crawler_kwargs)
         # d.addBoth(engine_stopped_callback)
         """
         reactor.run()
