@@ -1,7 +1,5 @@
 ---
 crawler_id: blog_list
-whitelisted_domains:
-- blog.scrapinghub.com
 start_urls:
 - https://blog.scrapinghub.com
 parsers:
