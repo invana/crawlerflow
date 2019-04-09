@@ -9,8 +9,8 @@ invana_bot_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append("{}/../".format(invana_bot_path))
 from invana_bot.jobs.cti import CTIJobGenerator
 from invana_bot.jobs.single import SingleCrawlJobGenerator
-from invana_bot.settings import DEFAULT_SETTINGS
-from invana_bot.managers.manifest import CTIManifestManager, SingleCrawlerManifestManager
+from invana_bot.settings.default import DEFAULT_SETTINGS
+from invana_bot.manifests.manifest import CTIManifestManager, SingleCrawlerManifestManager
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='InvanaBot - A web crawler framework that can'

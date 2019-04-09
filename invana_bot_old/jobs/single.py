@@ -7,6 +7,9 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
     """
     InvanaBot single crawler job generator
 
+
+
+
     """
 
     def create_job(self,

@@ -1,4 +1,4 @@
-from invana_bot.utils.exceptions import InvalidCrawlerConfig
+from utils.exceptions import InvalidCrawlerConfig
 
 
 def validate_config(config=None):

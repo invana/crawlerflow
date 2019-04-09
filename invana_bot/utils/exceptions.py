@@ -1,0 +1,2 @@
+class InvalidCrawlerConfig(Exception):
+    pass
