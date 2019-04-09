@@ -1,16 +1,16 @@
 from scrapy.linkextractors import LinkExtractor
 from invana_bot.utils.crawlers import get_crawler_from_list
-from invana_bot.runners.single import SingleCrawlerRunner
+from invana_bot.engines.single import SingleCrawlerRunnerEngine
 from invana_bot.utils.config import validate_cti_config
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
 from invana_bot.transformers.default import default_transformer
 import requests
-from .base import RunnerBase
+from .base import RunnerEngineBase
 
 
-class CTIFlowRunner(RunnerBase):
+class CTIFlowRunnerEngine(RunnerEngineBase):
     """
 
 
@@ -32,7 +32,7 @@ class CTIFlowRunner(RunnerBase):
                 crawler_id=self.manifest['init_crawler']['crawler_id'],
                 crawlers=self.crawlers)
             initial_crawler['start_urls'] = self.manifest['init_crawler']['start_urls']
-            crawler_runner = SingleCrawlerRunner(
+            crawler_runner = SingleCrawlerRunnerEngine(
                 job_id=self.job_id,
                 current_crawler=initial_crawler,
                 crawlers=self.crawlers,

@@ -1,5 +1,5 @@
 from .base import CTIJobGeneratorBase
-from invana_bot.runners.cti import CTIFlowRunner
+from invana_bot.engines.cti import CTIFlowRunnerEngine
 from datetime import datetime
 
 
@@ -18,7 +18,7 @@ class CTIJobGenerator(CTIJobGeneratorBase):
         settings_from_manifest = cti_manifest.get("settings", {})
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
-        cti_runner = CTIFlowRunner(cti_manifest=cti_manifest,
+        cti_runner = CTIFlowRunnerEngine(cti_manifest=cti_manifest,
                                    settings=actual_settings,
                                    job_id=self.job_id,
                                    context=context,

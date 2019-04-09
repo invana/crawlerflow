@@ -1,16 +1,16 @@
-from scrapy.linkextractors import LinkExtractor
-from invana_bot.utils.crawlers import get_crawler_from_list
-# from invana_bot.runners.single import SingleCrawlerRunner
-from invana_bot.utils.config import validate_cti_config
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.mongodb import WriteToMongoDB
-from invana_bot.transformers.default import default_transformer
 import requests
 from twisted.internet import reactor
 
 
-class RunnerBase(object):
+class RunnerEngineBase(object):
+    """
+
+    RunnerEngineBase
+
+    """
 
     def run(self):
         return self.crawl()

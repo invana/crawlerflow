@@ -1,4 +1,4 @@
-from invana_bot.runners.single import SingleCrawlerRunner
+from invana_bot.engines.single import SingleCrawlerRunnerEngine
 from .base import CTIJobGeneratorBase
 from datetime import datetime
 
@@ -25,7 +25,7 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
         settings_from_manifest = current_crawler.get("settings", {})
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
-        runner = SingleCrawlerRunner(settings=actual_settings,
+        runner = SingleCrawlerRunnerEngine(settings=actual_settings,
                                      current_crawler=current_crawler,
                                      job_id=self.job_id,
                                      context=context,

@@ -5,12 +5,13 @@ from scrapy.linkextractors import LinkExtractor
 from transformers.transforms import OTManager
 from transformers.executors import ReadFromMongo
 from invana_bot.transformers.default import default_transformer
-from .base import RunnerBase
+from .base import RunnerEngineBase
 
 
-class SingleCrawlerRunner(RunnerBase):
+class SingleCrawlerRunnerEngine(RunnerEngineBase):
     """
 
+SingleCrawlerRunnerEngine
     crawler = {  # single pipe
 
         "crawler_id": "blog-list",
