@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-
+import yaml
 
 class CTIManifestManager(object):
     """
@@ -17,7 +17,7 @@ class CTIManifestManager(object):
 
     def import_files(self):
         print("self.cti_config_path", self.cti_config_path)
-        self.cti_manifest = json.load(open("{}/cti_manifest.json".format(self.cti_config_path)))
+        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)))
         sys.path.append(self.cti_config_path)
         import cti_transformations
         self.cti_transformations_module = cti_transformations
@@ -50,5 +50,3 @@ class CTIManifestManager(object):
         self.import_files()
         self.import_cti_transformations()
         return self.cti_manifest, errors
-
-
