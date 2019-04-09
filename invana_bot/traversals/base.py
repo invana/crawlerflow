@@ -1,0 +1,2 @@
+class TraversalBase(object):
+    pass

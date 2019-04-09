@@ -110,12 +110,12 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                                 next_page_url = "https://" + get_domain(response.url) + next_page
                             else:
                                 next_page_url = next_page
-                            next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                            next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                             yield scrapy.Request(
                                 next_page_url,
                                 callback=self.parse,
                                 meta={"current_page_count": current_page_count,
-                                      "current_crawler": next_parser,
+                                      "current_crawler": next_crawler,
                                       "crawlers": crawlers
 
                                       }
@@ -136,13 +136,13 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             traversal_url = url_parsed.scheme + "://" + url_parsed.netloc + "/" + traversal_url.lstrip(
                                 "/")
 
-                        next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                        next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                         yield scrapy.Request(
                             traversal_url,
                             callback=self.parse,
                             meta={
                                 "crawlers": crawlers,
-                                "current_crawler": next_parser,
+                                "current_crawler": next_crawler,
                             }
                         )
                     else:
