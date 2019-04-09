@@ -34,8 +34,3 @@ tqdm==4.19.8
 twine==1.10.0
 w3lib==1.19.0
 zope.interface==4.4.3
-<<<<<<< Updated upstream
-invana-transformers
-=======
-invana-transformers
->>>>>>> Stashed changes

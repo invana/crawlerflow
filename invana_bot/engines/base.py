@@ -1,6 +1,4 @@
-from transformers.transforms import OTManager
-from transformers.executors import ReadFromMongo
-from invana_bot.transformers.mongodb import WriteToMongoDB
+from invana_bot.transformers.mongodb import OTManager, ReadFromMongo, WriteToMongoDB
 import requests
 from twisted.internet import reactor
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages, __version__ as setuptools_version
+
+requirements = open('./requirements.txt', 'r').readlines()
 
 setup(name='invana-bot',
       version='0.0.11',
@@ -9,25 +11,11 @@ setup(name='invana-bot',
       author='Ravi Raja Merugu',
       author_email='ravi@invanalabs.ai',
       url='https://github.com/invanalabs/invana-bot',
-      packages=[
-          'invana_bot',
-          'invana_bot.extractors',
-          'invana_bot.fields',
-          'invana_bot.httpcache',
-          'invana_bot.jobs',
-          'invana_bot.manifests',
-          'invana_bot.storages',
-          'invana_bot.runners',
-          'invana_bot.crawlers',
-          'invana_bot.storages',
-          'invana_bot.transformers',
-          'invana_bot.utils'
-      ],
-      install_requires=[
-          'Scrapy==1.6.0',
-          'pymongo',
-          'feedparser',
-          'requests',
-          'invana-transformers'
-      ]
+      packages=find_packages(
+          exclude=("bin", "dist", "docs", "example", "tests",)
+      ),
+      install_requires=[requirement for requirement in requirements],
+      entry_points={
+          'console_scripts': ['invana-bot = invana_bot.cmd.run:invana_bot_run']
+      },
       )
