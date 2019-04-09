@@ -8,6 +8,7 @@ Either crawling urls or traversing through pagination. But defined to only one w
 ```bash
 # path should have crawler_manifest.yml with the settings and crawler_transformations.py
 # you need to create crawler_transformations.py even though you are not performing any transformation.
+# refer examples/run-single-crawler/ folder for reference files that should exist in path.
 
 invana-bot --path . --type=single
 ```
@@ -15,7 +16,7 @@ invana-bot --path . --type=single
 
 ## Single Crawler with traversal
 
-In this example crawler `blog_list` is paginated for 4 times and extracted the data using 
+In this example crawler `blog_list` is paginated for 2 times and extracted the data using 
 the parsers `HTMLMetaTagExtractor`, `ParagraphExtractor`, `CustomContentExtractor`.
 
 `extra_settings` tells few extra settings that will help the crawling run as expected without
@@ -64,7 +65,7 @@ traversals:
 settings:
   allowed_domains:
   - blog.scrapinghub.com
-  download_delay: 2
+  download_delay: 5
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes scrapinghub blogs
