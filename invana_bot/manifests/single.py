@@ -1,6 +1,6 @@
-import json
 import sys
 import os
+import yaml
 
 
 class SingleCrawlerManifestManager(object):
@@ -17,7 +17,7 @@ class SingleCrawlerManifestManager(object):
 
     def import_files(self):
         print("self.cti_config_path", self.config_path)
-        self.current_crawler = json.load(open("{}/crawler_manifest.json".format(self.config_path)))
+        self.current_crawler = yaml.load(open("{}/crawler_manifest.yml".format(self.config_path)))
         sys.path.append(self.config_path)
         import crawler_transformations
         self.cti_transformations_module = crawler_transformations
