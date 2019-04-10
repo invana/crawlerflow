@@ -2,13 +2,7 @@ from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
 
 
-class MetaTagsExtractor(ExtractorBase):
-    # TODO - implement this
-    pass
-
-
 class ParagraphsExtractor(ExtractorBase):
-    # TODO - implement this
     def run(self):
         data = {}
         paragraphs_data = []
@@ -62,8 +56,6 @@ class HTMLMetaTagExtractor(ExtractorBase):
 
 class CustomContentExtractor(ExtractorBase):
     ITER_KEY = "iter_count"
-
-    # TODO - implement this
     def run(self):
         data = {}
         extracted_data = {}
