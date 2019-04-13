@@ -1,13 +1,9 @@
-from scrapy.crawler import CrawlerProcess
-from invana_bot.spiders.feeds import RSSSpider
 import uuid
-
 from scrapy.utils.log import configure_logging
 from twisted.internet import reactor
 from scrapy import signals
 from scrapy.crawler import Crawler, CrawlerRunner
 from scrapy.settings import Settings
-import copy
 
 
 class CTIJobGeneratorBase(object):
@@ -58,18 +54,19 @@ class CTIJobGeneratorBase(object):
         runner = CrawlerRunner()
         crawler_job = job['crawler_job']
         cti_runner = job['runner']
-        spider_cls = crawler_job['spider_cls']
-        spider_kwargs = crawler_job['spider_kwargs']
+        crawler_cls = crawler_job['crawler_cls']
+        crawler_kwargs = crawler_job['crawler_kwargs']
 
         def engine_stopped_callback():
-            # fn = copy.deepcopy(cti_runner.transform_and_index)
-            # fn()
             cti_runner.transform_and_index()
 
-        crawler = Crawler(spider_cls, Settings(cti_runner.settings))
+        crawler = Crawler(crawler_cls, Settings(cti_runner.settings))
         crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
-        d = runner.crawl(crawler, **spider_kwargs)
+        runner.crawl(crawler, **crawler_kwargs)
+        """
+        d = runner.crawl(crawler, **crawler_kwargs)
         # d.addBoth(engine_stopped_callback)
+        """
         reactor.run()
 
 

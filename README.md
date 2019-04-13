@@ -1,8 +1,12 @@
 # Invana Bot
 
-A web crawler framework that can transform websites into datasets with Crawl, 
-Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
- as default database for caching and storage.
+A web crawler framework that can transform websites into datasets using Crawl, 
+Transform and Index strategy. The best part is you don't need to code, you just need 
+ to define the extraction and traversal configurations in yaml. 
+
+
+InvanaBot uses [MongoDB](https://www.mongodb.com/) as default database for caching and storage.
+
 
 
 **NOTE: This project is under active development**
@@ -22,8 +26,7 @@ Transform and Index workflow. InvanaBot uses [MongoDB](https://www.mongodb.com/)
 
 3. Use standard extractors to scrape data like Tables, Paragraphs, Meta data of the page.
 
-4. Define custom extractors to scrapy the data in the format you want -
- list of objects, list of strings, or dictionaries.
+4. Define custom extractors to scrapy the data in the format you want in yaml config.
 
 5. MongoDB as default Cache and Storage Database.
 
@@ -43,39 +46,20 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 ## Usage
 
-```python
-## cti_flow/cti_manifest.json 
-{
-  "cti_id": "example_cti_flow",
-  "init_crawler": {...},
-  "crawlers": [...],
-  "transformations": [...],
-  "indexes": [...],
-  "callbacks": [...],
-  "context": {
-    "author": "https://github.com/rrmerugu",
-    "description": "Crawler that scrapes invanalabs xyz"
-  }
-}
-```
-
-```python
-## cti_flow/cti_transformations.py
-
-def transformation_fn(results):
-    """
-    write your data transformation logic
-    """
-    results_cleaned = results
-    return results_cleaned
-
-```
+To run a single website crawler, to extract information from one website only.
 
 ```bash
-
-python3 bin/bot.py --path ./cti_flow
-
+python3 bin/bot.py --path ./examples/run-single-crawler/ --type=single
 ```
+
+To run a complex crawling strategy where crawling and data extraction happenings through multiple 
+websites with traversal definitions.
+
+
+```bash
+python3 bin/bot.py --path ./examples/cti-flow-runner/ --type=cti
+```
+
 
 ## Documentation
 

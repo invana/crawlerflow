@@ -4,7 +4,7 @@ from scrapy.http import Request
 import os
 
 
-class WebSpiderBase(CrawlSpider):
+class WebCrawlerBase(CrawlSpider):
 
     def _build_request(self, rule, link):
         headers = {}

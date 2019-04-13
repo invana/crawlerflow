@@ -15,15 +15,15 @@
       "parsers": [
         {
           "parser_type": "HTMLMetaTagExtractor",
-          "parser_name": "meta_tags"
+          "parser_id": "meta_tags"
         },
         {
           "parser_type": "ParagraphsExtractor",
-          "parser_name": "paragraphs"
+          "parser_id": "paragraphs"
         },
         {
           "parser_type": "PaginationLinkExtractor",
-          "parser_name": "pagination",
+          "parser_id": "pagination",
           "data_selectors": [
             {
               "selector_id": "url",
@@ -44,7 +44,7 @@
         },
         {
           "parser_type": "CustomContentExtractor",
-          "parser_name": "blog_list_parser",
+          "parser_id": "blog_list_parser",
           "data_selectors": [
             {
               "selector_id": "blogs",
@@ -92,7 +92,7 @@
       "parsers": [
         {
           "parser_type": "CustomContentExtractor",
-          "parser_name": "blog_detail",
+          "parser_id": "blog_detail",
           "data_selectors": [
             {
               "selector_id": "blog_detail",

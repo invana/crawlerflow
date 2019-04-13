@@ -12,12 +12,12 @@
       "parsers": [
         {
           "parser_type": "HTMLMetaTagExtractor",
-          "parser_name": "meta_tags"
+          "parser_id": "meta_tags"
 
         },
         {
           "parser_type": "ParagraphExtractor",
-          "parser_name": "paragraphs"
+          "parser_id": "paragraphs"
         }
       ],
       "traversals": [

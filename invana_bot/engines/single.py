@@ -1,16 +1,14 @@
-from invana_bot.spiders.default import InvanaBotSingleSpider
-from scrapy.spiders import CrawlSpider, Rule
+from invana_bot.crawlers.default import InvanaBotSingleWebCrawler
+from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
-from transformers.transforms import OTManager
-from transformers.executors import ReadFromMongo
-from invana_bot.transformers.default import default_transformer
-from .base import RunnerBase
+from .base import RunnerEngineBase
 
 
-class SingleCrawlerRunner(RunnerBase):
+class SingleCrawlerRunnerEngine(RunnerEngineBase):
     """
 
+SingleCrawlerRunnerEngine
     crawler = {  # single pipe
 
         "crawler_id": "blog-list",
@@ -48,7 +46,7 @@ class SingleCrawlerRunner(RunnerBase):
                  job_id=None,
                  crawlers=None,
                  context=None,
-                 spider_cls=None,
+                 crawler_cls=None,
                  settings=None
                  ):
         """
@@ -62,7 +60,7 @@ class SingleCrawlerRunner(RunnerBase):
         self.job_id = job_id
         self.crawlers = crawlers
         self.settings = settings
-        self.spider_cls = spider_cls
+        self.crawler_cls = crawler_cls
         if context:
             self.context = context
 
@@ -103,7 +101,7 @@ class SingleCrawlerRunner(RunnerBase):
         ]
         allowed_domains = self.manifest.get("settings", {}).get('allowed_domains', [])
 
-        spider_kwargs = {
+        crawler_kwargs = {
             "start_urls": self.manifest['start_urls'],
             "allowed_domains": allowed_domains,
             "rules": rules,
@@ -111,10 +109,10 @@ class SingleCrawlerRunner(RunnerBase):
             "crawlers": self.crawlers,
             "context": self.context
         }
-        return spider_kwargs
+        return crawler_kwargs
 
     def run(self):
-        spider_cls = self.spider_cls or InvanaBotSingleSpider
+        crawler_cls = self.crawler_cls or InvanaBotSingleWebCrawler
 
-        spider_kwargs = self.generate_crawler_kwargs()
-        return {"spider_cls": spider_cls, "spider_kwargs": spider_kwargs, "spider_settings": self.settings}
+        crawler_kwargs = self.generate_crawler_kwargs()
+        return {"crawler_cls": crawler_cls, "crawler_kwargs": crawler_kwargs, "spider_settings": self.settings}

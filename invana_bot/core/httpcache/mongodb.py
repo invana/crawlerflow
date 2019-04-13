@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class MongoDBCacheStorage(object):
     """
-    should set INVANA_BOT_SETTINGS in the settings.py
+    should set INVANA_BOT_SETTINGS in the default.py
 
     pipeline_settings = {
         'ITEM_PIPELINES': {'invana_bot.storages.mongodb.MongoDBPipeline': 1},
