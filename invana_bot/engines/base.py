@@ -1,15 +1,14 @@
-from scrapy.linkextractors import LinkExtractor
-from invana_bot.utils.crawlers import get_crawler_from_list
-# from invana_bot.runners.single import SingleCrawlerRunner
-from invana_bot.utils.config import validate_cti_config
-from transformers.transforms import OTManager
-from transformers.executors import ReadFromMongo
-from invana_bot.transformers.mongodb import WriteToMongoDB
-from invana_bot.transformers.default import default_transformer
+from invana_bot.transformers.mongodb import OTManager, ReadFromMongo, WriteToMongoDB
 import requests
+from twisted.internet import reactor
 
 
-class RunnerBase(object):
+class RunnerEngineBase(object):
+    """
+
+    RunnerEngineBase
+
+    """
 
     def run(self):
         return self.crawl()
@@ -48,7 +47,7 @@ class RunnerBase(object):
             response = req.text
             print("Triggered callback successfully and callback responded with message :{}".format(response))
 
-    def callback(self):
+    def callback(self, callback_fn=None):
         all_indexes = self.manifest.get('indexes', [])
         if len(all_indexes) == 0:
             print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
@@ -57,11 +56,17 @@ class RunnerBase(object):
             for index in all_indexes:
                 index_id = index.get('index_id')
                 callback_config = self.get_callback_for_index(index_id=index_id)
-                try:
-                    self.trigger_callback(callback_config=callback_config)
-                except Exception as e:
-                    print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
-                                                                              e))
+                if callback_config:
+                    try:
+                        self.trigger_callback(callback_config=callback_config)
+                    except Exception as e:
+                        print("Failed to send callback[{}] with error: {}".format(callback_config.get("callback_id"),
+                                                                                  e))
+
+        if callback_fn is None:
+            reactor.stop()
+        else:
+            callback_fn()
 
     def get_callback_for_index(self, index_id=None):
         callbacks = self.manifest.get("callbacks", [])
@@ -79,20 +84,13 @@ class RunnerBase(object):
         :return:
         """
         print("transformer started")
-        print("self.manifest['transformations']", self.manifest['transformations'])
 
         all_transformation = self.manifest.get('transformations', [])
-        if len(all_transformation) == 0:
-            all_transformation.append({
-                "transformation_id": "default"
-            })
 
         for transformation in all_transformation:
             print("transformation", transformation)
             transformation_id = transformation['transformation_id']
             transformation_fn = transformation.get('transformation_fn')
-            if transformation_fn is None:
-                transformation_fn = default_transformer
 
             transformation_index_config = self.get_index(transformation_id=transformation_id,
                                                          indexes=self.manifest['indexes'])
@@ -111,14 +109,17 @@ class RunnerBase(object):
             for result in results_cleaned__:
                 if "_id" in result.keys():
                     del result['_id']
+                if "context" in result.keys():
+                    result['context']['job_id'] = self.job_id
+                else:
+                    result['context'] = {'job_id': self.job_id}
+
                 results_cleaned.append(result)
             self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
 
-            print("Total results_cleaned count of job {} is {}".format(self.job_id, results.__len__()))
+            print("Total results_cleaned count of job {} is {}".format(self.job_id, results_cleaned.__len__()))
 
         print("======================================================")
         print("Successfully crawled + transformed + indexed the data.")
         print("======================================================")
-        self.callback()
-        if callback_fn:
-            callback_fn()
+        self.callback(callback_fn=callback_fn)
