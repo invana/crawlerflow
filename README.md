@@ -15,7 +15,7 @@ InvanaBot uses [MongoDB](https://www.mongodb.com/) as default database for cachi
 [![codecov](https://codecov.io/gh/invanalabs/invana-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/invanalabs/invana-bot) 
 
 
-[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Support**](#support) | [**Documentation**](#documentation)
+[**Features**](#features) | [**Install**](#install) | [**Usage**](#usage) | [**Documentation**](#documentation) | [**Support**](#support)
 
 
 ## Features
