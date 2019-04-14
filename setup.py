@@ -2,7 +2,6 @@
 
 from setuptools import setup, find_packages, __version__ as setuptools_version
 
-requirements = open('./requirements.txt', 'r').readlines()
 
 setup(name='invana-bot',
       version='0.1.3',
