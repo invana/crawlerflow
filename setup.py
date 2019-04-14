@@ -5,7 +5,7 @@ from setuptools import setup, find_packages, __version__ as setuptools_version
 requirements = open('./requirements.txt', 'r').readlines()
 
 setup(name='invana-bot',
-      version='0.0.11',
+      version='0.1.1',
       description='A web crawler framework that can transform websites into datasets'
                   ' with Crawl, Transform and Index workflow.',
       author='Ravi Raja Merugu',
