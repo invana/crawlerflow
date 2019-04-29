@@ -100,6 +100,9 @@ SingleCrawlerRunnerEngine
             Rule(extractor, follow=True)  # TODO - add regex types of needed.
         ]
         allowed_domains = self.manifest.get("settings", {}).get('allowed_domains', [])
+        print("=================")
+        print("======manifest", self.manifest)
+        print("======settings", self.settings)
 
         crawler_kwargs = {
             "start_urls": self.manifest['start_urls'],
@@ -109,6 +112,10 @@ SingleCrawlerRunnerEngine
             "crawlers": self.crawlers,
             "context": self.context
         }
+        print("************")
+        print("====", crawler_kwargs)
+
+        exit()
         return crawler_kwargs
 
     def run(self):
