@@ -114,8 +114,6 @@ SingleCrawlerRunnerEngine
         }
         print("************")
         print("====", crawler_kwargs)
-
-        exit()
         return crawler_kwargs
 
     def run(self):
