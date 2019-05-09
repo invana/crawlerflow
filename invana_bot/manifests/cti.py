@@ -3,6 +3,7 @@ import sys
 import os
 import yaml
 
+
 class CTIManifestManager(object):
     """
 
@@ -39,9 +40,9 @@ class CTIManifestManager(object):
         return errors
 
     def import_cti_transformations(self):
-        for tranformation in self.cti_manifest.get("transformations", []):
-            method_to_call = getattr(self.cti_transformations_module, tranformation.get("transformation_fn"))
-            tranformation['transformation_fn'] = method_to_call
+        for transformation in self.cti_manifest.get("transformations", []):
+            method_to_call = getattr(self.cti_transformations_module, transformation.get("transformation_fn"))
+            transformation['transformation_fn'] = method_to_call
 
     def get_manifest(self):
         errors = self.validate_cti_path_and_files()

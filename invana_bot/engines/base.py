@@ -1,6 +1,9 @@
 from invana_bot.transformers.mongodb import OTManager, ReadFromMongo, WriteToMongoDB
 import requests
 from twisted.internet import reactor
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RunnerEngineBase(object):
@@ -104,7 +107,14 @@ class RunnerEngineBase(object):
             ops = []
             ot_manager = OTManager(ops).process(mongo_executor)
             results = ot_manager.results
-            results_cleaned__ = transformation_fn(results)
+            try:
+                results_cleaned__ = transformation_fn(results)
+                logger.info("Finished the transformation with transformation_id : {}".format(transformation_id))
+            except Exception as e:
+                logger.error(
+                    "Failed the transformation with transformation_id : {} with error :: {}".format(transformation_id,
+                                                                                                    e))
+                results_cleaned__ = []
             results_cleaned = []
             for result in results_cleaned__:
                 if "_id" in result.keys():
