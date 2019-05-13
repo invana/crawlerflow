@@ -69,7 +69,7 @@ class InvanaBotConfigValidator(object):
                                                                                               selector_attribute))
 
     def validate_crawlers(self, crawlers=None):
-        print(crawlers)
+        # print(crawlers)
         crawler_required_fields = [
             {
                 "parser_id": "crawler_id",

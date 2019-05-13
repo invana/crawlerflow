@@ -22,9 +22,7 @@ class SelectorExtractor(object):
 
 def transform_data(data=None, data_type=None):
     fields = importlib.import_module("invana_bot.fields")
-    print("fieldsfieldsfields", fields, data_type)
     Klass = getattr(fields, data_type)
-    print("KlassKlassKlassKlass", Klass)
     data = Klass(data=data).transform()
     return data
 
@@ -39,6 +37,7 @@ def clean_data(elements=None, selector=None):
     :return:
     """
     data_type = selector.get("data_type", "RawField")
+
     if data_type.startswith("List"):
         multiple = True
     else:

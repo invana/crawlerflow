@@ -70,7 +70,8 @@ class CustomContentExtractor(ExtractorBase):
                         _d = get_selector_element(el, child_selector)
                         datum[child_selector.get('selector_id')] = _d.strip() if _d else None
                     elements_data.append(datum)
-                if selector.get("multiple", False) is False:
+                data_type = selector.get("data_type", "RawField")
+                if data_type.startswith("List") is False:
                     single_data = elements_data[0]
                     extracted_data[selector.get('selector_id')] = single_data
                 else:

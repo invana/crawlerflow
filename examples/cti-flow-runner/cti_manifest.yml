@@ -16,23 +16,24 @@ crawlers:
     - selector_id: blogs
       selector: ".post-listing .post-item"
       selector_attribute: element
-      multiple: true
+      data_type: ListDictField
       child_selectors:
       - selector_id: url
         selector: ".post-header h2 a"
         selector_type: css
         selector_attribute: href
+        data_type: StringField
         multiple: false
       - selector_id: title
         selector: ".post-header h2 a"
         selector_type: css
         selector_attribute: text
-        multiple: false
+        data_type: StringField
       - selector_id: content
         selector: ".post-content"
         selector_type: css
         selector_attribute: html
-        multiple: false
+        data_type: RawField
   traversals:
   - traversal_type: pagination
     pagination:
@@ -53,28 +54,28 @@ crawlers:
     - selector_id: blog_detail
       selector: ".blog-section"
       selector_attribute: element
-      multiple: false
+      data_type: DictField
       child_selectors:
       - selector_id: title
         selector: h1 span
         selector_type: css
         selector_attribute: text
-        multiple: false
+        data_type: StringField
       - selector_id: published_at
         selector: ".date a"
         selector_type: css
         selector_attribute: text
-        multiple: false
+        data_type: StringField
       - selector_id: author
         selector: ".author a"
         selector_type: css
         selector_attribute: text
-        multiple: false
+        data_type: StringField
       - selector_id: html_content
         selector: ".post-body"
         selector_type: css
         selector_attribute: html
-        multiple: false
+        data_type: StringField
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn

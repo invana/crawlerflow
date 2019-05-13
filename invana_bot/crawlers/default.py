@@ -75,7 +75,6 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         if None in [crawlers, current_crawler]:
             current_crawler = self.current_crawler
             crawlers = self.crawlers
-        print("()()()()()()()", crawlers, current_crawler)
 
         data = {}
         for extractor in current_crawler['parsers']:
@@ -129,7 +128,9 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                     crawler=current_crawler,
                     parser_id=traversal_config['parser_id']
                 )
+
                 for item in data.get(traversal_config['parser_id']).get(subdocument_key, []):
+                    # print("itemitem", item)
                     traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
                     if traversal_url:
                         if "://" not in traversal_url:  # TODO - fix this monkey patch

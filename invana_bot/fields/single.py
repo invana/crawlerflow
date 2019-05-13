@@ -22,7 +22,6 @@ class FieldTransformerBase(object):
         try:
             result_data = transformation_method(self.data)
         except Exception as e:
-            print(e)
             result_data = self.data
         return result_data
 

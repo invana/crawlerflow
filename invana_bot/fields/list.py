@@ -20,7 +20,7 @@ class ListFieldTransformerBase(object):
             result_data = self.transformer_class(data=self.data).transform()
             result_data_list.append(result_data)
         except Exception as e:
-            print(e)
+            # print(e)
             result_data = self.data
             result_data_list.append(result_data)
         return result_data_list
