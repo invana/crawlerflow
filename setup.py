@@ -4,14 +4,14 @@ from setuptools import setup, find_packages, __version__ as setuptools_version
 
 
 setup(name='invana-bot',
-      version='0.1.8',
+      version='0.1.9',
       description='A web crawler framework that can transform websites into datasets'
                   ' with Crawl, Transform and Index workflow.',
       author='Ravi Raja Merugu',
       author_email='ravi@invanalabs.ai',
       url='https://github.com/invanalabs/invana-bot',
       packages=find_packages(
-          exclude=("bin", "dist", "docs", "example", "tests",)
+          exclude=("bin", "dist", "docs", "example", "tests", "dist")
       ),
       install_requires=[
           'elasticsearch-dsl==6.1.0',
