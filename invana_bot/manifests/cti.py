@@ -20,10 +20,15 @@ class CTIManifestManager(object):
         print("self.cti_config_path", self.cti_config_path)
         self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)))
         sys.path.append(self.cti_config_path)
+        """
+        don't remove the import below, this will be the cti_transformations.py,
+        which is one of the required file to run the job. This file will be provided by the 
+        user during the run.
+        """
         import cti_transformations
         self.cti_transformations_module = cti_transformations
-        print("cti_manifest is {}".format(self.cti_manifest))
-        print("cti_transformations_module is {}".format(self.cti_transformations_module))
+        # print("cti_manifest is {}".format(self.cti_manifest))
+        # print("cti_transformations_module is {}".format(self.cti_transformations_module))
 
     def validate_cti_path_and_files(self):
         errors = []

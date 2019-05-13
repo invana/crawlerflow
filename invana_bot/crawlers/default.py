@@ -75,6 +75,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         if None in [crawlers, current_crawler]:
             current_crawler = self.current_crawler
             crawlers = self.crawlers
+        print("()()()()()()()", crawlers, current_crawler)
 
         data = {}
         for extractor in current_crawler['parsers']:
@@ -114,11 +115,11 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             yield scrapy.Request(
                                 next_page_url,
                                 callback=self.parse,
-                                meta={"current_page_count": current_page_count,
-                                      "current_crawler": next_crawler,
-                                      "crawlers": crawlers
-
-                                      }
+                                meta={
+                                    "current_page_count": current_page_count,
+                                    "current_crawler": next_crawler,
+                                    "crawlers": crawlers
+                                }
                             )
             elif traversal['traversal_type'] == TRAVERSAL_LINK_FROM_FIELD:
                 next_crawler_id = traversal['next_crawler_id']

@@ -1,4 +1,5 @@
 def get_crawler_from_list(crawlers=None, crawler_id=None):
+    print ("========", crawlers, crawler_id)
     for crawler in crawlers:
         if crawler.get("crawler_id") == crawler_id:
             return crawler

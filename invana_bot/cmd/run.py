@@ -36,7 +36,6 @@ def invana_bot_run():
                 cti_manifest=cti_manifest,
                 context=context
             )
-            print("job", job)
             crawler_job_generator.start_job(job=job)
         else:
             print("==============================================================")
@@ -46,7 +45,6 @@ def invana_bot_run():
             ))
             print("==============================================================")
     elif crawler_type == "single":
-        print("==")
         manifest_manager = SingleCrawlerManifestManager(
             config_path=path
         )
@@ -60,7 +58,6 @@ def invana_bot_run():
                 current_crawler=crawler_manifest,
                 context=context
             )
-            print("job", job)
             crawler_job_generator.start_job(job=job)
         else:
             print("==============================================================")
