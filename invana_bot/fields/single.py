@@ -1,8 +1,5 @@
-import ast
 import locale
 import re
-
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 class FieldTransformerBase(object):
