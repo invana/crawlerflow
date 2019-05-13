@@ -59,8 +59,8 @@ indexes:
   unique_key: url
 settings:
   allowed_domains:
-  - blog.scrapinghub.com
-  download_delay: 10
+  - colorlib.com
+  download_delay: 1
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes invanalabs xyz
