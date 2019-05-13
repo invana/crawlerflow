@@ -43,6 +43,7 @@ SingleCrawlerRunnerEngine
 
     def __init__(self,
                  current_crawler=None,
+                 crawlers = None,
                  job_id=None,
                  context=None,
                  crawler_cls=None,
@@ -57,7 +58,10 @@ SingleCrawlerRunnerEngine
         """
         self.manifest = current_crawler
         self.job_id = job_id
-        self.crawlers = [current_crawler]
+        if crawlers is None:
+            self.crawlers = [current_crawler]
+        else:
+            self.crawlers = crawlers
         self.settings = settings
         self.crawler_cls = crawler_cls
         if context:
