@@ -55,7 +55,7 @@ class HTMLMetaTagExtractor(ExtractorBase):
 
 
 class CustomContentExtractor(ExtractorBase):
-    ITER_KEY = "iter_count"
+
     def run(self):
         data = {}
         extracted_data = {}
@@ -64,17 +64,14 @@ class CustomContentExtractor(ExtractorBase):
                 # TODO - currently only support multiple elements strategy. what if multiple=False
                 elements = self.response.css(selector.get('selector'))
                 elements_data = []
-                for item_no, el in enumerate(elements):
-                    item_no = item_no + 1  # because enumerate starts from 0
+                for el in elements:
                     datum = {}
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
                         datum[child_selector.get('selector_id')] = _d.strip() if _d else None
-                    datum[self.ITER_KEY] = item_no
                     elements_data.append(datum)
                 if selector.get("multiple", False) is False:
                     single_data = elements_data[0]
-                    single_data.pop(self.ITER_KEY)
                     extracted_data[selector.get('selector_id')] = single_data
                 else:
                     extracted_data[selector.get('selector_id')] = elements_data
