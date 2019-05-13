@@ -23,7 +23,9 @@ class SelectorExtractor(object):
 def transform_data(data=None, data_type=None):
     fields = importlib.import_module("invana_bot.fields")
     Klass = getattr(fields, data_type)
+    print("data_typedata_type", data_type, data)
     data = Klass(data=data).transform()
+    print(type(data))
     return data
 
 

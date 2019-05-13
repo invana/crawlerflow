@@ -68,7 +68,7 @@ class CustomContentExtractor(ExtractorBase):
                     datum = {}
                     for child_selector in selector.get('child_selectors', []):
                         _d = get_selector_element(el, child_selector)
-                        datum[child_selector.get('selector_id')] = _d.strip() if _d else None
+                        datum[child_selector.get('selector_id')] = _d if _d else None
                     elements_data.append(datum)
                 data_type = selector.get("data_type", "RawField")
                 if data_type.startswith("List") is False:

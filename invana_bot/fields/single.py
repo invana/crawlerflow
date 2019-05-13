@@ -1,3 +1,10 @@
+import ast
+import locale
+import re
+
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+
 class FieldTransformerBase(object):
     """
 
@@ -6,6 +13,7 @@ class FieldTransformerBase(object):
 
 
     """
+
     def get_method(self):
         """
         Should return the function that takes data as input. Ex: str, int, float,
@@ -22,6 +30,7 @@ class FieldTransformerBase(object):
         try:
             result_data = transformation_method(self.data)
         except Exception as e:
+            print(e)
             result_data = self.data
         return result_data
 
@@ -37,12 +46,22 @@ class StringField(FieldTransformerBase):
 
 class IntField(FieldTransformerBase):
     def get_method(self):
-        return int
+        def custom_int(data):
+            data = locale.atoi(data)
+            return int(data)
+
+        return custom_int
 
 
 class FloatField(FieldTransformerBase):
     def get_method(self):
-        return float
+        def custom_float(data):
+            data = re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", data)
+            if len(data) > 0:
+                return float(data[0])
+            else:
+                return float(0)
+        return custom_float
 
 
 class DictField(FieldTransformerBase):

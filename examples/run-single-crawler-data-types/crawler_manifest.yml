@@ -1,10 +1,44 @@
 ---
-crawler_id: proxy_list
+crawler_id: ecommerce_crawler
 start_urls:
-- https://free-proxy-list.net
+- "https://colorlib.com/preview/theme/dealers/"
 parsers:
-- parser_type: TableContentExtractor
-  parser_id: tables
+- parser_type: CustomContentExtractor
+  parser_id: product_detail
+  data_selectors:
+  - selector_id: title
+    selector: ".featured-hero-product h1"
+    selector_type: css
+    selector_attribute: text
+    data_type: StringField
+  - selector_id: price
+    selector: ".price strong"
+    selector_type: css
+    selector_attribute: text
+    data_type: IntField
+- parser_type: CustomContentExtractor
+  parser_id: more_products
+  data_selectors:
+  - selector_id: itesm
+    selector: ".item"
+    selector_attribute: element
+    data_type: ListDictField
+    child_selectors:
+    - selector_id: image
+      selector: ".img-fluid"
+      selector_type: css
+      selector_attribute: src
+      data_type: StringField
+    - selector_id: title
+      selector: ".item-info h3"
+      selector_type: css
+      selector_attribute: text
+      data_type: StringField
+    - selector_id: price
+      selector: ".price"
+      selector_type: css
+      selector_attribute: text
+      data_type: FloatField
 
 transformations:
 - transformation_id: default
@@ -21,7 +55,7 @@ indexes:
 - index_id: default
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/crawlers_data_index
-  collection_name: proxy_list
+  collection_name: ecommerce_crawler
   unique_key: url
 settings:
   allowed_domains:
