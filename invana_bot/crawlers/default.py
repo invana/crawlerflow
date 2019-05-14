@@ -6,7 +6,7 @@ import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 from invana_bot.utils.crawlers import get_crawler_from_list
 from urllib.parse import urlparse
-
+from datetime import datetime
 TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
 TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
 
@@ -71,6 +71,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         current_crawler = response.meta.get("current_crawler")
         crawlers = response.meta.get("crawlers")
         context = self.context
+        response.meta['context'] = context
+        response.meta['request_started_at'] = datetime.now()
 
         if None in [crawlers, current_crawler]:
             current_crawler = self.current_crawler
@@ -117,7 +119,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                                 meta={
                                     "current_page_count": current_page_count,
                                     "current_crawler": next_crawler,
-                                    "crawlers": crawlers
+                                    "crawlers": crawlers,
+                                    "context": self.context
                                 }
                             )
             elif traversal['traversal_type'] == TRAVERSAL_LINK_FROM_FIELD:
