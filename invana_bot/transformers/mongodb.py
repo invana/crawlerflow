@@ -23,7 +23,6 @@ class WriteToMongoDB(Executor):
         if isinstance(self._client, MongoClient):
             for doc in self._docs:
                 entry = self.get_object(doc=doc)
-                print("Writing the document ::{} with keys".format(doc.keys()))
                 if entry is None:
                     self._client[self._db][self._collection].insert(doc)
                 else:
