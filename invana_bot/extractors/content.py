@@ -9,7 +9,8 @@ class ParagraphsExtractor(ExtractorBase):
         elements = self.response.css("p").extract()
         for el in elements:
             paragraphs_data.append(el)
-        data[self.parser_id] = paragraphs_data
+        data[self.parser_id] = {}
+        data[self.parser_id]['paragraphs'] = paragraphs_data
         return data
 
 
@@ -35,7 +36,8 @@ class TableContentExtractor(ExtractorBase):
                 row_dict = dict(zip(table_headers, row_data))
                 table_data.append(row_dict)
             tables.append(table_data)
-        data[self.parser_id] = tables
+        data[self.parser_id] = {}
+        data[self.parser_id]['tables'] = tables
         return data
 
 
