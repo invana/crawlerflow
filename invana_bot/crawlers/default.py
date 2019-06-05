@@ -46,6 +46,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         data = extractor_object.run()
         return data
 
+
     @staticmethod
     def get_subdocument_key(crawler=None, parser_id=None):
         """
@@ -65,6 +66,16 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
     def post_parse(self, response=None):
         pass
+
+    def parse_error(self, failure):
+        pass
+
+    def start_requests(self):
+        for u in self.start_urls:
+            yield scrapy.Request(u,
+                                 callback=self.parse,
+                                 errback=self.parse_error,
+                                 dont_filter=True)
 
     def parse(self, response=None):
 
@@ -114,6 +125,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             yield scrapy.Request(
                                 next_page_url,
                                 callback=self.parse,
+                                errback=self.parse_error,
+
                                 meta={
                                     "current_page_count": current_page_count,
                                     "current_crawler": next_crawler,
@@ -141,6 +154,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                         yield scrapy.Request(
                             traversal_url,
                             callback=self.parse,
+                            errback=self.parse_error,
+
                             meta={
                                 "crawlers": crawlers,
                                 "current_crawler": next_crawler,
@@ -170,6 +185,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
                     yield scrapy.Request(
                         url, callback=self.parse,
+                        errback=self.parse_error,
+
                         meta={
                             "current_page_count": current_page_count,
                             "current_crawler": next_parser,
