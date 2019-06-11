@@ -75,7 +75,14 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             yield scrapy.Request(u,
                                  callback=self.parse,
                                  errback=self.parse_error,
-                                 dont_filter=True)
+                                 dont_filter=True,
+                                 meta={
+                                     "current_page_count": 0,
+                                     "current_crawler": self.current_crawler,
+                                     "crawlers": self.crawlers
+                                 }
+
+                                 )
 
     def parse(self, response=None):
 
@@ -178,7 +185,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 # new 100 pages in each thread.
                 current_page_count = response.meta.get('current_page_count', 1)
                 next_crawler_id = traversal['next_crawler_id']
-                next_parser = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
 
                 for url in filtered_urls:
                     current_page_count = current_page_count + 1
@@ -189,7 +196,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
                         meta={
                             "current_page_count": current_page_count,
-                            "current_crawler": next_parser,
+                            "current_crawler": next_crawler,
                             "crawlers": crawlers
                         }
                     )
