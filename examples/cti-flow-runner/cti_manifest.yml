@@ -67,11 +67,11 @@ crawlers:
         selector_type: css
         selector_attribute: text
         data_type: StringField
-#      - selector_id: html_content
-#        selector: ".post-body"
-#        selector_type: css
-#        selector_attribute: html
-#        data_type: StringField
+      - selector_id: html_content
+        selector: ".post-body"
+        selector_type: css
+        selector_attribute: html
+        data_type: StringField
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
