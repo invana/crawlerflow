@@ -140,74 +140,55 @@ class InvanaBotConfigValidator(object):
             self.validate_traversals(traversals=traversals, crawler=crawler, all_crawlers=crawlers)
 
     def validate_traversals(self, traversals=None, crawler=None, all_crawlers=None):
-        valid_traversal_types = ['pagination', 'same_domain', 'link_from_field']
 
+        must_have_keys = ["traversal_id", "selector_type", "selector_value", ]
         all_crawlers_ids = [crawler['crawler_id'] for crawler in all_crawlers]
 
         for traversal in traversals:
-            traversal_type = traversal.get("traversal_type")
-            if traversal_type not in valid_traversal_types:
-                self.log_error("Traversal of types '{}' are accepted, where as you have "
-                               " parser_id '{}'".format(", ".join(valid_traversal_types),
-                                                          traversal_type))
-
-            if traversal_type not in traversal.keys():
-                self.log_error("Traversal of type '{}' should have '{}' key defining the"
-                               " traversal configuration ".format(traversal_type, traversal_type))
             next_crawler_id = traversal.get("next_crawler_id")
 
+            traversal_example = """
+            
+Here are examples of traversal
+
+# css
+{
+    "traversal_id": "xyz_pagination",
+    "selector_type": "css",
+    "selector_value": "h1",
+    "max_pages": 100,
+    "next_crawler_id": "blogs_list"
+}  
+
+# xpath
+{
+    "traversal_id": "xyz_pagination",
+    "selector_type": "xpath",
+    "selector_value": "//title",
+    "max_pages": 100,
+    "next_crawler_id": "blogs_list"
+}       
+
+# regex
+{
+    "traversal_id": "xyz_pagination",
+    "selector_type": "regex",
+    "selector_value": "*/blog/*",
+    "max_pages": 100,
+    "next_crawler_id": "blogs_list"
+}            
+            
+            """
+
             if next_crawler_id is None:
-                self.log_error("All Traversals should have next_crawler_id set ")
+                self.log_error("All Traversals should have next_crawler_id set  {}".format(traversal_example))
 
             if next_crawler_id not in all_crawlers_ids:
                 self.log_error("You are using next_crawler_id '{}' "
                                "but it is not defined in the crawlers."
-                               " Available crawler_id in the config are {}".format(next_crawler_id,
-                                                                                   all_crawlers_ids))
-
-            if traversal_type == "pagination":
-                required_fields = ['selector', 'selector_type']
-                traversal_example = {
-                    "traversal_type": "pagination",
-                    "pagination": {
-                        "sel ector": ".next-posts-link",
-                        "selector_type": "css",
-                        "max_pages": 4
-                    },
-                    "next_crawler_id": "blogs_list"
-                }
-                for required_field in required_fields:
-                    if required_field not in traversal[traversal_type].keys():
-                        self.log_error(
-                            "Traversal type '{}' in crawler '{}' should have the config with keys '{}' along with optional max_pages."
-                            " Example: {}"
-                            "".format(
-                                traversal_type,
-                                crawler['crawler_id'],
-                                ", ".join(required_fields), traversal_example))
-
-            elif traversal_type == "same_domain":
-                pass  # don't have any required fields.
-
-            elif traversal_type == "link_from_field":
-                traversal_example = {
-                    "traversal_type": "link_from_field",
-                    "link_from_field": {
-                        "parser_id": "blog_list_parser",
-                        "selector_id": "url"
-                    },
-                    "next_crawler_id": "blog-detail"
-                }
-                required_fields = ['parser_id', 'selector_id']
-                for required_field in required_fields:
-                    if required_field not in traversal[traversal_type].keys():
-                        self.log_error(
-                            "Traversal type '{}' in crawler '{}' should have the config "
-                            "with keys '{}' along with optional max_pages. Example: {}"
-                            "".format(
-                                traversal_type,
-                                crawler['crawler_id'],
-                                ", ".join(required_fields), traversal_example))
+                               " Available crawler_id in the config are {} {}".format(next_crawler_id,
+                                                                                      all_crawlers_ids,
+                                                                                      traversal_example))
 
     def validate_transformations_and_indexes(self):
         transformations = self.config.get('transformations', [])
