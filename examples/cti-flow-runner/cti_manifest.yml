@@ -35,12 +35,12 @@ crawlers:
   - traversal_id: scrapinghub_pagination
     selector_type: css
     selector_value: ".next-posts-link"
-    max_pages: 0
+    max_pages: 1
     next_crawler_id: blog_list
   - traversal_id: scrapinghub_detail
     selector_type: css
     selector_value: "h2 a"
-    max_pages: 1000
+    max_pages: 1
     next_crawler_id: blog_detail
 - crawler_id: blog_detail
   parsers:
@@ -67,11 +67,11 @@ crawlers:
         selector_type: css
         selector_attribute: text
         data_type: StringField
-      - selector_id: html_content
-        selector: ".post-body"
-        selector_type: css
-        selector_attribute: html
-        data_type: StringField
+#      - selector_id: html_content
+#        selector: ".post-body"
+#        selector_type: css
+#        selector_attribute: html
+#        data_type: StringField
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn

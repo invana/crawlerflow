@@ -48,9 +48,9 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         return data
 
     @staticmethod
-    def run_traversals(response=None, traversal=None, **kwargs):
+    def run_traversal(response=None, traversal=None, **kwargs):
 
-        selector_type =  traversal.get("selector_type")
+        selector_type = traversal.get("selector_type")
         kwargs = {}
         if selector_type == "css":
             kwargs['restrict_css'] = traversal.get("selector_value")
@@ -60,6 +60,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             kwargs['restrict_regex'] = traversal.get("selector_value")
 
         kwargs['allow_domains'] = traversal.get("allow_domains", [])
+        print("kwargssss", kwargs)
 
         return GenericLinkExtractor(**kwargs).extract_links(response=response)
 
@@ -94,11 +95,22 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 errback=self.parse_error,
                 dont_filter=True,
                 meta={
-                    "current_page_count": 0,
+                    "current_request_traversal_page_count": 0,
                     "current_crawler": self.current_crawler,
                     "crawlers": self.crawlers
                 }
             )
+
+    @staticmethod
+    def is_this_request_from_same_traversal(response, traversal):
+        """
+        This mean the current request came from this  traversal,
+        so we can put max pages condition on this, otherwise for different
+        traversals of different crawlers, adding max_page doest make sense.
+        """
+        traversal_id = traversal['traversal_id']
+        current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
+        return current_request_traversal_id == traversal_id
 
     def parse(self, response=None):
 
@@ -122,121 +134,84 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         data['context']['crawler_id'] = current_crawler['crawler_id']
         yield data
 
-        for traversal in current_crawler.get('traversals', []):
+        """
+        if crawler_traversal_id is None, it means this response originated from the 
+        request raised by the start urls. 
+        
+        If it is Not None, the request/response is raised some traversal strategy.
+        """
+        current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
+        print(" <<<<<<<<< scurrent_crawler", current_crawler)
+        current_request_traversal_page_count = response.meta.get('current_request_traversal_page_count', 0)
+
+        """
+        Note on current_request_crawler_id:
+        This can never be none, including the ones that are started by start_urls .
+        """
+        current_crawler_id = current_crawler.get("crawler_id")
+        crawler_traversals = current_crawler.get('traversals', [])
+        print("crawler_traversals=========", crawler_traversals)
+        for traversal in crawler_traversals:
             traversal['allow_domains'] = current_crawler.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
-            # print("traversal=====", traversal)
-            traversal_links = self.run_traversals(response=response, traversal=traversal)
+            traversal_max_pages = traversal.get('max_pages', 1)
+
+            traversal_links = []
+            is_this_request_from_same_traversal = self.is_this_request_from_same_traversal(response, traversal)
+            print("is_this_request_from_same_traversal", is_this_request_from_same_traversal)
+            print("current_request_traversal_page_count", current_request_traversal_page_count)
+            print("traversal_max_pages", traversal_max_pages)
+            print(" current_request_traversal_page_count < traversal_max_pages",
+                  current_request_traversal_page_count < traversal_max_pages)
+            shall_traverse = False
+
+            if current_request_traversal_id is None:
+                """
+                start urls will not have this traversal_id set, so we should allow then to traverse
+                """
+                shall_traverse = True
+
+            elif is_this_request_from_same_traversal and current_request_traversal_page_count < traversal_max_pages:
+                shall_traverse = True
+
+            elif is_this_request_from_same_traversal:
+                shall_traverse = True
+            print("shall_traverse", shall_traverse)
+            if shall_traverse:
+                next_crawler_id = traversal['next_crawler_id']
+                next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+                traversal_links = self.run_traversal(response=response, traversal=traversal)
+                """
+                Then validate for max_pages logic if traversal_id's traversal has any!.
+                This is where the further traversal for this traversal_id  is decided 
+                """
+
+                for link in traversal_links:
+                    current_request_traversal_page_count += 1
+
+                    print("current_page_count", 1)
+                    print("-----------------------------------")
+                    max_pages = traversal.get("max_pages", 1)
+                    """
+                    we are already incrementing, the last number, so using <= might make it 6 pages when 
+                    max_pages is 5 
+                    """
+                    if current_request_traversal_page_count < max_pages:
+                        print("=======vcurrent_request_traversal_page_count", current_request_traversal_page_count)
+                        yield scrapy.Request(
+                            link,
+                            callback=self.parse,
+                            errback=self.parse_error,
+                            meta={
+                                "current_crawler": next_crawler,
+                                "crawlers": crawlers,
+                                "current_request_traversal_id": traversal_id,
+                                "current_request_traversal_page_count": current_request_traversal_page_count,
+
+                            }
+                        )
             print("=================================================")
             print("====traversal_links", traversal_id, len(traversal_links))
             print("=================================================")
-            next_crawler_id = traversal['next_crawler_id']
-            next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-            for link in traversal_links:
-                current_page_count = response.meta.get('current_page_count', 1)
 
-                yield scrapy.Request(
-                    link,
-                    callback=self.parse,
-                    errback=self.parse_error,
-
-                    meta={
-                        "current_page_count": current_page_count,
-                        "current_crawler": next_crawler,
-                        "crawlers": crawlers,
-                    }
-                )
-
-            # if traversal['traversal_type'] == "pagination":
-            #     # TODO - move this to run_pagination_traversal(self, response=None, traversal=None) method;
-            #     traversal_config = traversal['pagination']
-            #     next_crawler_id = traversal['next_crawler_id']
-            #     max_pages = traversal_config.get("max_pages", 1)
-            #     if current_page_count < max_pages:
-            #         next_selector = traversal_config.get('selector')
-            #         if next_selector:
-            #             if traversal_config.get('selector_type') == 'css':
-            #                 next_page = response.css(next_selector + "::attr(href)").extract_first()
-            #             elif traversal_config.get('selector_type') == 'xpath':
-            #                 next_page = response.xpath(next_selector + "::attr(href)").extract_first()
-            #             else:
-            #                 next_page = None
-            #             current_page_count = current_page_count + 1
-            #             if next_page:
-            #                 if not "://" in next_page:
-            #                     next_page_url = "https://" + get_domain(response.url) + next_page
-            #                 else:
-            #                     next_page_url = next_page
-            #                 next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-            #                 yield scrapy.Request(
-            #                     next_page_url,
-            #                     callback=self.parse,
-            #                     errback=self.parse_error,
-            #
-            #                     meta={
-            #                         "current_page_count": current_page_count,
-            #                         "current_crawler": next_crawler,
-            #                         "crawlers": crawlers,
-            #                     }
-            #                 )
-            # elif traversal['traversal_type'] == TRAVERSAL_LINK_FROM_FIELD:
-            #     next_crawler_id = traversal['next_crawler_id']
-            #     traversal_config = traversal[TRAVERSAL_LINK_FROM_FIELD]
-            #
-            #     subdocument_key = self.get_subdocument_key(
-            #         crawler=current_crawler,
-            #         parser_id=traversal_config['parser_id']
-            #     )
-            #
-            #     for item in data.get(traversal_config['parser_id']).get(subdocument_key, []):
-            #         traversal_url = item[traversal[TRAVERSAL_LINK_FROM_FIELD]['selector_id']]
-            #         if traversal_url:
-            #             if "://" not in traversal_url:  # TODO - fix this monkey patch
-            #                 url_parsed = urlparse(response.url)
-            #                 traversal_url = url_parsed.scheme + "://" + url_parsed.netloc + "/" + traversal_url.lstrip(
-            #                     "/")
-            #
-            #             next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-            #             yield scrapy.Request(
-            #                 traversal_url,
-            #                 callback=self.parse,
-            #                 errback=self.parse_error,
-            #
-            #                 meta={
-            #                     "crawlers": crawlers,
-            #                     "current_crawler": next_crawler,
-            #                 }
-            #             )
-            #         else:
-            #             print("ignoring traversal to {}".format(traversal_url))
-            # elif traversal['traversal_type'] == TRAVERSAL_SAME_DOMAIN_FIELD:
-            #     all_urls = response.css("a::attr(href)").extract()
-            #     filtered_urls = []
-            #     all_urls = list(set(all_urls))
-            #     current_domain = get_domain(response.url)
-            #     for url in all_urls:
-            #         url = get_absolute_url(url=url, origin_url=response.url)
-            #         if get_domain(url) == current_domain:
-            #             filtered_urls.append(url)
-            #     filtered_urls = list(set(filtered_urls))
-            #     # max_pages = traversal.get("max_pages", 100)
-            #     #  implementing max_pages is difficult cos it keeps adding
-            #     # new 100 pages in each thread.
-            #     current_page_count = response.meta.get('current_page_count', 1)
-            #     next_crawler_id = traversal['next_crawler_id']
-            #     next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
-            #
-            #     for url in filtered_urls:
-            #         current_page_count = current_page_count + 1
-            #
-            #         yield scrapy.Request(
-            #             url, callback=self.parse,
-            #             errback=self.parse_error,
-            #
-            #             meta={
-            #                 "current_page_count": current_page_count,
-            #                 "current_crawler": next_crawler,
-            #                 "crawlers": crawlers
-            #             }
-            #         )
         self.post_parse(response=response)

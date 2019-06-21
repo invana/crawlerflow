@@ -7,7 +7,7 @@ DEFAULT_SETTINGS_BASE = {
 
 MONGODB_SETTINGS = {
     'ITEM_PIPELINES': {'invana_bot.core.storages.mongodb.MongoDBPipeline': 1},
-    'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.mongodb.MongoDBCacheStorage",
+    # 'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.mongodb.MongoDBCacheStorage",
 
     'INVANA_BOT_SETTINGS': {
         'HTTPCACHE_STORAGE_SETTINGS': {
@@ -26,7 +26,7 @@ MONGODB_SETTINGS = {
 
 ELASTICSEARCH_SETTINGS = {
     'ITEM_PIPELINES': {'invana_bot.core.storages.elasticsearch.ElasticSearchPipeline': 1},
-    'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.elasticsearch.ESCacheStorage",
+    # 'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.elasticsearch.ESCacheStorage",
 
     'INVANA_BOT_SETTINGS': {
         'HTTPCACHE_STORAGE_SETTINGS': {
