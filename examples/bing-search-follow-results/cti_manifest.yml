@@ -12,11 +12,11 @@ crawlers:
   - parser_type: HTMLMetaTagExtractor
     parser_id: bing-search-result
   traversals:
-#  - traversal_id: bing_pagination
-#    selector_value: a.sb_pagN
-#    selector_type: css
-#    max_pages: 5
-#    next_crawler_id: bing_search
+  - traversal_id: bing_pagination
+    selector_value: a.sb_pagN
+    selector_type: css
+    max_pages: 5
+    next_crawler_id: bing_search
   - traversal_id: generic_crawler_traversal
     selector_type: css
     selector_value: ".b_algo h2 a"
