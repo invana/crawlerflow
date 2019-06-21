@@ -53,11 +53,11 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         selector_type = traversal.get("selector_type")
         kwargs = {}
         if selector_type == "css":
-            kwargs['restrict_css'] = traversal.get("selector_value")
+            kwargs['restrict_css'] = (traversal.get("selector_value"),)
         elif selector_type == "xpath":
-            kwargs['restrict_xpaths'] = traversal.get("selector_value")
+            kwargs['restrict_xpaths'] = (traversal.get("selector_value"),)
         elif selector_type == "css":
-            kwargs['restrict_regex'] = traversal.get("selector_value")
+            kwargs['restrict_regex'] = (traversal.get("selector_value"),)
 
         kwargs['allow_domains'] = traversal.get("allow_domains", [])
         print("kwargssss", kwargs)
@@ -141,7 +141,6 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         If it is Not None, the request/response is raised some traversal strategy.
         """
         current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
-        print(" <<<<<<<<< scurrent_crawler", current_crawler)
         current_request_traversal_page_count = response.meta.get('current_request_traversal_page_count', 0)
 
         """
@@ -150,9 +149,11 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         """
         current_crawler_id = current_crawler.get("crawler_id")
         crawler_traversals = current_crawler.get('traversals', [])
-        print("crawler_traversals=========", crawler_traversals)
         for traversal in crawler_traversals:
-            traversal['allow_domains'] = current_crawler.get("allowed_domains", [])
+            next_crawler_id = traversal['next_crawler_id']
+            next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+
+            traversal['allow_domains'] = next_crawler.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
             traversal_max_pages = traversal.get('max_pages', 1)
 
@@ -176,10 +177,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
             elif is_this_request_from_same_traversal:
                 shall_traverse = True
-            print("shall_traverse", shall_traverse)
+            print("shall_traverse: {}".format(traversal_id), shall_traverse)
             if shall_traverse:
-                next_crawler_id = traversal['next_crawler_id']
-                next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
                 traversal_links = self.run_traversal(response=response, traversal=traversal)
                 """
                 Then validate for max_pages logic if traversal_id's traversal has any!.

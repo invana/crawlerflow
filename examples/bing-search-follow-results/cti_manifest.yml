@@ -12,16 +12,16 @@ crawlers:
   - parser_type: HTMLMetaTagExtractor
     parser_id: bing-search-result
   traversals:
-  - traversal_id: bing_pagination
-    selector_value: a.sb_pagN
-    selector_type: css
-    max_pages: 5
-    next_crawler_id: bing_search
+#  - traversal_id: bing_pagination
+#    selector_value: a.sb_pagN
+#    selector_type: css
+#    max_pages: 5
+#    next_crawler_id: bing_search
   - traversal_id: generic_crawler_traversal
     selector_type: css
-    selector_value: h2 a
+    selector_value: ".b_algo h2 a"
     next_crawler_id: generic_crawler
-    max_items: 100
+    max_pages: 5
 - crawler_id: generic_crawler
   parsers:
   - parser_type: CustomContentExtractor
