@@ -184,19 +184,18 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 Then validate for max_pages logic if traversal_id's traversal has any!.
                 This is where the further traversal for this traversal_id  is decided 
                 """
+                max_pages = traversal.get("max_pages", 1)
 
                 for link in traversal_links:
-                    current_request_traversal_page_count += 1
 
-                    print("current_page_count", 1)
-                    print("-----------------------------------")
-                    max_pages = traversal.get("max_pages", 1)
                     """
                     we are already incrementing, the last number, so using <= might make it 6 pages when 
                     max_pages is 5 
                     """
                     if current_request_traversal_page_count < max_pages:
-                        print("=======vcurrent_request_traversal_page_count", current_request_traversal_page_count)
+                        print("=======current_request_traversal_page_count", current_request_traversal_page_count)
+                        print("link", link)
+                        print("-----------------------------------")
                         yield scrapy.Request(
                             link,
                             callback=self.parse,
@@ -209,6 +208,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
                             }
                         )
+                    current_request_traversal_page_count += 1
+
             print("=================================================")
             print("====traversal_links", traversal_id, len(traversal_links))
             print("=================================================")
