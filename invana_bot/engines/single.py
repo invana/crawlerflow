@@ -102,13 +102,12 @@ SingleCrawlerRunnerEngine
         rules = [
             Rule(extractor, follow=True)  # TODO - add regex types of needed.
         ]
-        print("======manifest", self.manifest)
-        allowed_domains = self.settings.get('allowed_domains', [])
-        # allowed_domains = ["bing.com", "amazon.in", "amazon.com"]
-        print("========allowed_domains", allowed_domains)
+        # allowed_domains = self.settings.get('allowed_domains', [])
         crawler_kwargs = {
             "start_urls": self.manifest['start_urls'],
-            "allowed_domains": allowed_domains,
+            "allowed_domains": [],
+            # NOTE - allowed_domains  is going flexible on this because this is a general crawl start,
+            #
             "rules": rules,
             "current_crawler": self.manifest,
             "crawlers": self.crawlers,

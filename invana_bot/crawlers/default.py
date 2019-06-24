@@ -123,6 +123,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             crawlers = self.crawlers
 
         data = {}
+        # TODO - check if there is a reasnos , otherwise it will end up
         for extractor in current_crawler['parsers']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
             data.update(extracted_data)
