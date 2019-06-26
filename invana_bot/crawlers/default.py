@@ -114,6 +114,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
     def parse(self, response=None):
 
+        self.logger.info("======Parsing the url: {}".format(response.url))
+
         current_crawler = response.meta.get("current_crawler")
         crawlers = response.meta.get("crawlers")
         context = self.context
@@ -138,7 +140,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         """
         if crawler_traversal_id is None, it means this response originated from the 
         request raised by the start urls. 
-        
+
         If it is Not None, the request/response is raised some traversal strategy.
         """
         current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
@@ -174,9 +176,22 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 shall_traverse = True
 
             elif is_this_request_from_same_traversal and current_request_traversal_page_count < traversal_max_pages:
+                """
+                This block will be valid for the traversals from same crawler_id, ie., pagination of a crawler 
+                """
+
                 shall_traverse = True
 
             elif is_this_request_from_same_traversal:
+                """
+                """
+                shall_traverse = True
+
+            elif is_this_request_from_same_traversal is False and current_request_traversal_page_count < traversal_max_pages:
+                """
+                This for the crawler_a traversing to crawler_b, this is not pagination, but trsversing between 
+                crawlers.
+                """
                 shall_traverse = True
             print("shall_traverse: {}".format(traversal_id), shall_traverse)
             if shall_traverse:
