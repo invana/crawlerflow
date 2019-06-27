@@ -135,7 +135,6 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
         data['context']['crawler_id'] = current_crawler['crawler_id']
-        yield data
 
         """
         if crawler_traversal_id is None, it means this response originated from the 
@@ -196,6 +195,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             print("shall_traverse: {}".format(traversal_id), shall_traverse)
             if shall_traverse:
                 traversal_links = self.run_traversal(response=response, traversal=traversal)
+                data[traversal_id] = {"traversal_urls": traversal_links}
                 """
                 Then validate for max_pages logic if traversal_id's traversal has any!.
                 This is where the further traversal for this traversal_id  is decided 
@@ -229,5 +229,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             print("=================================================")
             print("====traversal_links", traversal_id, len(traversal_links))
             print("=================================================")
+
+        yield data
 
         self.post_parse(response=response)
