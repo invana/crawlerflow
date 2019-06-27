@@ -8,7 +8,6 @@ class ListFieldTransformerBase(object):
         self.data = data
         self.validate_transformer()
 
-    @staticmethod
     def validate_transformer(self):
         if self.transformer_class is None:
             raise NotImplementedError("transformer_class should be assigned for List type of FieldTransformer")
