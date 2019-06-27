@@ -51,12 +51,12 @@ class HTMLMetaTagExtractor(ExtractorBase):
             # for open graph type of meta tags
             meta_property = element.xpath("@{0}".format('property')).extract_first()
             if meta_property:
-                meta_property = meta_property.replace(":", "__")
+                meta_property = meta_property.replace(":", "__").replace(".","__")
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('content')).extract_first()
 
             meta_name = element.xpath("@{0}".format('name')).extract_first()
             if meta_name:
-                meta_name = meta_name.replace(":", "__")
+                meta_name = meta_name.replace(":", "__").replace(".","__")
                 meta_data_dict["meta__{}".format(meta_name)] = element.xpath("@{0}".format('content')).extract_first()
 
         try:
