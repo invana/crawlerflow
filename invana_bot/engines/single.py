@@ -43,7 +43,7 @@ SingleCrawlerRunnerEngine
 
     def __init__(self,
                  current_crawler=None,
-                 crawlers = None,
+                 crawlers=None,
                  job_id=None,
                  context=None,
                  crawler_cls=None,
@@ -102,10 +102,12 @@ SingleCrawlerRunnerEngine
         rules = [
             Rule(extractor, follow=True)  # TODO - add regex types of needed.
         ]
-        allowed_domains = self.manifest.get("settings", {}).get('allowed_domains', [])
+        # allowed_domains = self.settings.get('allowed_domains', [])
         crawler_kwargs = {
             "start_urls": self.manifest['start_urls'],
-            "allowed_domains": allowed_domains,
+            "allowed_domains": [],
+            # NOTE - allowed_domains  is going flexible on this because this is a general crawl start,
+            #
             "rules": rules,
             "current_crawler": self.manifest,
             "crawlers": self.crawlers,

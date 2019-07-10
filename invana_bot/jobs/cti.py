@@ -18,11 +18,13 @@ class CTIJobGenerator(CTIJobGeneratorBase):
         settings_from_manifest = cti_manifest.get("settings", {})
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
-        cti_runner = CTIFlowRunnerEngine(cti_manifest=cti_manifest,
-                                   settings=actual_settings,
-                                   job_id=self.job_id,
-                                   context=context,
-                                   crawler_cls=crawler_cls
-                                   )
+        actual_settings['ALLOWED_DOMAINS'] = settings_from_manifest.get("allowed_domains", [])
+        cti_runner = CTIFlowRunnerEngine(
+            cti_manifest=cti_manifest,
+            settings=actual_settings,
+            job_id=self.job_id,
+            context=context,
+            crawler_cls=crawler_cls
+        )
         job, errors = cti_runner.crawl()
         return {"crawler_job": job, "crawler_job_errors": errors, "runner": cti_runner}

@@ -5,8 +5,6 @@ init_crawler:
   crawler_id: blog_list
 crawlers:
 - crawler_id: blog_list
-  allowed_domains:
-    - "blog.scrapinghub.com"
   parsers:
   - parser_type: HTMLMetaTagExtractor
     parser_id: meta_tags
@@ -31,16 +29,22 @@ crawlers:
         selector_type: css
         selector_attribute: text
         data_type: StringField
+      - selector_id: content
+        selector: ".post-content"
+        selector_type: css
+        selector_attribute: html
+        data_type: RawField
   traversals:
-  - traversal_id: scrapinghub_pagination
-    selector_type: css
-    selector_value: ".next-posts-link"
-    max_pages: 1
+  - traversal_type: pagination
+    pagination:
+      selector: ".next-posts-link"
+      selector_type: css
+      max_pages: 1
     next_crawler_id: blog_list
-  - traversal_id: scrapinghub_detail
-    selector_type: css
-    selector_value: "h2 a"
-    max_pages: 1
+  - traversal_type: link_from_field
+    link_from_field:
+      parser_id: blog_list_parser
+      selector_id: url
     next_crawler_id: blog_detail
 - crawler_id: blog_detail
   parsers:
@@ -67,11 +71,11 @@ crawlers:
         selector_type: css
         selector_attribute: text
         data_type: StringField
-#      - selector_id: html_content
-#        selector: ".post-body"
-#        selector_type: css
-#        selector_attribute: html
-#        data_type: StringField
+      - selector_id: html_content
+        selector: ".post-body"
+        selector_type: css
+        selector_attribute: html
+        data_type: StringField
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn

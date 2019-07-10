@@ -1,0 +1,52 @@
+---
+init_crawler:
+  start_urls:
+  - "https://www.bing.com/search?q=amazon.com:moto g5"
+  crawler_id: bing_search
+crawlers:
+- crawler_id: bing_search
+  allowed_domains:
+  - bing.com
+  parsers:
+  - parser_type: HTMLMetaTagExtractor
+    parser_id: bing_search_result
+  traversals:
+  - traversal_id: amazon_crawler_traversal
+    selector_type: css
+    selector_value: ".b_algo h2 a"
+    next_crawler_id: amazon_crawler
+    max_pages: 1
+- crawler_id: amazon_crawler
+  allowed_domains:
+    - amazon.in
+    - amazon.com
+  parsers:
+  - parser_type: CustomContentExtractor
+    parser_id: seo_data2
+    data_selectors:
+    - selector_id: title
+      selector: title
+      selector_type: css
+      selector_attribute: text
+      multiple: false
+    - selector_id: description
+      selector: "//meta[@name='description']"
+      selector_type: xpath
+      selector_attribute: "@content"
+      multiple: false
+    - selector_id: og_description
+      selector: "//meta[@name='og:description']"
+      selector_type: xpath
+      selector_attribute: "@content"
+      multiple: false
+  - parser_type: HTMLMetaTagExtractor
+    parser_id: seo_data
+settings:
+  allowed_domains:
+    - bing.com
+    - amazon.in
+    - amazon.com
+  download_delay: 0
+context:
+   cti_id: tcl-agriculture
+cti_id: tcl-agriculture

@@ -1,0 +1,51 @@
+---
+init_crawler:
+  start_urls:
+  - https://www.bing.com/search?q=Indian+Agriculture
+  - https://www.bing.com/search?q=Indian+Agriculture+trends
+  crawler_id: bing_search
+crawlers:
+- crawler_id: bing_search
+  allowed_domains:
+  - bing.com
+  parsers:
+  - parser_type: HTMLMetaTagExtractor
+    parser_id: bing-search-result
+  traversals:
+  - traversal_id: bing_pagination
+    selector_value: a.sb_pagN
+    selector_type: css
+    max_pages: 5
+    next_crawler_id: bing_search
+  - traversal_id: generic_crawler_traversal
+    selector_type: css
+    selector_value: ".b_algo h2 a"
+    next_crawler_id: generic_crawler
+    max_pages: 5
+- crawler_id: generic_crawler
+  parsers:
+  - parser_type: CustomContentExtractor
+    parser_id: page-seo-data
+    data_selectors:
+    - selector_id: title
+      selector: title
+      selector_type: css
+      selector_attribute: text
+      multiple: false
+    - selector_id: description
+      selector: "//meta[@name='description']"
+      selector_type: xpath
+      selector_attribute: "@content"
+      multiple: false
+    - selector_id: og_description
+      selector: "//meta[@name='og:description']"
+      selector_type: xpath
+      selector_attribute: "@content"
+      multiple: false
+settings:
+  allowed_domains: []
+  download_delay: 0
+context:
+  topic_name: Agriculture
+  cti_id: tcl-agriculture
+cti_id: tcl-agriculture

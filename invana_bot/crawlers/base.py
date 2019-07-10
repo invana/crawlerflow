@@ -5,6 +5,11 @@ import os
 
 
 class WebCrawlerBase(CrawlSpider):
+    """
+
+    TODO - document why we need this as base method.
+
+    """
 
     def _build_request(self, rule, link):
         headers = {}

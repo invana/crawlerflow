@@ -52,6 +52,7 @@ class CTIJobGeneratorBase(object):
 
     def start_job(self, job=None, callback_fn=None):
         runner = CrawlerRunner()
+        print (job)
         crawler_job = job['crawler_job']
         cti_runner = job['runner']
         crawler_cls = crawler_job['crawler_cls']
