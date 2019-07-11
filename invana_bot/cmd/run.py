@@ -33,7 +33,7 @@ def invana_bot_run():
     args = parser.parse_args()
     path = os.path.abspath(args.path)
     crawler_type = args.type
-    # print("crawler_type", crawler_type)
+    print("crawler_type", crawler_type)
 
     if crawler_type == "web":
         spider_cls = InvanaBotSingleWebCrawler
