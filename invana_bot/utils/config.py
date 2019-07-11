@@ -31,7 +31,7 @@ class InvanaBotConfigValidator(object):
         self.all_errors.append(error_text)
 
     def validate_required_fields(self):
-        required_keys = ['cti_id', 'init_crawler', 'crawlers']
+        required_keys = ['cti_id', 'init_crawler', 'spiders']
         for key_ in required_keys:
             if key_ not in self.config.keys():
                 self.log_error(
@@ -69,7 +69,7 @@ class InvanaBotConfigValidator(object):
                                                                                               selector_attribute))
 
     def validate_crawlers(self, crawlers=None):
-        # print(crawlers)
+        # print(spiders)
         crawler_required_fields = [
             {
                 "parser_id": "crawler_id",
@@ -97,11 +97,11 @@ class InvanaBotConfigValidator(object):
                     pass
                 else:
                     self.log_error(
-                        "required field '{}' in crawlers data not found".format(required_field['parser_id']))
+                        "required field '{}' in spiders data not found".format(required_field['parser_id']))
 
                 if type(crawler[required_field['parser_id']]) is not required_field['field_type']:
                     self.log_error(
-                        "required field '{}' in crawlers should of '{}' data type".format(required_field['parser_id'],
+                        "required field '{}' in spiders should of '{}' data type".format(required_field['parser_id'],
                                                                                           required_field['field_type']))
 
             """
@@ -185,7 +185,7 @@ Here are examples of traversal
 
             if next_crawler_id not in all_crawlers_ids:
                 self.log_error("You are using next_crawler_id '{}' "
-                               "but it is not defined in the crawlers."
+                               "but it is not defined in the spiders."
                                " Available crawler_id in the config are {} {}".format(next_crawler_id,
                                                                                       all_crawlers_ids,
                                                                                       traversal_example))
@@ -270,7 +270,7 @@ Here are examples of traversal
 
     def validate(self):
         self.validate_required_fields()
-        self.validate_crawlers(crawlers=self.config['crawlers'])
+        self.validate_crawlers(crawlers=self.config['spiders'])
         self.validate_transformations_and_indexes()
         self.validate_callback()
         self.validate_settings()
@@ -279,7 +279,7 @@ Here are examples of traversal
 
 # def validate_cti_config(config=None):
 #     optional_keys = ['transformations', 'indexes', 'callbacks']
-#     required_keys = ['cti_id', 'init_crawler', 'crawlers']
+#     required_keys = ['cti_id', 'init_crawler', 'spiders']
 #     for key_ in required_keys:
 #         if key_ not in config.keys():
 #             raise InvalidCrawlerConfig(

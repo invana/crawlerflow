@@ -1,4 +1,4 @@
-from invana_bot.crawlers.web import InvanaBotSingleWebCrawler
+from invana_bot.spiders.web import InvanaBotSingleWebCrawler
 from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
@@ -52,7 +52,7 @@ SingleCrawlerRunnerEngine
         """
 
         :param current_crawler: single crawler in the CTI flow
-        :param crawlers: all the crawlers in the CTI flow
+        :param crawlers: all the spiders in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
         :param settings:  settings to run the crawling job. .
         """
@@ -110,7 +110,7 @@ SingleCrawlerRunnerEngine
             #
             "rules": rules,
             "current_crawler": self.manifest,
-            "crawlers": self.crawlers,
+            "spiders": self.crawlers,
             "context": self.context
         }
         return crawler_kwargs

@@ -6,8 +6,8 @@ import argparse
 from invana_bot.jobs.cti import CTIJobGenerator
 from invana_bot.settings.default import DEFAULT_SETTINGS
 from invana_bot.manifests.cti import CTIManifestManager
-from invana_bot.crawlers.web import InvanaBotSingleWebCrawler
-from invana_bot.crawlers.xml import GenericXMLFeedSpider
+from invana_bot.spiders.web import InvanaBotSingleWebCrawler
+from invana_bot.spiders.xml import GenericXMLFeedSpider
 from invana_bot.jobs.single import SingleCrawlJobGenerator
 from invana_bot.manifests.single import SingleCrawlerManifestManager
 

@@ -16,7 +16,7 @@ class CTIFlowRunnerEngine(RunnerEngineBase):
         self.manifest = cti_manifest
         self.settings = settings
         # print("settings", settings)
-        self.crawlers = self.manifest['crawlers']
+        self.crawlers = self.manifest['spiders']
         self.job_id = job_id
         self.context = context
         self.crawler_cls = crawler_cls
