@@ -1,5 +1,5 @@
 from .content import ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtractor, \
     CustomContentExtractor, IconsExtractor, JSONLDExtractor, PlainContentExtractor, \
-    PageOverviewExtractor
+    PageOverviewExtractor, FeedUrlExtractor
 from .images import ImageExtractor
 from .links import PaginationLinkExtractor

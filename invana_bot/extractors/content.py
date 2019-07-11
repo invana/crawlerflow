@@ -159,6 +159,17 @@ class PlainContentExtractor(ExtractorBase):
         return data
 
 
+class FeedUrlExtractor(ExtractorBase):
+    def run(self):
+        data = {}
+        data[self.parser_id] = {}
+        data[self.parser_id]['rss__xml'] = self.response.xpath('//link[@type="application/rss+xml"]').xpath(
+            "@href").extract_first()
+        data[self.parser_id]['rss__atom'] = self.response.xpath('//link[@type="application/atom+xml"]').xpath(
+            "@href").extract_first()
+        return data
+
+
 class PageOverviewExtractor(ExtractorBase):
 
     def run(self):
@@ -202,7 +213,7 @@ class PageOverviewExtractor(ExtractorBase):
                 meta_tags_data.get("meta__twitter__url"),
             "page_type": meta_tags_data.get("og__type"),
             "keywords": meta_tags_data.get("meta__keywords"),
-            "domain" : get_domain(self.response.url),
+            "domain": get_domain(self.response.url),
             "first_paragraph": paragraphs_data[0] if len(paragraphs_data) > 0 else None,
             "shortlink_url": self.response.xpath('//link[@rel="shortlink"]').xpath("@href").extract_first(),
             "canonical_url": self.response.xpath('//link[@rel="canonical"]').xpath("@href").extract_first()

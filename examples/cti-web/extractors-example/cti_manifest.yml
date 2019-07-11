@@ -9,15 +9,9 @@ crawlers:
     - "chaibisket.com"
   parsers:
   - parser_type: HTMLMetaTagExtractor
-    parser_id: meta_tags
-  - parser_type: ParagraphsExtractor
-    parser_id: paragraphs
-  - parser_type: IconsExtractor
-    parser_id: icons
-  - parser_type: JSONLDExtractor
-    parser_id: json_ld
-  - parser_type: PageOverviewExtractor
-    parser_id: overview
+    parser_id: meta
+  - parser_type: FeedUrlExtractor
+    parser_id: feed_url
 settings:
   allowed_domains:
   - "chaibisket.com"
