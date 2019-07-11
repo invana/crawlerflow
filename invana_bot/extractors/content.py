@@ -116,7 +116,6 @@ class IconsExtractor(ExtractorBase):
         if favicon:
             meta_data_dict['favicon'] = favicon
 
-        print("=======favicon", favicon)
         elements = self.response.xpath('//link[@rel="icon" or @rel="apple-touch-icon-precomposed"]')
         for element in elements:
             # for open graph type of meta tags

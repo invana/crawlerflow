@@ -1,7 +1,7 @@
 cti_id: scrapinghub_blogs
 init_crawler:
   start_urls:
-  - "https://indianexpress.com/robots.txt"
+  - "https://indianexpress.com"
   crawler_id: blog_list
 crawlers:
 - crawler_id: blog_list
@@ -16,8 +16,6 @@ crawlers:
     parser_id: icons
   - parser_type: JSONLDExtractor
     parser_id: json_ld
-  - parser_type: PlainContentExtractor
-    parser_id: html_content
 settings:
   allowed_domains:
   - "indianexpress.com"
