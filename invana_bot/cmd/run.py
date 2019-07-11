@@ -6,8 +6,9 @@ import argparse
 from invana_bot.jobs.cti import CTIJobGenerator
 from invana_bot.settings.default import DEFAULT_SETTINGS
 from invana_bot.manifests.cti import CTIManifestManager
-from invana_bot.spiders.web import InvanaBotSingleWebCrawler
-from invana_bot.spiders.xml import GenericXMLFeedSpider
+from invana_bot.crawlers.web import InvanaBotSingleWebCrawler
+from invana_bot.crawlers.xml import GenericXMLFeedSpider
+from invana_bot.crawlers.api import GenericAPISpider
 from invana_bot.jobs.single import SingleCrawlJobGenerator
 from invana_bot.manifests.single import SingleCrawlerManifestManager
 
@@ -33,12 +34,13 @@ def invana_bot_run():
     args = parser.parse_args()
     path = os.path.abspath(args.path)
     crawler_type = args.type
-    # print("crawler_type", crawler_type)
 
     if crawler_type == "web":
         spider_cls = InvanaBotSingleWebCrawler
     elif crawler_type == "xml":
         spider_cls = GenericXMLFeedSpider
+    elif crawler_type == "api":
+        spider_cls = GenericAPISpider
 
     else:
         raise Exception("There is no crawling strategy designed for crawler type: '{}'".format(crawler_type))
@@ -48,6 +50,15 @@ def invana_bot_run():
     )
 
     cti_manifest, errors = manifest_manager.get_manifest()
+    # print("cti_manifest", cti_manifest)
+
+    first_crawler = cti_manifest.get("crawlers", [])[0]
+
+    ignore_crawler_keys = ["crawler_id", "allowed_domains", "parsers", "traversals"]
+    extra_arguments = {}
+    for k, v in first_crawler.items():
+        if k not in ignore_crawler_keys:
+            extra_arguments[k] = v
     if len(errors) == 0:
         crawler_job_generator = CTIJobGenerator(
             settings=DEFAULT_SETTINGS,
@@ -56,7 +67,9 @@ def invana_bot_run():
         job = crawler_job_generator.create_job(
             cti_manifest=cti_manifest,
             context=context,
-            crawler_cls=spider_cls
+            crawler_cls=spider_cls,
+            extra_arguments=extra_arguments
+
         )
         crawler_job_generator.start_job(job=job)
     else:

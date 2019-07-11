@@ -1,4 +1,4 @@
-from invana_bot.spiders.web import InvanaBotSingleWebCrawler
+from invana_bot.crawlers.web import InvanaBotSingleWebCrawler
 from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
@@ -47,13 +47,15 @@ SingleCrawlerRunnerEngine
                  job_id=None,
                  context=None,
                  crawler_cls=None,
-                 settings=None
+                 settings=None,
+                 extra_arguments=None
                  ):
         """
 
         :param current_crawler: single crawler in the CTI flow
-        :param crawlers: all the spiders in the CTI flow
+        :param crawlers: all the crawlers in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
+        :param extra_arguments: extra parameters that you want to send to spider class
         :param settings:  settings to run the crawling job. .
         """
         self.manifest = current_crawler
@@ -64,6 +66,7 @@ SingleCrawlerRunnerEngine
             self.crawlers = crawlers
         self.settings = settings
         self.crawler_cls = crawler_cls
+        self.extra_arguments = extra_arguments or {}
         if context:
             self.context = context
 
@@ -108,11 +111,14 @@ SingleCrawlerRunnerEngine
             "allowed_domains": [],
             # NOTE - allowed_domains  is going flexible on this because this is a general crawl start,
             #
+
             "rules": rules,
             "current_crawler": self.manifest,
-            "spiders": self.crawlers,
-            "context": self.context
+            "crawlers": self.crawlers,
+            "context": self.context,
+
         }
+        crawler_kwargs.update(self.extra_arguments)
         return crawler_kwargs
 
     def run(self):

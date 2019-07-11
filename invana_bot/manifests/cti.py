@@ -18,7 +18,7 @@ class CTIManifestManager(object):
 
     def import_files(self):
         print("self.cti_config_path", self.cti_config_path)
-        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)))
+        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)), Loader=yaml.FullLoader)
         sys.path.append(self.cti_config_path)
         """
         don't remove the import below, this will be the cti_transformations.py,

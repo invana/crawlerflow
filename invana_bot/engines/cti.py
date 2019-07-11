@@ -12,14 +12,17 @@ class CTIFlowRunnerEngine(RunnerEngineBase):
 
     """
 
-    def __init__(self, cti_manifest=None, settings=None, job_id=None, context=None, crawler_cls=None):
+    def __init__(self, cti_manifest=None, settings=None, job_id=None,
+                 context=None, crawler_cls=None,
+                 extra_arguments=None):
         self.manifest = cti_manifest
         self.settings = settings
         # print("settings", settings)
-        self.crawlers = self.manifest['spiders']
+        self.crawlers = self.manifest['crawlers']
         self.job_id = job_id
         self.context = context
         self.crawler_cls = crawler_cls
+        self.extra_arguments = extra_arguments
 
     def crawl(self):
         errors = validate_cti_config(self.manifest)
@@ -36,7 +39,8 @@ class CTIFlowRunnerEngine(RunnerEngineBase):
                 crawlers=self.crawlers,
                 context=self.context,
                 crawler_cls=self.crawler_cls,
-                settings=self.settings
+                settings=self.settings,
+                extra_arguments=self.extra_arguments
             )
             cti_job = crawler_runner.run()
 
