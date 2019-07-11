@@ -1,12 +1,12 @@
 cti_id: scrapinghub_blogs
 init_crawler:
   start_urls:
-  - "https://indianexpress.com"
+  - "https://chaibisket.com/fan-note-to-manisharma/"
   crawler_id: blog_list
 crawlers:
 - crawler_id: blog_list
   allowed_domains:
-    - "indianexpress.com"
+    - "chaibisket.com"
   parsers:
   - parser_type: HTMLMetaTagExtractor
     parser_id: meta_tags
@@ -16,9 +16,11 @@ crawlers:
     parser_id: icons
   - parser_type: JSONLDExtractor
     parser_id: json_ld
+  - parser_type: PageOverviewExtractor
+    parser_id: overview
 settings:
   allowed_domains:
-  - "indianexpress.com"
+  - "chaibisket.com"
   download_delay: 0
 context:
   author: https://github.com/rrmerugu

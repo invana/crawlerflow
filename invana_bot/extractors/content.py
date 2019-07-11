@@ -1,5 +1,6 @@
 from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
+from invana_bot.utils.url import get_urn, get_domain
 import json
 
 
@@ -11,7 +12,7 @@ class ParagraphsExtractor(ExtractorBase):
         for el in elements:
             paragraphs_data.append(el)
         data[self.parser_id] = {}
-        data[self.parser_id]['paragraphs'] = paragraphs_data
+        data[self.parser_id]['paragraphs'] = [paragraph.strip() for paragraph in paragraphs_data]
         return data
 
 
@@ -61,12 +62,14 @@ class HTMLMetaTagExtractor(ExtractorBase):
             meta_property = element.xpath("@{0}".format('property')).extract_first()
             if meta_property:
                 meta_property = meta_property.replace(":", "__").replace(".", "__")
-                meta_data_dict[meta_property] = element.xpath("@{0}".format('content')).extract_first()
+                meta_data_dict[meta_property] = element.xpath(
+                    "@{0}".format('content')).extract_first() or element.xpath("@{0}".format('value')).extract_first()
 
             meta_name = element.xpath("@{0}".format('name')).extract_first()
             if meta_name:
                 meta_name = meta_name.replace(":", "__").replace(".", "__")
-                meta_data_dict["meta__{}".format(meta_name)] = element.xpath("@{0}".format('content')).extract_first()
+                meta_data_dict["meta__{}".format(meta_name)] = element.xpath(
+                    "@{0}".format('content')).extract_first() or element.xpath("@{0}".format('value')).extract_first()
 
         try:
             title = self.response.css('title::text').get()
@@ -153,4 +156,56 @@ class PlainContentExtractor(ExtractorBase):
         data = {}
         response_text = self.response.body
         data[self.parser_id] = response_text
+        return data
+
+
+class PageOverviewExtractor(ExtractorBase):
+
+    def run(self):
+        data = {}
+
+        meta_tags_data = HTMLMetaTagExtractor(
+            response=self.response,
+            extractor=self.extractor,
+            parser_id=self.parser_id
+        ).run().get(self.parser_id, {})
+
+        paragraphs_data = ParagraphsExtractor(
+            response=self.response,
+            extractor=self.extractor,
+            parser_id="paragraphs"
+        ).run().get("paragraphs", {}).get("paragraphs", {})
+        extracted_data = {
+            "title":
+                meta_tags_data.get("title") or
+                meta_tags_data.get("meta__title") or
+                meta_tags_data.get("og__title") or
+                meta_tags_data.get("fb__title") or
+                meta_tags_data.get("meta__twitter__title"),
+            "description":
+                meta_tags_data.get("description") or
+                meta_tags_data.get("meta__description") or
+                meta_tags_data.get("og__description") or
+                meta_tags_data.get("fb__description") or
+                meta_tags_data.get("meta__twitter__description"),
+            "image":
+                meta_tags_data.get("image") or
+                meta_tags_data.get("meta__image") or
+                meta_tags_data.get("og__image") or
+                meta_tags_data.get("fb__image") or
+                meta_tags_data.get("meta__twitter__image"),
+            "url":
+                meta_tags_data.get("url") or
+                meta_tags_data.get("meta__url") or
+                meta_tags_data.get("og__url") or
+                meta_tags_data.get("fb__url") or
+                meta_tags_data.get("meta__twitter__url"),
+            "page_type": meta_tags_data.get("og__type"),
+            "keywords": meta_tags_data.get("meta__keywords"),
+            "domain" : get_domain(self.response.url),
+            "first_paragraph": paragraphs_data[0] if len(paragraphs_data) > 0 else None,
+            "shortlink_url": self.response.xpath('//link[@rel="shortlink"]').xpath("@href").extract_first(),
+            "canonical_url": self.response.xpath('//link[@rel="canonical"]').xpath("@href").extract_first()
+        }
+        data[self.parser_id] = extracted_data
         return data
