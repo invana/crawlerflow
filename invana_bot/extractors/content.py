@@ -1,5 +1,6 @@
 from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
+import json
 
 
 class ParagraphsExtractor(ExtractorBase):
@@ -115,7 +116,7 @@ class IconsExtractor(ExtractorBase):
         if favicon:
             meta_data_dict['favicon'] = favicon
 
-        print ("=======favicon", favicon)
+        print("=======favicon", favicon)
         elements = self.response.xpath('//link[@rel="icon" or @rel="apple-touch-icon-precomposed"]')
         for element in elements:
             # for open graph type of meta tags
@@ -124,4 +125,24 @@ class IconsExtractor(ExtractorBase):
                 meta_property = meta_property.replace(":", "__").replace(".", "__")
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
         data[self.parser_id] = meta_data_dict
+        return data
+
+
+class JSONLDExtractor(ExtractorBase):
+
+    def run(self):
+        data = {}
+        extracted_data = []
+
+        elements = self.response.xpath('//script[@type="application/ld+json"]/text()').extract()
+        for element in elements:
+            # for open graph type of meta tags
+            try:
+                element = element.strip()
+                element = json.loads(element)
+                extracted_data.append(element)
+            except Exception as e:
+                pass
+
+        data[self.parser_id] = extracted_data
         return data
