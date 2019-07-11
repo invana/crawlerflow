@@ -1,16 +1,18 @@
-from scrapy.spiders import XMLFeedSpider
+from .base import WebCrawlerBase
 from invana_bot.utils.url import get_domain, get_absolute_url
 from scrapy.utils.spider import iterate_spider_output
 from invana_bot.utils.crawlers import get_crawler_from_list
 import scrapy
+import json
 
 
-class GenericXMLFeedSpider(XMLFeedSpider):
+class GenericAPISpider(WebCrawlerBase):
     """
 
     start_urls: ["https://news.ycombinator.com/rss"]
     allowed_domains: ["news.ycombinator.com"]
-    itertag = "item"
+    extra_url_param: token=xyz
+    pagination_param: page
 
 
 
@@ -19,29 +21,10 @@ class GenericXMLFeedSpider(XMLFeedSpider):
     wordpress: ?paged=n
     blogger: ?start-index=n
     """
-    name = "GenericXMLFeedSpider"
-
-    @staticmethod
-    def run_extractor(node=None, response=None, extractor=None):
-        item = {}
-        for selector in extractor.get("data_selectors", []):
-            data_type = selector.get("data_type").lower()
-            selector_attribute = selector.get("selector_attribute")
-            selector_id = selector.get("selector_id")
-            selector = selector.get("selector")
-            if data_type.startswith("List"):
-                try:
-                    item[selector_id] = node.xpath('{}/{}'.format(selector, selector_attribute), ).extract()
-                except Exception as e:
-                    print(e)
-                    item[selector_id] = None
-            else:
-                try:
-                    item[selector_id] = node.xpath('{}/{}'.format(selector, selector_attribute), ).extract_first()
-                except Exception as e:
-                    print(e)
-                    item[selector_id] = None
-        return item
+    name = "GenericAPISpider"
+    extra_url_param = None
+    pagination_param = None
+    result_key = "result"
 
     def parse_error(self, failure):
         """
@@ -52,10 +35,6 @@ class GenericXMLFeedSpider(XMLFeedSpider):
 
     def post_parse(self, response=None):
         pass
-
-    def parse_node(self, response, node, extractor):
-        print ("node", node)
-        return self.run_extractor(node=node, response=response, extractor=extractor)
 
     @staticmethod
     def is_this_request_from_same_traversal(response, traversal):
@@ -68,7 +47,7 @@ class GenericXMLFeedSpider(XMLFeedSpider):
         current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
         return current_request_traversal_id == traversal_id
 
-    def parse_nodes(self, response, nodes):
+    def parse(self, response):
         """This method is called for the nodes matching the provided tag name
         (itertag). Receives the response and an Selector for each node.
         Overriding this method is mandatory. Otherwise, you spider won't work.
@@ -82,16 +61,19 @@ class GenericXMLFeedSpider(XMLFeedSpider):
             current_crawler = self.current_crawler
             crawlers = self.crawlers
 
-        data = {"url": response.url, "domain": get_domain(response.url)}
-        for extractor in current_crawler.get('parsers', []):
-            extracted_items = []
-            for selector in nodes:
-                print("======selector", selector)
-                ret = iterate_spider_output(self.parse_node(response, selector, extractor))
-                for result_item in self.process_results(response, ret):
-                    extracted_items.append(result_item)
-            data[extractor['parser_id']] = {}
-            data[extractor['parser_id']]['entries'] = extracted_items
+        try:
+            jsonresponse = json.loads(response.body_as_unicode())
+        except Exception as e:
+            print(e)
+            jsonresponse = {}
+
+        if self.result_key is None:
+            result_data = jsonresponse
+        else:
+            result_data = jsonresponse.get(self.result_key)
+
+        data = {"url": response.url, "domain": get_domain(response.url), "data": result_data}
+
         context["crawler_id"] = current_crawler.get("crawler_id")
         data['context'] = context
 
@@ -206,4 +188,3 @@ class GenericXMLFeedSpider(XMLFeedSpider):
         yield data
 
         self.post_parse(response=response)
-

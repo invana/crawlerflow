@@ -12,6 +12,7 @@ def validate_config(config=None):
 
 
 class InvanaBotConfigValidator(object):
+
     CRAWLER_EXAMPLE = {
         "crawler_id": "blogs_list",
         "parsers": [],
@@ -24,8 +25,9 @@ class InvanaBotConfigValidator(object):
     }
     all_errors = []
 
-    def __init__(self, config=None):
+    def __init__(self, config=None, crawler_type="web"):
         self.config = config
+        self.crawler_type = crawler_type
 
     def log_error(self, error_text):
         self.all_errors.append(error_text)
@@ -70,15 +72,16 @@ class InvanaBotConfigValidator(object):
 
     def validate_crawlers(self, crawlers=None):
         # print(crawlers)
+
         crawler_required_fields = [
             {
                 "parser_id": "crawler_id",
                 "field_type": str
             },
-            {
-                "parser_id": "parsers",
-                "field_type": list
-            }
+            # {
+            #     "parser_id": "parsers",
+            #     "field_type": list
+            # }
 
         ]
 
@@ -108,7 +111,7 @@ class InvanaBotConfigValidator(object):
             making sure parsers data is correct
             """
             for required_field in required_parsers_fields:
-                for parser in crawler['parsers']:
+                for parser in crawler.get('parsers',[]):
                     parser_config_keys = parser.keys()
                     if required_field['parser_id'] in parser_config_keys:
                         pass
