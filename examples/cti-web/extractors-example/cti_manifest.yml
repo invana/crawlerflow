@@ -1,0 +1,23 @@
+cti_id: scrapinghub_blogs
+init_crawler:
+  start_urls:
+  - "https://indianexpress.com"
+  crawler_id: blog_list
+crawlers:
+- crawler_id: blog_list
+  allowed_domains:
+    - "indianexpress.com"
+  parsers:
+  - parser_type: HTMLMetaTagExtractor
+    parser_id: meta_tags
+  - parser_type: ParagraphsExtractor
+    parser_id: paragraphs
+  - parser_type: IconsExtractor
+    parser_id: icons
+settings:
+  allowed_domains:
+  - "indianexpress.com"
+  download_delay: 0
+context:
+  author: https://github.com/rrmerugu
+  description: Crawler that scrapes invanalabs xyz

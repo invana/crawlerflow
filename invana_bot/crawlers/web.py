@@ -1,7 +1,6 @@
 from .base import WebCrawlerBase
-from invana_bot.extractors.content import CustomContentExtractor, \
-    ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtractor
-from invana_bot.extractors.links import PaginationLinkExtractor
+from importlib import import_module
+
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
 from invana_bot.utils.crawlers import get_crawler_from_list
@@ -25,25 +24,18 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
     def run_extractor(response=None, extractor=None):
         parser_type = extractor.get("parser_type")
         parser_id = extractor.get("parser_id")
-        if parser_type in [None, "CustomContentExtractor"]:
-            extractor_object = CustomContentExtractor(response=response, extractor=extractor,
-                                                      parser_id=parser_id)
-        elif parser_type == "TableContentExtractor":
-            extractor_object = TableContentExtractor(response=response, extractor=extractor,
-                                                     parser_id=parser_id or "tables")
 
-        elif parser_type == "PaginationLinkExtractor":
-            extractor_object = PaginationLinkExtractor(response=response, extractor=extractor,
-                                                       parser_id=parser_id or "pagination")
+        driver_klass_module = import_module(f'invana_bot.extractors')
+        driver_klass = getattr(driver_klass_module, parser_type)
 
-        elif parser_type == "HTMLMetaTagExtractor":
-            extractor_object = HTMLMetaTagExtractor(response=response, extractor=extractor,
-                                                    parser_id=parser_id or "meta_tags")
-        elif parser_type == "ParagraphsExtractor":
-            extractor_object = ParagraphsExtractor(response=response, extractor=extractor,
-                                                   parser_id=parser_id or "paragraphs")
-        else:
+        if parser_type is None:
             return {}
+
+        else:
+            extractor_object = driver_klass(response=response,
+                                            extractor=extractor,
+                                            parser_id=parser_id)
+
         data = extractor_object.run()
         return data
 

@@ -16,7 +16,15 @@ class ParagraphsExtractor(ExtractorBase):
 
 class HeadingsExtractor(ExtractorBase):
     # TODO - implement this
-    pass
+    def run(self):
+        data = {}
+        paragraphs_data = []
+        elements = self.response.css("p").extract()
+        for el in elements:
+            paragraphs_data.append(el)
+        data[self.parser_id] = {}
+        data[self.parser_id]['headings'] = paragraphs_data
+        return data
 
 
 class MainContentExtractor(ExtractorBase):
@@ -51,12 +59,12 @@ class HTMLMetaTagExtractor(ExtractorBase):
             # for open graph type of meta tags
             meta_property = element.xpath("@{0}".format('property')).extract_first()
             if meta_property:
-                meta_property = meta_property.replace(":", "__").replace(".","__")
+                meta_property = meta_property.replace(":", "__").replace(".", "__")
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('content')).extract_first()
 
             meta_name = element.xpath("@{0}".format('name')).extract_first()
             if meta_name:
-                meta_name = meta_name.replace(":", "__").replace(".","__")
+                meta_name = meta_name.replace(":", "__").replace(".", "__")
                 meta_data_dict["meta__{}".format(meta_name)] = element.xpath("@{0}".format('content')).extract_first()
 
         try:
@@ -95,4 +103,25 @@ class CustomContentExtractor(ExtractorBase):
                 _d = get_selector_element(self.response, selector)
                 extracted_data[selector.get('selector_id')] = _d
         data[self.parser_id] = extracted_data
+        return data
+
+
+class IconsExtractor(ExtractorBase):
+    def run(self):
+        data = {}
+        meta_data_dict = {}
+
+        favicon = self.response.xpath('//link[@rel="shortcut icon"]').xpath("@href").get()
+        if favicon:
+            meta_data_dict['favicon'] = favicon
+
+        print ("=======favicon", favicon)
+        elements = self.response.xpath('//link[@rel="icon" or @rel="apple-touch-icon-precomposed"]')
+        for element in elements:
+            # for open graph type of meta tags
+            meta_property = element.xpath("@sizes").extract_first()
+            if meta_property:
+                meta_property = meta_property.replace(":", "__").replace(".", "__")
+                meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
+        data[self.parser_id] = meta_data_dict
         return data
