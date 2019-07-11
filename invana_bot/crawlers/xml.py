@@ -54,7 +54,6 @@ class GenericXMLFeedSpider(XMLFeedSpider):
         pass
 
     def parse_node(self, response, node, extractor):
-        print ("node", node)
         return self.run_extractor(node=node, response=response, extractor=extractor)
 
     @staticmethod
@@ -86,7 +85,6 @@ class GenericXMLFeedSpider(XMLFeedSpider):
         for extractor in current_crawler.get('parsers', []):
             extracted_items = []
             for selector in nodes:
-                print("======selector", selector)
                 ret = iterate_spider_output(self.parse_node(response, selector, extractor))
                 for result_item in self.process_results(response, ret):
                     extracted_items.append(result_item)
