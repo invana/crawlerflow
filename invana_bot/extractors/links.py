@@ -1,16 +1,41 @@
 from invana_bot.extractors.base import ExtractorBase
 from invana_bot.utils.selectors import get_selector_element
+from invana_bot.utils.url import get_urn, get_domain
 
 
 class AllLinksExtractor(ExtractorBase):
     def run(self):
         data = {}
-        paragraphs_data = []
-        elements = self.response.css("p").extract()
-        for el in elements:
-            paragraphs_data.append(el)
-        data[self.parser_id] = {}
-        data[self.parser_id]['all_links'] = paragraphs_data
+        extracted_data = []
+        links = self.response.css("a").xpath("@href").extract()
+
+        for link in links:
+            if link and not link.startswith("#"):
+                extracted_data.append(link)
+        data[self.parser_id] = extracted_data
+        return data
+
+
+class AllLinkAnalyticsExtractor(ExtractorBase):
+
+    def run(self):
+        data = {}
+        extracted_data = AllLinksExtractor(
+            response=self.response,
+            extractor=self.extractor,
+            parser_id="all_links"
+        ).run().get("all_links", {})
+
+        links_data = {}
+        for link in extracted_data:
+            domain = get_domain(link)
+            if domain in links_data.keys():
+                links_data[domain].append(link)
+            else:
+                links_data[domain] = [link]
+
+        data[self.parser_id] = [{"domain": domain, "links": domain_links, "links_count": domain_links.__len__()} for
+                                domain, domain_links in links_data.items()]
 
         return data
 

@@ -2,4 +2,4 @@ from .content import ParagraphsExtractor, TableContentExtractor, HTMLMetaTagExtr
     CustomContentExtractor, IconsExtractor, JSONLDExtractor, PlainContentExtractor, \
     PageOverviewExtractor, FeedUrlExtractor
 from .images import ImageExtractor
-from .links import PaginationLinkExtractor
+from .links import PaginationLinkExtractor, AllLinksExtractor, AllLinkAnalyticsExtractor

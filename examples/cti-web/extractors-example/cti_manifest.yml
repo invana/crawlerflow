@@ -8,10 +8,10 @@ crawlers:
   allowed_domains:
     - "chaibisket.com"
   parsers:
-  - parser_type: HTMLMetaTagExtractor
-    parser_id: meta
   - parser_type: FeedUrlExtractor
     parser_id: feed_url
+  - parser_type: AllLinkAnalyticsExtractor
+    parser_id: links_analytics
 settings:
   allowed_domains:
   - "chaibisket.com"
