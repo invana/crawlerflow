@@ -146,3 +146,12 @@ class JSONLDExtractor(ExtractorBase):
 
         data[self.parser_id] = extracted_data
         return data
+
+
+class PlainContentExtractor(ExtractorBase):
+
+    def run(self):
+        data = {}
+        response_text = self.response.body
+        data[self.parser_id] = response_text
+        return data
