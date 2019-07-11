@@ -196,7 +196,7 @@ Here are examples of traversal
         if len(indexes) == 0:
             if len(transformations) > 0:
                 self.log_error("transformations cannot be applied if indexes is not defined.")
-            print("Ignoring the transformation if index")
+            # print("Ignoring the transformation if index")
         else:
             transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
 
@@ -262,7 +262,7 @@ Here are examples of traversal
 
     def validate_settings(self):
         settings = self.config.get("settings", {})
-        required_keys = ['download_delay', 'allowed_domains']
+        required_keys = [ 'allowed_domains']
         for required_key in required_keys:
             if required_key not in settings.keys():
                 self.log_error(

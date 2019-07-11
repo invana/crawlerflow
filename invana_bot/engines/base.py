@@ -1,6 +1,6 @@
 from invana_bot.transformers.mongodb import OTManager, ReadFromMongo, WriteToMongoDB
-import requests
 from twisted.internet import reactor
+import requests
 import logging
 
 logger = logging.getLogger(__name__)
