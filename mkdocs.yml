@@ -5,11 +5,11 @@ nav:
 - Home: index.md
 - Tutorial:
   - Quickstart: tutorials/quickstart.md
-  - Web Crawling:
-    - Single Domain Crawling: tutorials/single-domain-crawler.md
-    - Multi-Domain Crawling: tutorials/multi-domain-crawler.md
-  - Feeds Crawling : tutorials/feeds-crawler.md
-  - API Crawling: tutorials/api-crawler.md
+#  - Web Crawling:
+#    - Single Domain Crawling: tutorials/single-domain-crawler.md
+#    - Multi-Domain Crawling: tutorials/multi-domain-crawler.md
+#  - Feeds Crawling : tutorials/feeds-crawler.md
+#  - API Crawling: tutorials/api-crawler.md
 - API Guide:
   - Spiders:
     - 1. Web Spider: spiders/web-spider.md
