@@ -1,0 +1,14 @@
+h2 {
+    font-size: 24px !important;
+    margin-top: 20px;
+    line-height: 40px;
+}
+
+h1, h2, h3 {
+    font-weight: 400;
+}
+
+body {
+    font-size: 14px;
+    line-height: 1.628571429;
+}

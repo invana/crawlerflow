@@ -1,4 +1,4 @@
-from invana_bot.crawlers.web import InvanaBotSingleWebCrawler
+from invana_bot.spiders.web import InvanaBotSingleWebCrawler
 from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor

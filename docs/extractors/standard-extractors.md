@@ -1,3 +1,6 @@
+# Standard Extractor
+
+
 # Extractors 
 
 InvanaBot allows users to extract information while it crawls through the webpages. You can specify multiple
