@@ -12,3 +12,6 @@ body {
     font-size: 14px;
     line-height: 1.628571429;
 }
+code{
+    font-size: 12px !important;
+}
