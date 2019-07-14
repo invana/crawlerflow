@@ -1,79 +1,406 @@
 # Standard Extractor
 
 
-# Extractors 
-
 InvanaBot allows users to extract information while it crawls through the webpages. You can specify multiple
 extractors to a crawler, allowing you to organise the information you need into grouped/subdocument data.
 
 
 All the extractors are available at `invana_bot.extractors`
 
-## Standard Extractors
 
-These are built-in extractors built with few usecases in mind.
 
-1. ParagraphsExtractor
-2. TableContentExtractor
-3. HTMLMetaTagExtractor
-4. CustomContentExtractor
-5. ImageExtractor
+## ParagraphsExtractor
 
-### Usage
-
-The extractors should be given to `parsers` list of a `crawler`. Each Parser should have a definition of 
-`parser_type` and `parser_id`. During the crawl and extraction the extracted data will be saved to store as 
- `parser_id` (sub-document) in the overall data entry.
+Here is the configuration.
 
 ```yaml
 crawlers:
-- crawler_id: blog_list
+- crawler_id: default_crawler
   parsers:
-  - parser_type: HTMLMetaTagExtractor
-    parser_id: meta_tags
-  - parser_type: ParagraphExtractor
-    parser_id: paragraphs
+  - parser_type: ParagraphsExtractor
+    parser_id: paragraphs_data
 ```
 
-## Custom Extractors 
-This is non standard extractor which allows user to build their own extractor strategy.
+Here is the data extracted. This will return all the paragraphs as list.
 
-1. CustomContentExtractor (non standard )
+```json
+{
+  "paragraphs_data" :  [
+      "Here is the first paragraph",
+      "Here is the second paragraph"
+    ]
+  
+}
+```
 
-For custom extractor, You need to define what data to extract and how to save it in the db. You can either give just one or
-multiple `selector` data or add child_selectors to any selector. 
 
-**NOTE: Only one level of `child_selector` is only supported.**
+## TableContentExtractor
 
-## Usage
 
+Here is the configuration.
 
 ```yaml
-
 crawlers:
-- crawler_id: blog_list
+- crawler_id: default_crawler
   parsers:
-  - parser_type: CustomContentExtractor
-    parser_id: blog_list_parser
-    data_selectors:
-    - selector_id: blogs
-      selector: ".post-listing .post-item"
-      selector_attribute: element
-      multiple: true
-      child_selectors:
-      - selector_id: url
-        selector: ".post-header h2 a"
-        selector_type: css
-        selector_attribute: href
-        multiple: false
-      - selector_id: title
-        selector: ".post-header h2 a"
-        selector_type: css
-        selector_attribute: text
-        multiple: false
-      - selector_id: content
-        selector: ".post-content"
-        selector_type: css
-        selector_attribute: html
-        multiple: false
+  - parser_type: TableContentExtractor
+    parser_id: tables_data
+```
+
+Here is the data extracted. This will return all the tables as list.
+
+```json
+{  
+   "tables_data":[  
+      [ // table 1
+         {  
+            "Code":"IN",
+            "Country":"India",
+            "Last Checked":"1 second ago"
+         }
+      ],
+      [ // table 2
+        {
+            "Code": "DEL",
+            "State": "New Delhi"
+        }
+      ]
+   ]
+} 
+```
+
+## MetaTagExtractor
+
+Here is the configuration. This will gather data of og, twitter and fb meta tags, pretty much any 
+`meta` element.
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: MetaTagExtractor
+    parser_id: meta_tag_data
+```
+
+Here is the data extracted. This will return all the `<meta>` tags data as dictionary.
+
+```json
+{
+  "meta_tag_data":{  
+      "meta__viewport":"width=device-width,initial-scale=1,maximum-scale=1",
+      "meta__referrer":"origin",
+      "meta__description":"Here is the description of the site ",
+      "title":"Example site | Homepage"
+   }
+}
+```
+
+
+## IconsExtractor
+
+Here is the configuration.
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: IconsExtractor
+    parser_id: icon_data
+```
+
+Here is the data extracted. This will return all the `<meta>` tags data as dictionary.
+
+
+
+```json
+{
+  "icon_data": {
+      "32x32": "https://example.com/2018/10/fav-icon.png?w=32",
+      "192x192": "https://example.com/2018/10/fav-icon.png?w=120"
+    }
+}
+```
+
+## JSONLDExtractor
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: JSONLDExtractor
+    parser_id: json_ld_data
+```
+
+Here is the data extracted. The returned data would be in list, as there can be multiple json+ld 
+descriptions in a single page. 
+
+```json
+
+{
+  "json_ld_data": [
+    {
+      "@context": "http://schema.org",
+      "@type": "NewsArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://example.com/article/technology/science/space-age/"
+      },
+      "url": "https://example.com/article/technology/science/space-age/",
+      "articleBody": "Lorem ipusum, here is the article body.",
+      "articleSection": "technology",
+      "keywords": "Chandrayaan-2, Chandrayaan-2 launch, Chandrayaan-2 launch monday, Chandrayaan-2 launch timing, Chandrayaan-2 isro launch date time, Chandrayaan-2 launch july 15, isro moon, isro Chandrayaan-2, Chandrayaan-2 moon",
+      "headline": "Chandrayaan-2 to launch India into new space age",
+      "description": "The Chandrayaan-2, a moon-lander and rover mission, is designed to go where no spacecraft has gone before.",
+      "datePublished": "2019-07-14T09:29:56+05:30",
+      "dateModified": "2019-07-14T09:29:56+05:30",
+      "publisher": {
+        "@type": "Organization",
+        "name": "MoonNews Publications",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://s2.wp.com/wp-content/themes/vip/example.com-v2/dist/images/ienewlogo3_new.png",
+          "width": "600",
+          "height": "60"
+        }
+      },
+      "author": {
+        "@type": "Person",
+        "name": "John Doe",
+        "sameAs": "https://example.com/profile/author/john-doe/"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://images.example.com/2019/07/chandrayaan-2_759-1.jpg",
+        "width": "759",
+        "height": "422"
+      }
+    },
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "https://example.com/profile/author/john-doe/",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "MoonNews Publications",
+        "url": "https://example.com/"
+      }
+    },
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://example.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://example.com/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+```
+
+## PlainHTMLContentExtractor
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: PlainHTMLContentExtractor
+    parser_id: html_content
+```
+
+Here is the data extracted. 
+
+```json
+{
+  "html_content": "<html></body>Hello World!</body></html>"
+}
+
+```
+
+
+
+## PageOverviewExtractor
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: PageOverviewExtractor
+    parser_id: overview
+```
+
+Here is the data extracted. 
+
+```json
+
+
+{  
+   "overview":{  
+      "title":"Welcome to the site.",
+      "description":"Our space mission is designed to go where no spacecraft has gone before.",
+      "image":"https://example.com/2019/07/image.jpg?w=759",
+      "url":"https://example.com/article/technology/science/space-age/",
+      "page_type":"article",
+      "keywords":"space launch, chandrayaan-2 launch",
+      "domain":"example.com",
+      "first_paragraph":"First Paragraph comes here.",
+      "shortlink_url":"https://example.com/?page=ok-me",
+      "canonical_url":"https://example.com/article/technology/science/space-age/"
+   }
+}
+```
+
+## FeedUrlExtractor
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: FeedUrlExtractor
+    parser_id: feeds_data
+```
+
+Here is the data extracted. 
+
+```json
+{
+  "feeds_data": {"rss__xml": "https://blog.scrapinghub.com/rss.xml", "rss__atom": null}
+}
+
+```
+## ImagesExtractor
+
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: ImagesExtractor
+    parser_id: images
+```
+
+Here is the data extracted. 
+
+```json
+{
+  "images": [
+    "https://example.com/image-1.png",
+    "https://example.com/image-2.png",
+    "https://example.com/image-3.png"
+  ]
+}
+
+```
+
+
+## AllLinksExtractor
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: AllLinksExtractor
+    parser_id: all_links
+```
+
+Here is the data extracted. This will contains all links 
+
+```json
+{
+  "all_links": [
+    "https://example.com/page-1",
+    "https://example.com/page-2",
+    "https://example.com/page-3",
+    "https://facebook.com/page-3",
+    "https://twitter.com/page-3"
+  ]
+}
+
+```
+
+
+
+## AllLinksAnalyticsExtractor
+
+
+Here is the configuration. 
+
+```yaml
+crawlers:
+- crawler_id: default_crawler
+  parsers:
+  - parser_type: AllLinksAnalyticsExtractor
+    parser_id: all_links_analysed
+```
+
+Here is the data extracted. This will contains all links in the page, seperating them into 
+domain specific links.
+
+
+```json
+{  
+   "links":[  
+      {  
+         "domain":"blog.scrapinghub.com",
+         "links":[  
+            "https://blog.scrapinghub.com",
+            "https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python",
+            "https://blog.scrapinghub.com/author/attila-tóth",
+            "https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python#comments-listing",
+            "https://blog.scrapinghub.com/spidermon-scrapy-spider-monitoring",
+            "...",
+            "https://blog.scrapinghub.com/alternative-financial-data-quality"
+         ],
+         "links_count":48
+      },
+      {  
+         "domain":"overthecap.com",
+         "links":[  
+            "https://overthecap.com/",
+            "https://overthecap.com/position/quarterback/"
+         ],
+         "links_count":2
+      },
+      {  
+         "domain":"github.com",
+         "links":[  
+            "https://github.com/zseta/NFL-Contracts",
+            "https://github.com/zseta/NFL-Contracts",
+            "https://github.com/zseta/NFL-Contracts"
+         ],
+         "links_count":3
+      },
+      {  
+         "domain":"scrapingauthority.com",
+         "links":[  
+            "https://scrapingauthority.com/resources/"
+         ],
+         "links_count":1
+      },
+      {  
+         "domain":"twitter.com",
+         "links":[  
+            "https://twitter.com/share",
+            "https://twitter.com/ScrapingHub"
+         ],
+         "links_count":2
+      }
+
+   ]
+
+}
 ```

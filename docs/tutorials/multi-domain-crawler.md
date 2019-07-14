@@ -12,7 +12,7 @@ whitelisted_domains:
 start_urls:
 - https://blog.scrapinghub.com
 parsers:
-- parser_type: HTMLMetaTagExtractor
+- parser_type: MetaTagExtractor
   parser_id: meta_tags
 - parser_type: ParagraphExtractor
   parser_id: paragraphs

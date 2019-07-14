@@ -1,6 +1,5 @@
 # Quick start
 
-# Transformations
 
 
 You can apply multiple transformations on the crawled data. Transformations are applied once 

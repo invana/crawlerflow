@@ -8,7 +8,7 @@ crawlers:
   allowed_domains:
   - bing.com
   parsers:
-  - parser_type: HTMLMetaTagExtractor
+  - parser_type: MetaTagExtractor
     parser_id: bing_search_result
   traversals:
   - traversal_id: amazon_crawler_traversal
@@ -39,7 +39,7 @@ crawlers:
       selector_type: xpath
       selector_attribute: "@content"
       multiple: false
-  - parser_type: HTMLMetaTagExtractor
+  - parser_type: MetaTagExtractor
     parser_id: seo_data
 settings:
   allowed_domains:

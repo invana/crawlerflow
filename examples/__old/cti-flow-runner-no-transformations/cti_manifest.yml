@@ -6,7 +6,7 @@ init_crawler:
 crawlers:
 - crawler_id: blog_list
   parsers:
-  - parser_type: HTMLMetaTagExtractor
+  - parser_type: MetaTagExtractor
     parser_id: meta_tags
   - parser_type: ParagraphExtractor
     parser_id: paragraphs

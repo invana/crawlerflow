@@ -1,12 +1,12 @@
 from invana_bot.extractors.base import ExtractorBase
 
 
-class ImageExtractor(ExtractorBase):
+class ImagesExtractor(ExtractorBase):
     def run(self):
         data = {}
         images_data = []
-        images_selector = self.response.css("img")
+        images_selector = self.response.xpath('//img/@src').extract()
         for selector in images_selector:
-            images_data.append(selector.get("src"))
+            images_data.append(selector)
         data[self.parser_id] = images_data
         return data

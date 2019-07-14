@@ -9,7 +9,7 @@ crawlers:
   allowed_domains:
   - bing.com
   parsers:
-  - parser_type: HTMLMetaTagExtractor
+  - parser_type: MetaTagExtractor
     parser_id: bing-search-result
   traversals:
   - traversal_id: bing_pagination

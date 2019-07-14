@@ -1,20 +1,18 @@
 cti_id: scrapinghub_blogs
 init_crawler:
   start_urls:
-  - "https://chaibisket.com/fan-note-to-manisharma/"
+  - "https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python"
   crawler_id: blog_list
 crawlers:
 - crawler_id: blog_list
   allowed_domains:
-    - "chaibisket.com"
+    - "blog.scrapinghub.com"
   parsers:
-  - parser_type: FeedUrlExtractor
-    parser_id: feed_url
-  - parser_type: AllLinkAnalyticsExtractor
-    parser_id: links_analytics
+  - parser_type: AllLinksAnalyticsExtractor
+    parser_id: links
 settings:
   allowed_domains:
-  - "chaibisket.com"
+  - "blog.scrapinghub.com"
   download_delay: 0
 context:
   author: https://github.com/rrmerugu

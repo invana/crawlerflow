@@ -7,12 +7,11 @@ import json
 class ParagraphsExtractor(ExtractorBase):
     def run(self):
         data = {}
-        paragraphs_data = []
-        elements = self.response.css("p").extract()
+        extracted_data = []
+        elements = self.response.css("p::text").extract()
         for el in elements:
-            paragraphs_data.append(el)
-        data[self.parser_id] = {}
-        data[self.parser_id]['paragraphs'] = [paragraph.strip() for paragraph in paragraphs_data]
+            extracted_data.append(el)
+        data[self.parser_id] = [d.strip() for d in extracted_data]
         return data
 
 
@@ -20,12 +19,12 @@ class HeadingsExtractor(ExtractorBase):
     # TODO - implement this
     def run(self):
         data = {}
-        paragraphs_data = []
-        elements = self.response.css("p").extract()
+        extracted_data = []
+        heading_tags = ["h1", "h2", "h3", "h4", "h5", "h6"]
+        elements = self.response.css(",".join(heading_tags)).extract()
         for el in elements:
-            paragraphs_data.append(el)
-        data[self.parser_id] = {}
-        data[self.parser_id]['headings'] = paragraphs_data
+            extracted_data.append(el)
+        data[self.parser_id] = [d.strip() for d in extracted_data]
         return data
 
 
@@ -46,12 +45,11 @@ class TableContentExtractor(ExtractorBase):
                 row_dict = dict(zip(table_headers, row_data))
                 table_data.append(row_dict)
             tables.append(table_data)
-        data[self.parser_id] = {}
-        data[self.parser_id]['tables'] = tables
+        data[self.parser_id] = tables
         return data
 
 
-class HTMLMetaTagExtractor(ExtractorBase):
+class MetaTagExtractor(ExtractorBase):
     def run(self):
         data = {}
         meta_data_dict = {}
@@ -150,7 +148,7 @@ class JSONLDExtractor(ExtractorBase):
         return data
 
 
-class PlainContentExtractor(ExtractorBase):
+class PlainHTMLContentExtractor(ExtractorBase):
 
     def run(self):
         data = {}
@@ -175,7 +173,7 @@ class PageOverviewExtractor(ExtractorBase):
     def run(self):
         data = {}
 
-        meta_tags_data = HTMLMetaTagExtractor(
+        meta_tags_data = MetaTagExtractor(
             response=self.response,
             extractor=self.extractor,
             parser_id=self.parser_id
@@ -185,7 +183,8 @@ class PageOverviewExtractor(ExtractorBase):
             response=self.response,
             extractor=self.extractor,
             parser_id="paragraphs"
-        ).run().get("paragraphs", {}).get("paragraphs", {})
+        ).run().get("paragraphs", {})
+        # TODO - clean the data, that is extracted. ex:  meta_tags_data.get("title")
         extracted_data = {
             "title":
                 meta_tags_data.get("title") or

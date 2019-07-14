@@ -1,17 +1,32 @@
 h2 {
     font-size: 24px !important;
-    margin-top: 20px;
-    line-height: 40px;
+}
+
+h3 {
+    font-size: 20px !important;
+
 }
 
 h1, h2, h3 {
     font-weight: 400;
+    margin-top: 20px;
+    line-height: 40px;
+
 }
 
 body {
     font-size: 14px;
     line-height: 1.628571429;
 }
-code{
+
+code {
     font-size: 12px !important;
+}
+
+.bs-sidebar .nav > .active > a, .bs-sidebar .nav > .active:hover > a {
+    font-weight: normal !important;
+    /*background-color: #eee;*/
+    display: block;
+    padding: 5px 20px;
+    z-index: 1;
 }
