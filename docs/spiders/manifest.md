@@ -14,8 +14,6 @@ feeds or API. The difference exists only in the way you execute `invana-bot` com
 - spider_id: default_spider
   allowed_domains:
     - blog.scrapinghub.com
-  headers:
-    - key : value
   settings:
     - key : value
 ```
@@ -111,5 +109,16 @@ def default_transformation(data):
 ```
 
 
-## Controlling 
+## Controllers
 
+
+### DOWNLOAD_TIMEOUT
+
+Default is `180`
+
+This is the max time a downloader would wait for the response beforing calling timeout. 
+
+
+### CONCURRENT_ITEMS
+
+Default is 

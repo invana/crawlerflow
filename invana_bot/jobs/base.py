@@ -88,22 +88,4 @@ def callback_fn():
         reactor.run()
 
 
-"""
-class InvanaFeedCrawler(CTIJobGeneratorBase):
 
-    def crawl_feeds(self, feed_urls=None):
-        self.setup_crawler_type_settings(crawler_type="feeds")
-        self._validate_urls(feed_urls)
-
-        process = CrawlerProcess(self.settings)
-        allowed_domains = []
-        for feed_url in feed_urls:
-            domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
-            allowed_domains.append(domain)
-
-        process.crawl(RSSSpider,
-                      start_urls=feed_urls,
-                      )
-        process.start()
-
-"""
