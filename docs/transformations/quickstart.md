@@ -20,7 +20,7 @@ transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
   
-- index_id: primary_db
+- data_storage_id: primary_db
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: blog_list

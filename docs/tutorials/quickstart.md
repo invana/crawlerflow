@@ -66,8 +66,8 @@ spiders:
         selector_type: css
         selector_attribute: text
         data_type: StringField
-indexes:
-- index_id: default
+data_storages:
+- data_storage_id: default
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: scrapinghub_blogs

@@ -1,7 +1,7 @@
 # Manifest
 
 
-InvanaBot crawls, transforms and indexes the data from multiple web sources. 
+InvanaBot crawls, transforms and data_storages the data from multiple web sources. 
 
 
 ## Spiders
@@ -75,11 +75,10 @@ def default_transformation(data):
 """
 ```
 
-## Indexes
+## Data Storages
 
 This is where the data extracted during the spiders will be saved. Currently InvanaBot 
 supports [MongoDB](https://www.mongodb.com/) and [Elasticsearch](https://www.elastic.co/products/elasticsearch).
-
 
 
 
@@ -97,15 +96,20 @@ supports [MongoDB](https://www.mongodb.com/) and [Elasticsearch](https://www.ela
     transformation_fn : """
 #!/usr/bin/env python
 
+
 def default_transformation(data):
   # TODO modify the data according to your needs.
   return data
 """  
-  indexes:
-  - index_id: default_index
-  transformation_id: default_transformation
-  connection_uri: mongodb://127.0.0.1/spiders_data_index
-  collection_name: default_spider
-  unique_key: url
+  data_storages:
+  - data_storage_id: default_index
+    transformation_id: default_transformation
+    connection_uri: mongodb://127.0.0.1/spiders_data_index
+    collection_name: default_spider
+    unique_key: url
 
 ```
+
+
+## Controlling 
+

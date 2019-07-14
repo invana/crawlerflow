@@ -13,9 +13,9 @@ nav:
 - API Guide:
   - manifest.yml: spiders/manifest.md
   - Spiders:
-    - 2. Web Spider: spiders/web-spider.md
-    - 3. Feeds Spider: spiders/feeds-spider.md
-    - 4. API Spider: spiders/api-spider.md
+    - 1. Web Spider: spiders/web-spider.md
+    - 2. Feeds Spider: spiders/feeds-spider.md
+    - 3. API Spider: spiders/api-spider.md
   - Extractors:
     - Standard Extractors : extractors/standard-extractors.md
     - Custom Extractor : extractors/custom-extractor.md

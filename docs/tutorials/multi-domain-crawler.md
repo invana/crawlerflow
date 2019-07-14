@@ -51,14 +51,14 @@ transformations:
   transformation_fn: transformation_fn
 callbacks:
 - callback_id: default
-  index_id: default
+  data_storage_id: default
   url: http://localhost/api/callback
   request_type: POST
   payload: {}
   headers:
     X-TOKEN: abc123456789
-indexes:
-- index_id: default
+data_storages:
+- data_storage_id: default
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: blog_list

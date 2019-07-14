@@ -58,7 +58,7 @@
   ],
   "transformations": [
   ],
-  "indexes": [
+  "data_storages": [
     {
       "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz"

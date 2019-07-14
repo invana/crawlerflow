@@ -44,7 +44,7 @@ class InvanaBotConfigValidator(object):
 
     # @staticmethod
     # def validate_options_fields():
-    #     optional_keys = ['transformations', 'indexes', 'callbacks', 'context']
+    #     optional_keys = ['transformations', 'data_storages', 'callbacks', 'context']
     #
 
     def validate_selector(self, selector=None):
@@ -193,12 +193,12 @@ Here are examples of traversal
                                                                                       all_spiders_ids,
                                                                                       traversal_example))
 
-    def validate_transformations_and_indexes(self):
+    def validate_transformations_and_data_storages(self):
         transformations = self.config.get('transformations', [])
-        indexes = self.config.get('indexes', [])
-        if len(indexes) == 0:
+        data_storages = self.config.get('data_storages', [])
+        if len(data_storages) == 0:
             if len(transformations) > 0:
-                self.log_error("transformations cannot be applied if indexes is not defined.")
+                self.log_error("transformations cannot be applied if data_storages is not defined.")
             # print("Ignoring the transformation if index")
         else:
             transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
@@ -216,9 +216,9 @@ Here are examples of traversal
                 "collection_name": "blogs_list",
                 "unique_key": "url"
             }
-            # transformation_ids_in_indexes = [index.get('transformation_id') for index in indexes]
+            # transformation_ids_in_data_storages = [index.get('transformation_id') for index in data_storages]
             index_required_fields = example_index.keys()
-            for index in indexes:
+            for index in data_storages:
                 transformation_id = index.get("transformation_id")
                 for required_field in index_required_fields:
                     if index.get(required_field) is None:
@@ -230,11 +230,11 @@ Here are examples of traversal
                                    " transformation defined in transformations".format(transformation_id))
 
     def validate_callback(self):
-        all_index_ids = [index.get('index_id') for index in self.config.get("indexes", [])]
+        all_data_storage_ids = [index.get('data_storage_id') for index in self.config.get("data_storages", [])]
 
         callback_template = {
             "callback_id": "default",
-            "index_id": "default",
+            "data_storage_id": "default",
             "url": "http://localhost/api/callback",
             "request_type": "POST",
             "payload": {
@@ -248,15 +248,15 @@ Here are examples of traversal
         callback_required_keys = callback_template.keys()
         for callback in callbacks:
             callback_id = callback.get("callback_id")
-            callback_index_id = callback.get("index_id")
+            callback_data_storage_id = callback.get("data_storage_id")
             if callback_id is None:
                 self.log_error("Invalid callback configuration, callback_id cannot be None."
                                " Here is the example {}".format(callback_template))
 
-            if callback_index_id not in all_index_ids:
+            if callback_data_storage_id not in all_data_storage_ids:
                 self.log_error("callback is set with an index - '{}' which is not "
-                               "defined in the indexes configuration."
-                               "".format(callback_index_id))
+                               "defined in the data_storages configuration."
+                               "".format(callback_data_storage_id))
 
             for required_field in callback_required_keys:
                 if callback.get(required_field) is None:
@@ -274,14 +274,14 @@ Here are examples of traversal
     def validate(self):
         self.validate_required_fields()
         self.validate_spiders(spiders=self.config['spiders'])
-        self.validate_transformations_and_indexes()
+        self.validate_transformations_and_data_storages()
         self.validate_callback()
         self.validate_settings()
         return self.all_errors
 
 
 # def validate_cti_config(config=None):
-#     optional_keys = ['transformations', 'indexes', 'callbacks']
+#     optional_keys = ['transformations', 'data_storages', 'callbacks']
 #     required_keys = ['cti_id', 'init_crawler', 'spiders']
 #     for key_ in required_keys:
 #         if key_ not in config.keys():

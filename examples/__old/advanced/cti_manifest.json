@@ -141,9 +141,9 @@
       "transformation_fn": "transformation_fn"
     }
   ],
-  "indexes": [
+  "data_storages": [
     {
-      "index_id": "default",
+      "data_storage_id": "default",
       "transformation_id": "default",
       "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "collection_name": "blog_list",
@@ -153,7 +153,7 @@
   "callbacks": [
     {
       "callback_id": "default",
-      "index_id": "default",
+      "data_storage_id": "default",
       "url": "http://localhost/api/callback",
       "request_type": "POST",
       "payload": {

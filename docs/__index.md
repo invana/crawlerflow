@@ -14,7 +14,7 @@ InvanaBot operates on **Crawl => Transform => Index** workflow.
     page to goto.
 - **transformations** : a list of python functions that can take `results` of current job as 
 input and returns `cleaned_results` as output.
-- **indexes** : a list of  that tells to what data storage, `cleaned_results` from different transformations 
+- **data_storages** : a list of  that tells to what data storage, `cleaned_results` from different transformations 
  should be saved to 
 
 
@@ -92,7 +92,7 @@ Example of a full features manifest.json
   ],
   "transformations": [
   ],
-  "indexes": [
+  "data_storages": [
     {
       "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz"
@@ -155,7 +155,7 @@ Example of a full features manifest.json
 ```json
 {
   "callback_id": "default",
-  "index_id": "default",
+  "data_storage_id": "default",
   "url": "http://localhost/api/callback",
   "request_type": "POST",
   "payload": {
