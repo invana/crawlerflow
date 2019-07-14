@@ -6,6 +6,7 @@ import json
 
 class ParagraphsExtractor(ExtractorBase):
     def run(self):
+        print ("-======response", type(self.response), self.response)
         data = {}
         extracted_data = []
         elements = self.response.css("p::text").extract()

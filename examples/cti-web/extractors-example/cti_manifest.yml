@@ -8,8 +8,8 @@ crawlers:
   allowed_domains:
     - "blog.scrapinghub.com"
   parsers:
-  - parser_type: AllLinksAnalyticsExtractor
-    parser_id: links
+  - parser_type: ParagraphsExtractor
+    parser_id: paragraphs
 settings:
   allowed_domains:
   - "blog.scrapinghub.com"

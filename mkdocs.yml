@@ -18,6 +18,8 @@ nav:
   - Extractors:
     - Standard Extractors : extractors/standard-extractors.md
     - Custom Extractor : extractors/custom-extractor.md
+    - Pythonic Extractor : extractors/pythonic-extractor.md
+    - Advanced Usage : extractors/advanced-usage.md
   - Transformations:
     - QuickStart : transformations/quickstart.md
     - 1. Field Transformation : transformations/field-transformation.md
