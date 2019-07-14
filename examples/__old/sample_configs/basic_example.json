@@ -4,20 +4,20 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "site_list"
+    "spider_id": "site_list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "site_list",
-      "parsers": [
+      "spider_id": "site_list",
+      "extractors": [
         {
-          "parser_type": "ParagraphsExtractor"
+          "extractor_type": "ParagraphsExtractor"
         }
       ],
       "traversals": [
         {
           "traversal_type": "same_domain",
-          "next_crawler_id": "site_list"
+          "next_spider_id": "site_list"
         }
       ]
     }
@@ -26,7 +26,7 @@
   ],
   "indexes": [
     {
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz",
       "transformation_id": "default"
     }

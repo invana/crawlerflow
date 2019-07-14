@@ -1,17 +1,17 @@
 cti_id: news.ycombinator.com
 init_crawler:
-  crawler_id: default
+  spider_id: default
   start_urls:
     - https://news.ycombinator.com/rss
-crawlers:
-- crawler_id: default
+spiders:
+- spider_id: default
   allowed_domains:
   - news.ycombinator.com
   iterator: xml
   itertag: item
-  parsers:
-  - parser_id: stories
-    parser_type: CustomContentExtractor
+  extractors:
+  - extractor_id: stories
+    extractor_type: CustomContentExtractor
     data_selectors:
     - selector_id: title
       selector: title

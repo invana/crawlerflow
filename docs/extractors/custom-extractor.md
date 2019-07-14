@@ -16,11 +16,11 @@ multiple `selector` data or add child_selectors to any selector.
 
 ```yaml
 
-crawlers:
-- crawler_id: blog_list
-  parsers:
-  - parser_type: CustomContentExtractor
-    parser_id: blog_list_parser
+spiders:
+- spider_id: blog_list
+  extractors:
+  - extractor_type: CustomContentExtractor
+    extractor_id: blog_list_parser
     data_selectors:
     - selector_id: blogs
       selector: ".post-listing .post-item"

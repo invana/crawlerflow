@@ -6,18 +6,18 @@
 
 ```yaml
 # crawler_manifest.yml
-crawler_id: blog_list
+spider_id: blog_list
 whitelisted_domains:
 - blog.scrapinghub.com
 start_urls:
 - https://blog.scrapinghub.com
-parsers:
-- parser_type: MetaTagExtractor
-  parser_id: meta_tags
-- parser_type: ParagraphExtractor
-  parser_id: paragraphs
-- parser_type: CustomContentExtractor
-  parser_id: blog_list_parser
+extractors:
+- extractor_type: MetaTagExtractor
+  extractor_id: meta_tags
+- extractor_type: ParagraphExtractor
+  extractor_id: paragraphs
+- extractor_type: CustomContentExtractor
+  extractor_id: blog_list_parser
   data_selectors:
   - selector_id: blogs
     selector: ".post-listing .post-item"
@@ -45,7 +45,7 @@ traversals:
     selector: ".next-posts-link"
     selector_type: css
     max_pages: 2
-  next_crawler_id: blog_list
+  next_spider_id: blog_list
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
@@ -60,7 +60,7 @@ callbacks:
 indexes:
 - index_id: default
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: blog_list
   unique_key: url
 settings:

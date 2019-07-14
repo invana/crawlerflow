@@ -25,9 +25,9 @@ cti_id: scrapinghub_blogs
 init_crawler:
   start_urls:
   - "https://blog.scrapinghub.com"
-  crawler_id: blog_list
-crawlers:
-- crawler_id: blog_list
+  spider_id: blog_list
+spiders:
+- spider_id: blog_list
   allowed_domains:
     - "blog.scrapinghub.com"
   traversals:
@@ -35,16 +35,16 @@ crawlers:
     selector_type: css
     selector_value: ".next-posts-link"
     max_pages: 1
-    next_crawler_id: blog_list
+    next_spider_id: blog_list
   - traversal_id: scrapinghub_detail
     selector_type: css
     selector_value: "h2 a"
     max_pages: 1
-    next_crawler_id: blog_detail
-- crawler_id: blog_detail
-  parsers:
-  - parser_type: CustomContentExtractor
-    parser_id: blog_detail
+    next_spider_id: blog_detail
+- spider_id: blog_detail
+  extractors:
+  - extractor_type: CustomContentExtractor
+    extractor_id: blog_detail
     data_selectors:
     - selector_id: blog_detail
       selector: ".blog-section"
@@ -69,7 +69,7 @@ crawlers:
 indexes:
 - index_id: default
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: scrapinghub_blogs
   unique_key: url
 settings:

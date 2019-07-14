@@ -52,9 +52,9 @@ def invana_bot_run():
     cti_manifest, errors = manifest_manager.get_manifest()
     # print("cti_manifest", cti_manifest)
 
-    first_crawler = cti_manifest.get("crawlers", [])[0]
+    first_crawler = cti_manifest.get("spiders", [])[0]
 
-    ignore_crawler_keys = ["crawler_id", "allowed_domains", "parsers", "traversals"]
+    ignore_crawler_keys = ["spider_id", "allowed_domains", "extractors", "traversals"]
     extra_arguments = {}
     for k, v in first_crawler.items():
         if k not in ignore_crawler_keys:

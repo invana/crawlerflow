@@ -8,5 +8,5 @@ class ImagesExtractor(ExtractorBase):
         images_selector = self.response.xpath('//img/@src').extract()
         for selector in images_selector:
             images_data.append(selector)
-        data[self.parser_id] = images_data
+        data[self.extractor_id] = images_data
         return data

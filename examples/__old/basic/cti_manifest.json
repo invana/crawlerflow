@@ -4,20 +4,20 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blogs_list"
+    "spider_id": "blogs_list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "blogs_list",
-      "parsers": [
+      "spider_id": "blogs_list",
+      "extractors": [
         {
-          "parser_type": "MetaTagExtractor",
-          "parser_id": "meta_tags"
+          "extractor_type": "MetaTagExtractor",
+          "extractor_id": "meta_tags"
 
         },
         {
-          "parser_type": "ParagraphExtractor",
-          "parser_id": "paragraphs"
+          "extractor_type": "ParagraphExtractor",
+          "extractor_id": "paragraphs"
         }
       ],
       "traversals": [
@@ -28,7 +28,7 @@
             "selector_type": "css",
             "max_pages": 4
           },
-          "next_crawler_id": "blogs_list"
+          "next_spider_id": "blogs_list"
         }
       ]
     }
@@ -43,7 +43,7 @@
     {
       "index_id": "default",
       "transformation_id": "default",
-      "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "collection_name": "blogs_list",
       "unique_key": "url"
     }

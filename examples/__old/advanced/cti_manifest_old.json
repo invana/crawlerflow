@@ -4,24 +4,24 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blog_list"
+    "spider_id": "blog_list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "blog_list",
+      "spider_id": "blog_list",
       "whitelisted_domains": ["blog.scrapinghub.com"],
-      "parsers": [
+      "extractors": [
         {
-          "parser_type": "MetaTagExtractor",
-          "parser_id": "meta_tags"
+          "extractor_type": "MetaTagExtractor",
+          "extractor_id": "meta_tags"
         },
         {
-          "parser_type": "ParagraphExtractor",
-          "parser_id": "paragraphs"
+          "extractor_type": "ParagraphExtractor",
+          "extractor_id": "paragraphs"
         },
         {
-          "parser_type": "CustomContentExtractor",
-          "parser_id": "blog_list_parser",
+          "extractor_type": "CustomContentExtractor",
+          "extractor_id": "blog_list_parser",
           "data_selectors": [
             {
               "selector_id": "blogs",
@@ -63,24 +63,24 @@
             "selector_type": "css",
             "max_pages": 4
           },
-          "next_crawler_id": "blog_list"
+          "next_spider_id": "blog_list"
         },
         {
           "traversal_type": "link_from_field",
           "link_from_field": {
-            "parser_id": "blog_list_parser",
+            "extractor_id": "blog_list_parser",
             "selector_id": "url"
           },
-          "next_crawler_id": "blog_detail"
+          "next_spider_id": "blog_detail"
         }
       ]
     },
     {
-      "crawler_id": "blog_detail",
-      "parsers": [
+      "spider_id": "blog_detail",
+      "extractors": [
         {
-          "parser_type": "CustomContentExtractor",
-          "parser_id": "blog_detail",
+          "extractor_type": "CustomContentExtractor",
+          "extractor_id": "blog_detail",
           "data_selectors": [
             {
               "selector_id": "blog_detail",
@@ -133,7 +133,7 @@
     {
       "index_id": "default",
       "transformation_id": "default",
-      "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "collection_name": "blog_list",
       "unique_key": "url"
     }

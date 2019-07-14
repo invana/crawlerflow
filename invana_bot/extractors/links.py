@@ -12,7 +12,7 @@ class AllLinksExtractor(ExtractorBase):
         for link in links:
             if link and not link.startswith("#"):
                 extracted_data.append(link)
-        data[self.parser_id] = extracted_data
+        data[self.extractor_id] = extracted_data
         return data
 
 
@@ -23,7 +23,7 @@ class AllLinksAnalyticsExtractor(ExtractorBase):
         extracted_data = AllLinksExtractor(
             response=self.response,
             extractor=self.extractor,
-            parser_id="all_links"
+            extractor_id="all_links"
         ).run().get("all_links", {})
 
         links_data = {}
@@ -34,7 +34,7 @@ class AllLinksAnalyticsExtractor(ExtractorBase):
             else:
                 links_data[domain] = [link]
 
-        data[self.parser_id] = [{"domain": domain, "links": domain_links, "links_count": domain_links.__len__()} for
+        data[self.extractor_id] = [{"domain": domain, "links": domain_links, "links_count": domain_links.__len__()} for
                                 domain, domain_links in links_data.items()]
 
         return data
@@ -55,7 +55,7 @@ class ForeignDomainLinkExtractor(ExtractorBase):
 #         for selector in self.extractor.get('data_selectors', []):
 #             _d = get_selector_element(self.response, selector)
 #             extracted_data[selector.get('selector_id')] = _d
-#         data[self.parser_id] = extracted_data
+#         data[self.extractor_id] = extracted_data
 #         return data
 
 

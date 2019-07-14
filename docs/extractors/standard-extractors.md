@@ -14,11 +14,11 @@ All the extractors are available at `invana_bot.extractors`
 Here is the configuration.
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: ParagraphsExtractor
-    parser_id: paragraphs_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: ParagraphsExtractor
+    extractor_id: paragraphs_data
 ```
 
 Here is the data extracted. This will return all the paragraphs as list.
@@ -40,11 +40,11 @@ Here is the data extracted. This will return all the paragraphs as list.
 Here is the configuration.
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: TableContentExtractor
-    parser_id: tables_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: TableContentExtractor
+    extractor_id: tables_data
 ```
 
 Here is the data extracted. This will return all the tables as list.
@@ -75,11 +75,11 @@ Here is the configuration. This will gather data of og, twitter and fb meta tags
 `meta` element.
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: MetaTagExtractor
-    parser_id: meta_tag_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: MetaTagExtractor
+    extractor_id: meta_tag_data
 ```
 
 Here is the data extracted. This will return all the `<meta>` tags data as dictionary.
@@ -101,11 +101,11 @@ Here is the data extracted. This will return all the `<meta>` tags data as dicti
 Here is the configuration.
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: IconsExtractor
-    parser_id: icon_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: IconsExtractor
+    extractor_id: icon_data
 ```
 
 Here is the data extracted. This will return all the `<meta>` tags data as dictionary.
@@ -126,11 +126,11 @@ Here is the data extracted. This will return all the `<meta>` tags data as dicti
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: JSONLDExtractor
-    parser_id: json_ld_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: JSONLDExtractor
+    extractor_id: json_ld_data
 ```
 
 Here is the data extracted. The returned data would be in list, as there can be multiple json+ld 
@@ -207,11 +207,11 @@ descriptions in a single page.
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: PlainHTMLContentExtractor
-    parser_id: html_content
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: PlainHTMLContentExtractor
+    extractor_id: html_content
 ```
 
 Here is the data extracted. 
@@ -230,11 +230,11 @@ Here is the data extracted.
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: PageOverviewExtractor
-    parser_id: overview
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: PageOverviewExtractor
+    extractor_id: overview
 ```
 
 Here is the data extracted. 
@@ -263,11 +263,11 @@ Here is the data extracted.
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: FeedUrlExtractor
-    parser_id: feeds_data
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: FeedUrlExtractor
+    extractor_id: feeds_data
 ```
 
 Here is the data extracted. 
@@ -284,11 +284,11 @@ Here is the data extracted.
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: ImagesExtractor
-    parser_id: images
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: ImagesExtractor
+    extractor_id: images
 ```
 
 Here is the data extracted. 
@@ -310,11 +310,11 @@ Here is the data extracted.
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: AllLinksExtractor
-    parser_id: all_links
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: AllLinksExtractor
+    extractor_id: all_links
 ```
 
 Here is the data extracted. This will contains all links 
@@ -340,11 +340,11 @@ Here is the data extracted. This will contains all links
 Here is the configuration. 
 
 ```yaml
-crawlers:
-- crawler_id: default_crawler
-  parsers:
-  - parser_type: AllLinksAnalyticsExtractor
-    parser_id: all_links_analysed
+spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: AllLinksAnalyticsExtractor
+    extractor_id: all_links_analysed
 ```
 
 Here is the data extracted. This will contains all links in the page, seperating them into 

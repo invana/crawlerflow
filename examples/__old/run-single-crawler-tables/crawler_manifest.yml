@@ -1,10 +1,10 @@
 ---
-crawler_id: proxy_list
+spider_id: proxy_list
 start_urls:
 - https://free-proxy-list.net
-parsers:
-- parser_type: TableContentExtractor
-  parser_id: tables
+extractors:
+- extractor_type: TableContentExtractor
+  extractor_id: tables
 
 transformations:
 - transformation_id: default
@@ -20,7 +20,7 @@ callbacks:
 indexes:
 - index_id: default
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: proxy_list
   unique_key: url
 settings:

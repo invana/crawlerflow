@@ -4,26 +4,26 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blog_list"
+    "spider_id": "blog_list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "blog_list",
+      "spider_id": "blog_list",
       "whitelisted_domains": [
         "blog.scrapinghub.com"
       ],
-      "parsers": [
+      "extractors": [
         {
-          "parser_type": "MetaTagExtractor",
-          "parser_id": "meta_tags"
+          "extractor_type": "MetaTagExtractor",
+          "extractor_id": "meta_tags"
         },
         {
-          "parser_type": "ParagraphsExtractor",
-          "parser_id": "paragraphs"
+          "extractor_type": "ParagraphsExtractor",
+          "extractor_id": "paragraphs"
         },
         {
-          "parser_type": "PaginationLinkExtractor",
-          "parser_id": "pagination",
+          "extractor_type": "PaginationLinkExtractor",
+          "extractor_id": "pagination",
           "data_selectors": [
             {
               "selector_id": "url",
@@ -32,7 +32,7 @@
               "selector_attribute": "href",
               "traversals": [
                 {
-                  "crawler_id": "blog_list",
+                  "spider_id": "blog_list",
                   "traversal_type": "pagination",
                   "extra_settings": {
                     "max_pages": 4
@@ -43,8 +43,8 @@
           ]
         },
         {
-          "parser_type": "CustomContentExtractor",
-          "parser_id": "blog_list_parser",
+          "extractor_type": "CustomContentExtractor",
+          "extractor_id": "blog_list_parser",
           "data_selectors": [
             {
               "selector_id": "blogs",
@@ -60,7 +60,7 @@
                   "multiple": false,
                   "traversals": [
                     {
-                      "crawler_id": "blog_detail",
+                      "spider_id": "blog_detail",
                       "extra_settings": {
                         "max_pages": 4
                       }
@@ -88,11 +88,11 @@
       ]
     },
     {
-      "crawler_id": "blog_detail",
-      "parsers": [
+      "spider_id": "blog_detail",
+      "extractors": [
         {
-          "parser_type": "CustomContentExtractor",
-          "parser_id": "blog_detail",
+          "extractor_type": "CustomContentExtractor",
+          "extractor_id": "blog_detail",
           "data_selectors": [
             {
               "selector_id": "blog_detail",
@@ -145,7 +145,7 @@
     {
       "index_id": "default",
       "transformation_id": "default",
-      "connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "collection_name": "blog_list",
       "unique_key": "url"
     }

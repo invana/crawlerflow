@@ -11,8 +11,8 @@ class SingleCrawlerRunnerEngine(RunnerEngineBase):
 SingleCrawlerRunnerEngine
     crawler = {  # single pipe
 
-        "crawler_id": "blog-list",
-        "parsers": [
+        "spider_id": "blog-list",
+        "extractors": [
             {
                 "data_selectors": [
                     {
@@ -43,7 +43,7 @@ SingleCrawlerRunnerEngine
 
     def __init__(self,
                  current_crawler=None,
-                 crawlers=None,
+                 spiders=None,
                  job_id=None,
                  context=None,
                  crawler_cls=None,
@@ -53,17 +53,17 @@ SingleCrawlerRunnerEngine
         """
 
         :param current_crawler: single crawler in the CTI flow
-        :param crawlers: all the crawlers in the CTI flow
+        :param spiders: all the spiders in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
         :param extra_arguments: extra parameters that you want to send to spider class
         :param settings:  settings to run the crawling job. .
         """
         self.manifest = current_crawler
         self.job_id = job_id
-        if crawlers is None:
-            self.crawlers = [current_crawler]
+        if spiders is None:
+            self.spiders = [current_crawler]
         else:
-            self.crawlers = crawlers
+            self.spiders = spiders
         self.settings = settings
         self.crawler_cls = crawler_cls
         self.extra_arguments = extra_arguments or {}
@@ -81,7 +81,7 @@ SingleCrawlerRunnerEngine
             return None, errors
 
     def validate_pipe(self):
-        must_have_keys = ["crawler_id", "parsers"]
+        must_have_keys = ["spider_id", "extractors"]
         optional_keys = ["traversals"]
         for key in must_have_keys:
             if key not in self.manifest.keys():
@@ -98,7 +98,7 @@ SingleCrawlerRunnerEngine
         return self.manifest.get("traversals", [])
 
     def get_extractors(self):
-        return self.manifest.get("parsers", [])
+        return self.manifest.get("extractors", [])
 
     def generate_crawler_kwargs(self):
         extractor = LinkExtractor()
@@ -114,7 +114,7 @@ SingleCrawlerRunnerEngine
 
             "rules": rules,
             "current_crawler": self.manifest,
-            "crawlers": self.crawlers,
+            "spiders": self.spiders,
             "context": self.context,
 
         }

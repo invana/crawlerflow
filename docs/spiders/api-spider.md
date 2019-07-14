@@ -6,14 +6,14 @@ Create a manifest.yml and run the spider.
 ```yaml
 cti_id: localhost-auditlogs
 init_crawler:
-  crawler_id: default
+  spider_id: default
   start_urls:
-    - http://localhost:8000/api/index/crawler/data?page=1&crawled_id=bing_search&parser_id=bing-search-result&job_id=5d25d414b7ba3e4972172913&token=b1d0801131a542d98a492916da362612
-crawlers:
-- crawler_id: default
+    - http://localhost:8000/api/index/crawler/data?page=1&crawled_id=bing_search&extractor_id=bing-search-result&job_id=5d25d414b7ba3e4972172913&token=b1d0801131a542d98a492916da362612
+spiders:
+- spider_id: default
   allowed_domains:
   - localhost:8000
-  extra_url_param: crawled_id=bing_search&parser_id=bing-search-result&job_id=5d25d414b7ba3e4972172913&token=b1d0801131a542d98a492916da362612
+  extra_url_param: crawled_id=bing_search&extractor_id=bing-search-result&job_id=5d25d414b7ba3e4972172913&token=b1d0801131a542d98a492916da362612
   pagination_param: page
   result_key: result
 settings:

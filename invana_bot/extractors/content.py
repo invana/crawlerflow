@@ -12,7 +12,7 @@ class ParagraphsExtractor(ExtractorBase):
         elements = self.response.css("p::text").extract()
         for el in elements:
             extracted_data.append(el)
-        data[self.parser_id] = [d.strip() for d in extracted_data]
+        data[self.extractor_id] = [d.strip() for d in extracted_data]
         return data
 
 
@@ -25,7 +25,7 @@ class HeadingsExtractor(ExtractorBase):
         elements = self.response.css(",".join(heading_tags)).extract()
         for el in elements:
             extracted_data.append(el)
-        data[self.parser_id] = [d.strip() for d in extracted_data]
+        data[self.extractor_id] = [d.strip() for d in extracted_data]
         return data
 
 
@@ -46,7 +46,7 @@ class TableContentExtractor(ExtractorBase):
                 row_dict = dict(zip(table_headers, row_data))
                 table_data.append(row_dict)
             tables.append(table_data)
-        data[self.parser_id] = tables
+        data[self.extractor_id] = tables
         return data
 
 
@@ -76,7 +76,7 @@ class MetaTagExtractor(ExtractorBase):
                 meta_data_dict["title"] = title
         except Exception as e:
             pass
-        data[self.parser_id] = meta_data_dict
+        data[self.extractor_id] = meta_data_dict
         return data
 
 
@@ -105,7 +105,7 @@ class CustomContentExtractor(ExtractorBase):
             else:
                 _d = get_selector_element(self.response, selector)
                 extracted_data[selector.get('selector_id')] = _d
-        data[self.parser_id] = extracted_data
+        data[self.extractor_id] = extracted_data
         return data
 
 
@@ -125,7 +125,7 @@ class IconsExtractor(ExtractorBase):
             if meta_property:
                 meta_property = meta_property.replace(":", "__").replace(".", "__")
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
-        data[self.parser_id] = meta_data_dict
+        data[self.extractor_id] = meta_data_dict
         return data
 
 
@@ -145,7 +145,7 @@ class JSONLDExtractor(ExtractorBase):
             except Exception as e:
                 pass
 
-        data[self.parser_id] = extracted_data
+        data[self.extractor_id] = extracted_data
         return data
 
 
@@ -154,17 +154,17 @@ class PlainHTMLContentExtractor(ExtractorBase):
     def run(self):
         data = {}
         response_text = self.response.body
-        data[self.parser_id] = response_text
+        data[self.extractor_id] = response_text
         return data
 
 
 class FeedUrlExtractor(ExtractorBase):
     def run(self):
         data = {}
-        data[self.parser_id] = {}
-        data[self.parser_id]['rss__xml'] = self.response.xpath('//link[@type="application/rss+xml"]').xpath(
+        data[self.extractor_id] = {}
+        data[self.extractor_id]['rss__xml'] = self.response.xpath('//link[@type="application/rss+xml"]').xpath(
             "@href").extract_first()
-        data[self.parser_id]['rss__atom'] = self.response.xpath('//link[@type="application/atom+xml"]').xpath(
+        data[self.extractor_id]['rss__atom'] = self.response.xpath('//link[@type="application/atom+xml"]').xpath(
             "@href").extract_first()
         return data
 
@@ -177,13 +177,13 @@ class PageOverviewExtractor(ExtractorBase):
         meta_tags_data = MetaTagExtractor(
             response=self.response,
             extractor=self.extractor,
-            parser_id=self.parser_id
-        ).run().get(self.parser_id, {})
+            extractor_id=self.extractor_id
+        ).run().get(self.extractor_id, {})
 
         paragraphs_data = ParagraphsExtractor(
             response=self.response,
             extractor=self.extractor,
-            parser_id="paragraphs"
+            extractor_id="paragraphs"
         ).run().get("paragraphs", {})
         # TODO - clean the data, that is extracted. ex:  meta_tags_data.get("title")
         extracted_data = {
@@ -218,5 +218,5 @@ class PageOverviewExtractor(ExtractorBase):
             "shortlink_url": self.response.xpath('//link[@rel="shortlink"]').xpath("@href").extract_first(),
             "canonical_url": self.response.xpath('//link[@rel="canonical"]').xpath("@href").extract_first()
         }
-        data[self.parser_id] = extracted_data
+        data[self.extractor_id] = extracted_data
         return data

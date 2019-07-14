@@ -3,7 +3,7 @@ from importlib import import_module
 
 import scrapy
 from invana_bot.utils.url import get_domain, get_absolute_url
-from invana_bot.utils.crawlers import get_crawler_from_list
+from invana_bot.utils.spiders import get_crawler_from_list
 from urllib.parse import urlparse
 from invana_bot.traversals.generic import GenericLinkExtractor
 
@@ -22,19 +22,19 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
     @staticmethod
     def run_extractor(response=None, extractor=None):
-        parser_type = extractor.get("parser_type")
-        parser_id = extractor.get("parser_id")
+        extractor_type = extractor.get("extractor_type")
+        extractor_id = extractor.get("extractor_id")
 
         driver_klass_module = import_module(f'invana_bot.extractors')
-        driver_klass = getattr(driver_klass_module, parser_type)
+        driver_klass = getattr(driver_klass_module, extractor_type)
 
-        if parser_type is None:
+        if extractor_type is None:
             return {}
 
         else:
             extractor_object = driver_klass(response=response,
                                             extractor=extractor,
-                                            parser_id=parser_id)
+                                            extractor_id=extractor_id)
 
         data = extractor_object.run()
         return data
@@ -57,17 +57,17 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         return GenericLinkExtractor(**kwargs).extract_links(response=response)
 
     @staticmethod
-    def get_subdocument_key(crawler=None, parser_id=None):
+    def get_subdocument_key(crawler=None, extractor_id=None):
         """
         element is the subdocument key name.
 
         :param crawler:
-        :param parser_id:
+        :param extractor_id:
         :param selector_id:
         :return:
         """
-        for extractor in crawler['parsers']:
-            if extractor.get("parser_id") == parser_id:
+        for extractor in crawler['extractors']:
+            if extractor.get("extractor_id") == extractor_id:
                 for selector in extractor.get('data_selectors', []):
                     if selector.get('selector_attribute') == 'element':
                         return selector.get("selector_id")
@@ -89,7 +89,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 meta={
                     "current_request_traversal_page_count": 0,
                     "current_crawler": self.current_crawler,
-                    "crawlers": self.crawlers
+                    "spiders": self.spiders
                 }
             )
 
@@ -98,7 +98,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         """
         This mean the current request came from this  traversal,
         so we can put max pages condition on this, otherwise for different
-        traversals of different crawlers, adding max_page doest make sense.
+        traversals of different spiders, adding max_page doest make sense.
         """
         traversal_id = traversal['traversal_id']
         current_request_traversal_id = response.meta.get('current_request_traversal_id', None)
@@ -109,16 +109,16 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         self.logger.info("======Parsing the url: {}".format(response.url))
 
         current_crawler = response.meta.get("current_crawler")
-        crawlers = response.meta.get("crawlers")
+        spiders = response.meta.get("spiders")
         context = self.context
 
-        if None in [crawlers, current_crawler]:
+        if None in [spiders, current_crawler]:
             current_crawler = self.current_crawler
-            crawlers = self.crawlers
+            spiders = self.spiders
 
         data = {}
         # TODO - check if there is a reasnos , otherwise it will end up
-        for extractor in current_crawler['parsers']:
+        for extractor in current_crawler['extractors']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
             data.update(extracted_data)
 
@@ -126,7 +126,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             data.update({"context": context})
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
-        data['context']['crawler_id'] = current_crawler['crawler_id']
+        data['context']['spider_id'] = current_crawler['spider_id']
 
         """
         if crawler_traversal_id is None, it means this response originated from the 
@@ -138,14 +138,14 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         current_request_traversal_page_count = response.meta.get('current_request_traversal_page_count', 0)
 
         """
-        Note on current_request_crawler_id:
+        Note on current_request_spider_id:
         This can never be none, including the ones that are started by start_urls .
         """
-        current_crawler_id = current_crawler.get("crawler_id")
+        current_spider_id = current_crawler.get("spider_id")
         crawler_traversals = current_crawler.get('traversals', [])
         for traversal in crawler_traversals:
-            next_crawler_id = traversal['next_crawler_id']
-            next_crawler = get_crawler_from_list(crawler_id=next_crawler_id, crawlers=crawlers)
+            next_spider_id = traversal['next_spider_id']
+            next_crawler = get_crawler_from_list(spider_id=next_spider_id, spiders=spiders)
 
             traversal['allow_domains'] = next_crawler.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
@@ -168,7 +168,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
             elif is_this_request_from_same_traversal and current_request_traversal_page_count < traversal_max_pages:
                 """
-                This block will be valid for the traversals from same crawler_id, ie., pagination of a crawler 
+                This block will be valid for the traversals from same spider_id, ie., pagination of a crawler 
                 """
 
                 shall_traverse = True
@@ -181,7 +181,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             elif is_this_request_from_same_traversal is False and current_request_traversal_page_count < traversal_max_pages:
                 """
                 This for the crawler_a traversing to crawler_b, this is not pagination, but trsversing between 
-                crawlers.
+                spiders.
                 """
                 shall_traverse = True
             print("shall_traverse: {}".format(traversal_id), shall_traverse)
@@ -210,7 +210,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             errback=self.parse_error,
                             meta={
                                 "current_crawler": next_crawler,
-                                "crawlers": crawlers,
+                                "spiders": spiders,
                                 "current_request_traversal_id": traversal_id,
                                 "current_request_traversal_page_count": current_request_traversal_page_count,
 
