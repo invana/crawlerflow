@@ -11,8 +11,8 @@ nav:
 #  - Feeds Crawling : tutorials/feeds-crawler.md
 #  - API Crawling: tutorials/api-crawler.md
 - API Guide:
+  - manifest.yml: spiders/manifest.md
   - Spiders:
-    - 1. Introduction: spiders/introduction.md
     - 2. Web Spider: spiders/web-spider.md
     - 3. Feeds Spider: spiders/feeds-spider.md
     - 4. API Spider: spiders/api-spider.md
@@ -27,7 +27,6 @@ nav:
     - 2. Doc Transformation : transformations/doc-transformation.md
     - 3. Job Transformation : transformations/job-transformation.md
 - Topics:
-  - Manifest : topics/manifest.md
   - Terminology: topics/terminology.md
   - Write own data storage: topics/write-own-data-storage.md
 #  - Run as python script : topics/write-own-data-storage.md
