@@ -8,13 +8,13 @@ InvanaBot operates on **Crawl => Transform => Index** workflow.
 - **cti_id** : unique identifier used to  
 - **init_crawler** : json config that tells, from where the crawling should start.
     - **start_urls** 
-- **crawlers** : a list of json based configurations that tells how to **traverse** and **parse** 
-    - **parsers** : list of json configurations that tells crawler what data should be extracted from a web page.
+- **spiders** : a list of json based configurations that tells how to **traverse** and **parse** 
+    - **extractors** : list of json configurations that tells crawler what data should be extracted from a web page.
     - **traversals** : list of json configurations that defines the pagination or which 
     page to goto.
 - **transformations** : a list of python functions that can take `results` of current job as 
 input and returns `cleaned_results` as output.
-- **indexes** : a list of  that tells to what data storage, `cleaned_results` from different transformations 
+- **data_storages** : a list of  that tells to what data storage, `cleaned_results` from different transformations 
  should be saved to 
 
 
@@ -28,14 +28,14 @@ Example of a full features manifest.json
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blog-list"
+    "spider_id": "blog-list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "blog-list",
-      "parsers": [
+      "spider_id": "blog-list",
+      "extractors": [
         {
-          "parser_type": "CustomContentExtractor",
+          "extractor_type": "CustomContentExtractor",
           "data_selectors": [
             {
               "id": "blogs",
@@ -77,28 +77,28 @@ Example of a full features manifest.json
             "selector_type": "css",
             "max_pages": 20
           },
-          "next_crawler_id": "blog-list"
+          "next_spider_id": "blog-list"
         },
         {
           "traversal_type": "link_from_field",
           "link_from_field": {
-            "parser_type": "CustomContentExtractor",
-            "parser_id": "url"
+            "extractor_type": "CustomContentExtractor",
+            "extractor_id": "url"
           },
-          "next_crawler_id": "blog-detail"
+          "next_spider_id": "blog-detail"
         }
       ]
     }
   ],
   "transformations": [
   ],
-  "indexes": [
+  "data_storages": [
     {
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz"
     },
     {
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz"
     }
   ],
@@ -123,7 +123,7 @@ Example of a full features manifest.json
     "selector_type": "css",
     "max_pages": 20
   },
-  "next_crawler_id": "blog-list"
+  "next_spider_id": "blog-list"
 }
 
 
@@ -135,7 +135,7 @@ Example of a full features manifest.json
   "same_domain": {
     "max_pages": 1000
   },
-  "next_crawler_id": "blog-list"
+  "next_spider_id": "blog-list"
 }
 ```
 
@@ -143,10 +143,10 @@ Example of a full features manifest.json
 {
   "traversal_type": "link_from_field",
   "link_from_field": {
-    "parser_type": "CustomContentExtractor",
-    "parser_id": "url"
+    "extractor_type": "CustomContentExtractor",
+    "extractor_id": "url"
   },
-  "next_crawler_id": "blog-detail"
+  "next_spider_id": "blog-detail"
 }
 ```
 
@@ -155,7 +155,7 @@ Example of a full features manifest.json
 ```json
 {
   "callback_id": "default",
-  "index_id": "default",
+  "data_storage_id": "default",
   "url": "http://localhost/api/callback",
   "request_type": "POST",
   "payload": {

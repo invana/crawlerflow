@@ -3,6 +3,7 @@ import sys
 import os
 import yaml
 
+
 class CTIManifestManager(object):
     """
 
@@ -17,12 +18,20 @@ class CTIManifestManager(object):
 
     def import_files(self):
         print("self.cti_config_path", self.cti_config_path)
-        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)))
+        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)), Loader=yaml.FullLoader)
         sys.path.append(self.cti_config_path)
-        import cti_transformations
+        """
+        don't remove the import below, this will be the cti_transformations.py,
+        which is one of the required file to run the job. This file will be provided by the 
+        user during the run.
+        """
+        try:
+            import cti_transformations
+        except Exception as e:
+            cti_transformations = None
         self.cti_transformations_module = cti_transformations
-        print("cti_manifest is {}".format(self.cti_manifest))
-        print("cti_transformations_module is {}".format(self.cti_transformations_module))
+        # print("cti_manifest is {}".format(self.cti_manifest))
+        # print("cti_transformations_module is {}".format(self.cti_transformations_module))
 
     def validate_cti_path_and_files(self):
         errors = []
@@ -39,9 +48,10 @@ class CTIManifestManager(object):
         return errors
 
     def import_cti_transformations(self):
-        for tranformation in self.cti_manifest.get("transformations", []):
-            method_to_call = getattr(self.cti_transformations_module, tranformation.get("transformation_fn"))
-            tranformation['transformation_fn'] = method_to_call
+        if self.cti_transformations_module:
+            for transformation in self.cti_manifest.get("transformations", []):
+                method_to_call = getattr(self.cti_transformations_module, transformation.get("transformation_fn"))
+                transformation['transformation_fn'] = method_to_call
 
     def get_manifest(self):
         errors = self.validate_cti_path_and_files()

@@ -1,0 +1,32 @@
+---
+spider_id: proxy_list
+start_urls:
+- https://free-proxy-list.net
+extractors:
+- extractor_type: TableContentExtractor
+  extractor_id: tables
+
+transformations:
+- transformation_id: default
+  transformation_fn: transformation_fn
+callbacks:
+- callback_id: default
+  data_storage_id: default
+  url: http://localhost/api/callback
+  request_type: POST
+  payload: {}
+  headers:
+    X-TOKEN: abc123456789
+data_storages:
+- data_storage_id: default
+  transformation_id: default
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
+  collection_name: proxy_list
+  unique_key: url
+settings:
+  allowed_domains:
+  - blog.scrapinghub.com
+  download_delay: 10
+context:
+  author: https://github.com/rrmerugu
+  description: Crawler that scrapes invanalabs xyz

@@ -20,7 +20,7 @@ InvanaBot uses [MongoDB](https://www.mongodb.com/) as default database for cachi
 
 ## Features
 
-1. crawlers in the form of json configuration.
+1. spiders in the form of json configuration.
 
 2. Define traversals from one parser to another.
 

@@ -44,20 +44,20 @@ class ElasticSearchPipeline(object):
 
         return WebLinkExtracted
 
-    def __init__(self, CONNECTION_URI=None,
+    def __init__(self, connection_uri=None,
                  database_name=None,
                  collection_name=None):
-        self.CONNECTION_URI = CONNECTION_URI
+        self.connection_uri = connection_uri
         self.database_name = database_name
         self.collection_name = collection_name
-        connections.create_connection(hosts=[self.CONNECTION_URI])
+        connections.create_connection(hosts=[self.connection_uri])
         self.WebLinkExtracted = self.setup_collection()
         self.WebLinkExtracted.init()
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            CONNECTION_URI=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('CONNECTION_URI'),
+            connection_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get('CONNECTION_URI'),
             database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'DATABASE_NAME'),
             collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(

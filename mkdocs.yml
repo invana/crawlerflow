@@ -1,0 +1,33 @@
+site_name: InvanaBot | βeta
+theme: yeti
+extra_css: [extra-style.css]
+nav:
+- Home: index.md
+- Tutorial:
+  - Quickstart: tutorials/quickstart.md
+#  - Web Crawling:
+#    - Single Domain Crawling: tutorials/single-domain-crawler.md
+#    - Multi-Domain Crawling: tutorials/multi-domain-crawler.md
+#  - Feeds Crawling : tutorials/feeds-crawler.md
+#  - API Crawling: tutorials/api-crawler.md
+- API Guide:
+  - manifest.yml: spiders/manifest.md
+  - Spiders:
+    - 1. Web Spider: spiders/web-spider.md
+    - 2. Feeds Spider: spiders/feeds-spider.md
+    - 3. API Spider: spiders/api-spider.md
+  - Extractors:
+    - Standard Extractors : extractors/standard-extractors.md
+    - Custom Extractor : extractors/custom-extractor.md
+    - Pythonic Extractor : extractors/pythonic-extractor.md
+    - Advanced Usage : extractors/advanced-usage.md
+  - Transformations:
+    - QuickStart : transformations/quickstart.md
+    - 1. Field Transformation : transformations/field-transformation.md
+    - 2. Doc Transformation : transformations/doc-transformation.md
+    - 3. Job Transformation : transformations/job-transformation.md
+- Topics:
+  - Terminology: topics/terminology.md
+  - Write own data storage: topics/write-own-data-storage.md
+#  - Run as python script : topics/write-own-data-storage.md
+#- About: transformations.md

@@ -50,15 +50,33 @@ class CTIJobGeneratorBase(object):
     def get_settings(self):
         return self.settings
 
-    def start_job(self, job=None):
+    def start_job(self, job=None, callback_fn=None):
         runner = CrawlerRunner()
+        print (job)
         crawler_job = job['crawler_job']
         cti_runner = job['runner']
         crawler_cls = crawler_job['crawler_cls']
         crawler_kwargs = crawler_job['crawler_kwargs']
 
         def engine_stopped_callback():
-            cti_runner.transform_and_index()
+            cti_runner.transform_and_index(callback_fn=callback_fn)
+
+        if callback_fn:
+            print("""
+==========================================================
+WARNING: callback_fn is {}
+==========================================================
+Since start_job is called with callback_fn, make sure you end the reactor if you want the crawler process to
+stop after the callback function is executed. By default callback_fn=None will close the reactor.
+
+To write a custom callback_fn
+
+def callback_fn():
+    print ("Write your own callback logic")
+    from twisted.internet import reactor
+    reactor.stop()
+==========================================================
+        """.format(callback_fn))
 
         crawler = Crawler(crawler_cls, Settings(cti_runner.settings))
         crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
@@ -70,22 +88,4 @@ class CTIJobGeneratorBase(object):
         reactor.run()
 
 
-"""
-class InvanaFeedCrawler(CTIJobGeneratorBase):
 
-    def crawl_feeds(self, feed_urls=None):
-        self.setup_crawler_type_settings(crawler_type="feeds")
-        self._validate_urls(feed_urls)
-
-        process = CrawlerProcess(self.settings)
-        allowed_domains = []
-        for feed_url in feed_urls:
-            domain = feed_url.split("://")[1].split("/")[0]  # TODO - clean this
-            allowed_domains.append(domain)
-
-        process.crawl(RSSSpider,
-                      start_urls=feed_urls,
-                      )
-        process.start()
-
-"""
