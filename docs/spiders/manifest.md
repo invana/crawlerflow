@@ -14,8 +14,7 @@ feeds or API. The difference exists only in the way you execute `invana-bot` com
 - spider_id: default_spider
   allowed_domains:
     - blog.scrapinghub.com
-  settings:
-    - key : value
+
 ```
 
 ## Extractors 
