@@ -170,7 +170,9 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#quickstart">Quickstart</a></li>
-            <li><a href="#project-setup">Project Setup</a></li>
+            <li><a href="#1-installation">1. Installation</a></li>
+            <li><a href="#2-create-spider">2. Create Spider</a></li>
+            <li><a href="#3-run-the-spider">3. Run the Spider</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -178,7 +180,7 @@
 <h1 id="quickstart">Quickstart</h1>
 <p>We're going to create a simple single domain crawler to get the extract the blogs and save to MongoDB and 
 Elasticsearch.</p>
-<h2 id="project-setup">Project Setup</h2>
+<h2 id="1-installation">1. Installation</h2>
 <pre><code class="bash">
 # Create the project directory
 mkdir tutorial 
@@ -190,9 +192,13 @@ python3 -m venv venv
 source venv/bin/activate  # On Windows use `env\Scripts\activate`
 
 # Install InvanaBot into the virtual environment
-pip install invana-bot
+pip3 install invana-bot
 
-# Setup a new spider
+
+</code></pre>
+
+<h2 id="2-create-spider">2. Create Spider</h2>
+<pre><code class="bash"># Setup a new spider
 cat &gt; cti_manifest.yml &lt;&lt;EOF
 cti_id: scrapinghub_blogs
 init_crawler:
@@ -253,10 +259,10 @@ context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes scrapinghub blogs
 EOF
+</code></pre>
 
-invana-bot --type=web
-
-
+<h2 id="3-run-the-spider">3. Run the Spider</h2>
+<pre><code class="bash">invana-bot --type=web
 </code></pre></div>
         </div>
 
