@@ -9,3 +9,4 @@ dist/
 ./examples/basic/crawl_test.py
 ./__playground
 .DS_Store
+site/
