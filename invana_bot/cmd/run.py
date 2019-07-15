@@ -114,7 +114,7 @@ def invana_bot_run():
     #         )
     #         context = crawler_manifest.get("context")
     #         job = crawler_job_generator.create_job(
-    #             current_crawler=crawler_manifest,
+    #             current_spider=crawler_manifest,
     #             context=context
     #         )
     #         crawler_job_generator.start_job(job=job)

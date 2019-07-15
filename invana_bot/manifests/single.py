@@ -17,11 +17,11 @@ class SingleCrawlerManifestManager(object):
 
     def import_files(self):
         # print("self.cti_config_path", self.config_path)
-        self.current_crawler = yaml.load(open("{}/crawler_manifest.yml".format(self.config_path)))
+        self.current_spider = yaml.load(open("{}/crawler_manifest.yml".format(self.config_path)))
         sys.path.append(self.config_path)
         import crawler_transformations
         self.cti_transformations_module = crawler_transformations
-        # print("cti_manifest is {}".format(self.current_crawler))
+        # print("cti_manifest is {}".format(self.current_spider))
         # print("cti_transformations_module is {}".format(self.cti_transformations_module))
 
     def validate_cti_path_and_files(self):
@@ -39,7 +39,7 @@ class SingleCrawlerManifestManager(object):
         return errors
 
     def import_cti_transformations(self):
-        for tranformation in self.current_crawler.get("transformations", []):
+        for tranformation in self.current_spider.get("transformations", []):
             method_to_call = getattr(self.cti_transformations_module, tranformation.get("transformation_fn"))
             tranformation['transformation_fn'] = method_to_call
 
@@ -49,4 +49,4 @@ class SingleCrawlerManifestManager(object):
             return None, errors
         self.import_files()
         self.import_cti_transformations()
-        return self.current_crawler, errors
+        return self.current_spider, errors

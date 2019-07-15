@@ -35,7 +35,7 @@ class CTIFlowRunnerEngine(RunnerEngineBase):
             initial_crawler['start_urls'] = self.manifest['init_crawler']['start_urls']
             crawler_runner = SingleCrawlerRunnerEngine(
                 job_id=self.job_id,
-                current_crawler=initial_crawler,
+                current_spider=initial_crawler,
                 spiders=self.spiders,
                 context=self.context,
                 crawler_cls=self.crawler_cls,

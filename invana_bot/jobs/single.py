@@ -10,7 +10,7 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
     """
 
     def create_job(self,
-                   current_crawler=None,
+                   current_spider=None,
                    context=None,
                    crawler_cls=None):
         if context is None:
@@ -19,11 +19,11 @@ class SingleCrawlJobGenerator(CTIJobGeneratorBase):
             context['job_id'] = self.job_id
             context['job_started'] = datetime.now()
 
-        settings_from_manifest = current_crawler.get("settings", {})
+        settings_from_manifest = current_spider.get("settings", {})
         actual_settings = self.settings
         actual_settings['DOWNLOAD_DELAY'] = settings_from_manifest.get("download_delay", 0)
         runner = SingleCrawlerRunnerEngine(settings=actual_settings,
-                                     current_crawler=current_crawler,
+                                     current_spider=current_spider,
                                      job_id=self.job_id,
                                      context=context,
                                      crawler_cls=crawler_cls)

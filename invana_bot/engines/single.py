@@ -42,7 +42,7 @@ SingleCrawlerRunnerEngine
     """
 
     def __init__(self,
-                 current_crawler=None,
+                 current_spider=None,
                  spiders=None,
                  job_id=None,
                  context=None,
@@ -52,16 +52,16 @@ SingleCrawlerRunnerEngine
                  ):
         """
 
-        :param current_crawler: single crawler in the CTI flow
+        :param current_spider: single crawler in the CTI flow
         :param spiders: all the spiders in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
         :param extra_arguments: extra parameters that you want to send to spider class
         :param settings:  settings to run the crawling job. .
         """
-        self.manifest = current_crawler
+        self.manifest = current_spider
         self.job_id = job_id
         if spiders is None:
-            self.spiders = [current_crawler]
+            self.spiders = [current_spider]
         else:
             self.spiders = spiders
         self.settings = settings
@@ -113,7 +113,7 @@ SingleCrawlerRunnerEngine
             #
 
             "rules": rules,
-            "current_crawler": self.manifest,
+            "current_spider": self.manifest,
             "spiders": self.spiders,
             "context": self.context,
 

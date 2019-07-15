@@ -18,7 +18,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
     name = "InvanaBotSingleWebCrawler"
 
     def closed(self, reason):
-        print("spider closed with payload:", reason, self.current_crawler.get('cti_id'))
+        print("spider closed with payload:", reason, self.current_spider.get('cti_id'))
 
     @staticmethod
     def run_extractor(response=None, extractor=None):
@@ -88,7 +88,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 dont_filter=True,
                 meta={
                     "current_request_traversal_page_count": 0,
-                    "current_crawler": self.current_crawler,
+                    "current_spider": self.current_spider,
                     "spiders": self.spiders
                 }
             )
@@ -108,25 +108,36 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
 
         self.logger.info("======Parsing the url: {}".format(response.url))
 
-        current_crawler = response.meta.get("current_crawler")
+        current_spider = response.meta.get("current_spider")
         spiders = response.meta.get("spiders")
         context = self.context
 
-        if None in [spiders, current_crawler]:
-            current_crawler = self.current_crawler
+        if None in [spiders, current_spider]:
+            current_spider = self.current_spider
             spiders = self.spiders
 
         data = {}
         # TODO - check if there is a reasnos , otherwise it will end up
-        for extractor in current_crawler['extractors']:
+        for extractor in current_spider['extractors']:
             extracted_data = self.run_extractor(response=response, extractor=extractor)
             data.update(extracted_data)
+
+            extractor_data_storage = extractor.get("data_storage", {})
+            if extractor_data_storage.get("include_url") is True:
+                extracted_data['url'] = response.url
+
+            collection_name = extractor_data_storage.get("collection_name")
+            if collection_name:
+                yield {
+                    "__collection_name": collection_name,
+                    "data": extracted_data,
+                }
 
         if context is not None:
             data.update({"context": context})
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
-        data['context']['spider_id'] = current_crawler['spider_id']
+        data['context']['spider_id'] = current_spider['spider_id']
 
         """
         if crawler_traversal_id is None, it means this response originated from the 
@@ -141,8 +152,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         Note on current_request_spider_id:
         This can never be none, including the ones that are started by start_urls .
         """
-        current_spider_id = current_crawler.get("spider_id")
-        crawler_traversals = current_crawler.get('traversals', [])
+        current_spider_id = current_spider.get("spider_id")
+        crawler_traversals = current_spider.get('traversals', [])
         for traversal in crawler_traversals:
             next_spider_id = traversal['next_spider_id']
             next_crawler = get_crawler_from_list(spider_id=next_spider_id, spiders=spiders)
@@ -209,7 +220,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             callback=self.parse,
                             errback=self.parse_error,
                             meta={
-                                "current_crawler": next_crawler,
+                                "current_spider": next_crawler,
                                 "spiders": spiders,
                                 "current_request_traversal_id": traversal_id,
                                 "current_request_traversal_page_count": current_request_traversal_page_count,
