@@ -4,14 +4,14 @@
     "start_urls": [
       "https://blog.scrapinghub.com"
     ],
-    "crawler_id": "blog-list"
+    "spider_id": "blog-list"
   },
-  "crawlers": [
+  "spiders": [
     {
-      "crawler_id": "blog-list",
-      "parsers": [
+      "spider_id": "blog-list",
+      "extractors": [
         {
-          "parser_type": "CustomContentExtractor",
+          "extractor_type": "CustomContentExtractor",
           "data_selectors": [
             {
               "id": "blogs",
@@ -56,23 +56,23 @@
             "selector_type": "css",
             "max_pages": 20
           },
-          "next_crawler_id": "blog-list"
+          "next_spider_id": "blog-list"
         },
         {
           "traversal_type": "link_from_field",
           "link_from_field": {
-            "parser_type": "CustomContentExtractor",
-            "parser_id": "url"
+            "extractor_type": "CustomContentExtractor",
+            "extractor_id": "url"
           },
-          "next_crawler_id": "blog-detail"
+          "next_spider_id": "blog-detail"
         }
       ]
     },
     {
-      "crawler_id": "blog-detail",
-      "parsers": [
+      "spider_id": "blog-detail",
+      "extractors": [
         {
-          "parser_type": "CustomContentExtractor",
+          "extractor_type": "CustomContentExtractor",
           "data_selectors": [
             {
               "id": "blog_detail",
@@ -121,9 +121,9 @@
   ],
   "transformations": [
   ],
-  "indexes": [
+  "data_storages": [
     {
-      "db_connection_uri": "mongodb://127.0.0.1/crawlers_data_index",
+      "db_connection_uri": "mongodb://127.0.0.1/spiders_data_index",
       "db_collection_name": "invanalabs_xyz"
     }
   ],

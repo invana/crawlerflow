@@ -1,8 +1,9 @@
-# Transformations
+# Quick start
+
 
 
 You can apply multiple transformations on the crawled data. Transformations are applied once 
-all the crawlers in the CTI flow are done.
+all the spiders in the CTI flow are done.
 
 Here is how you define a transformation. You need to add the transformation config in yaml . Each 
 trasnformation would contain two things:
@@ -19,9 +20,9 @@ transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
   
-- index_id: primary_db
+- data_storage_id: primary_db
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: blog_list
   unique_key: url
 ```

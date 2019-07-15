@@ -1,6 +1,6 @@
 from invana_bot.transformers.mongodb import OTManager, ReadFromMongo, WriteToMongoDB
-import requests
 from twisted.internet import reactor
+import requests
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,8 +17,8 @@ class RunnerEngineBase(object):
         return self.crawl()
 
     @staticmethod
-    def get_index(transformation_id=None, indexes=None):
-        for _index in indexes:
+    def get_index(transformation_id=None, data_storages=None):
+        for _index in data_storages:
             if _index['transformation_id'] == transformation_id:
                 return _index
 
@@ -51,14 +51,14 @@ class RunnerEngineBase(object):
             print("Triggered callback successfully and callback responded with message :{}".format(response))
 
     def callback(self, callback_fn=None):
-        all_indexes = self.manifest.get('indexes', [])
-        if len(all_indexes) == 0:
+        all_data_storages = self.manifest.get('data_storages', [])
+        if len(all_data_storages) == 0:
             print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
         else:
             print("Initiating, sending the callback notifications after the respective transformations ")
-            for index in all_indexes:
-                index_id = index.get('index_id')
-                callback_config = self.get_callback_for_index(index_id=index_id)
+            for index in all_data_storages:
+                data_storage_id = index.get('data_storage_id')
+                callback_config = self.get_callback_for_index(data_storage_id=data_storage_id)
                 if callback_config:
                     try:
                         self.trigger_callback(callback_config=callback_config)
@@ -71,11 +71,11 @@ class RunnerEngineBase(object):
         else:
             callback_fn()
 
-    def get_callback_for_index(self, index_id=None):
+    def get_callback_for_index(self, data_storage_id=None):
         callbacks = self.manifest.get("callbacks", [])
         for callback in callbacks:
-            callback_index_id = callback.get('index_id')
-            if callback_index_id == index_id:
+            callback_data_storage_id = callback.get('data_storage_id')
+            if callback_data_storage_id == data_storage_id:
                 return callback
         return
 
@@ -96,7 +96,7 @@ class RunnerEngineBase(object):
             transformation_fn = transformation.get('transformation_fn')
 
             transformation_index_config = self.get_index(transformation_id=transformation_id,
-                                                         indexes=self.manifest['indexes'])
+                                                         data_storages=self.manifest['data_storages'])
             mongo_executor = ReadFromMongo(
                 self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
                 self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],

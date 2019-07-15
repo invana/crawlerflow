@@ -1,10 +1,10 @@
 ---
-crawler_id: ecommerce_crawler
+spider_id: ecommerce_crawler
 start_urls:
 - "https://colorlib.com/preview/theme/dealers/"
-parsers:
-- parser_type: CustomContentExtractor
-  parser_id: product_detail
+extractors:
+- extractor_type: CustomContentExtractor
+  extractor_id: product_detail
   data_selectors:
   - selector_id: title
     selector: ".featured-hero-product h1"
@@ -16,8 +16,8 @@ parsers:
     selector_type: css
     selector_attribute: text
     data_type: IntField
-- parser_type: CustomContentExtractor
-  parser_id: more_products
+- extractor_type: CustomContentExtractor
+  extractor_id: more_products
   data_selectors:
   - selector_id: itesm
     selector: ".item"
@@ -45,16 +45,16 @@ transformations:
   transformation_fn: transformation_fn
 callbacks:
 - callback_id: default
-  index_id: default
+  data_storage_id: default
   url: http://localhost/api/callback
   request_type: POST
   payload: {}
   headers:
     X-TOKEN: abc123456789
-indexes:
-- index_id: default
+data_storages:
+- data_storage_id: default
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: ecommerce_crawler
   unique_key: url
 settings:

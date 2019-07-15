@@ -1,7 +1,7 @@
 # Terminology
 
 
-**crawlers** : single unit of CTI flow. A crawler has extractors, traversals.
+**spiders** : single unit of CTI flow. A crawler has extractors, traversals.
 
 **traversal**: definition of how one crawler will navigate to another one. 
 

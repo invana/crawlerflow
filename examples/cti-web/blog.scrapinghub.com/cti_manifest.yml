@@ -2,18 +2,18 @@ cti_id: scrapinghub_blogs
 init_crawler:
   start_urls:
   - "https://blog.scrapinghub.com"
-  crawler_id: blog_list
-crawlers:
-- crawler_id: blog_list
+  spider_id: blog_list
+spiders:
+- spider_id: blog_list
   allowed_domains:
     - "blog.scrapinghub.com"
-  parsers:
-  - parser_type: HTMLMetaTagExtractor
-    parser_id: meta_tags
-  - parser_type: ParagraphExtractor
-    parser_id: paragraphs
-  - parser_type: CustomContentExtractor
-    parser_id: blog_list_parser
+  extractors:
+  - extractor_type: MetaTagExtractor
+    extractor_id: meta_tags
+  - extractor_type: ParagraphExtractor
+    extractor_id: paragraphs
+  - extractor_type: CustomContentExtractor
+    extractor_id: blog_list_parser
     data_selectors:
     - selector_id: blogs
       selector: ".post-listing .post-item"
@@ -36,16 +36,16 @@ crawlers:
     selector_type: css
     selector_value: ".next-posts-link"
     max_pages: 1
-    next_crawler_id: blog_list
+    next_spider_id: blog_list
   - traversal_id: scrapinghub_detail
     selector_type: css
     selector_value: "h2 a"
     max_pages: 1
-    next_crawler_id: blog_detail
-- crawler_id: blog_detail
-  parsers:
-  - parser_type: CustomContentExtractor
-    parser_id: blog_detail
+    next_spider_id: blog_detail
+- spider_id: blog_detail
+  extractors:
+  - extractor_type: CustomContentExtractor
+    extractor_id: blog_detail
     data_selectors:
     - selector_id: blog_detail
       selector: ".blog-section"
@@ -75,15 +75,15 @@ crawlers:
 transformations:
 - transformation_id: default
   transformation_fn: transformation_fn
-indexes:
-- index_id: default
+data_storages:
+- data_storage_id: default
   transformation_id: default
-  connection_uri: mongodb://127.0.0.1/crawlers_data_index
+  connection_uri: mongodb://127.0.0.1/spiders_data_index
   collection_name: blog_list
   unique_key: url
 callbacks:
 - callback_id: default
-  index_id: default
+  data_storage_id: default
   url: http://localhost/api/callback
   request_type: POST
   payload: {}

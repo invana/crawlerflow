@@ -1,4 +1,4 @@
-from invana_bot.crawlers.default import InvanaBotSingleWebCrawler
+from invana_bot.spiders.web import InvanaBotSingleWebCrawler
 from scrapy.spiders import Rule
 from invana_bot.utils.config import validate_crawler_config
 from scrapy.linkextractors import LinkExtractor
@@ -11,8 +11,8 @@ class SingleCrawlerRunnerEngine(RunnerEngineBase):
 SingleCrawlerRunnerEngine
     crawler = {  # single pipe
 
-        "crawler_id": "blog-list",
-        "parsers": [
+        "spider_id": "blog-list",
+        "extractors": [
             {
                 "data_selectors": [
                     {
@@ -43,27 +43,30 @@ SingleCrawlerRunnerEngine
 
     def __init__(self,
                  current_crawler=None,
-                 crawlers=None,
+                 spiders=None,
                  job_id=None,
                  context=None,
                  crawler_cls=None,
-                 settings=None
+                 settings=None,
+                 extra_arguments=None
                  ):
         """
 
         :param current_crawler: single crawler in the CTI flow
-        :param crawlers: all the crawlers in the CTI flow
+        :param spiders: all the spiders in the CTI flow
         :param context: any extra information user want to send to the crawled data or carry forward.
+        :param extra_arguments: extra parameters that you want to send to spider class
         :param settings:  settings to run the crawling job. .
         """
         self.manifest = current_crawler
         self.job_id = job_id
-        if crawlers is None:
-            self.crawlers = [current_crawler]
+        if spiders is None:
+            self.spiders = [current_crawler]
         else:
-            self.crawlers = crawlers
+            self.spiders = spiders
         self.settings = settings
         self.crawler_cls = crawler_cls
+        self.extra_arguments = extra_arguments or {}
         if context:
             self.context = context
 
@@ -78,7 +81,7 @@ SingleCrawlerRunnerEngine
             return None, errors
 
     def validate_pipe(self):
-        must_have_keys = ["crawler_id", "parsers"]
+        must_have_keys = ["spider_id", "extractors"]
         optional_keys = ["traversals"]
         for key in must_have_keys:
             if key not in self.manifest.keys():
@@ -95,7 +98,7 @@ SingleCrawlerRunnerEngine
         return self.manifest.get("traversals", [])
 
     def get_extractors(self):
-        return self.manifest.get("parsers", [])
+        return self.manifest.get("extractors", [])
 
     def generate_crawler_kwargs(self):
         extractor = LinkExtractor()
@@ -108,11 +111,14 @@ SingleCrawlerRunnerEngine
             "allowed_domains": [],
             # NOTE - allowed_domains  is going flexible on this because this is a general crawl start,
             #
+
             "rules": rules,
             "current_crawler": self.manifest,
-            "crawlers": self.crawlers,
-            "context": self.context
+            "spiders": self.spiders,
+            "context": self.context,
+
         }
+        crawler_kwargs.update(self.extra_arguments)
         return crawler_kwargs
 
     def run(self):
