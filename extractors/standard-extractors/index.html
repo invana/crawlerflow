@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Standard Extractors - InvanaBot | βeta</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/color-brewer.min.css">
+        <link href="../../extra-style.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">InvanaBot | βeta</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../..">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tutorial <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../../tutorials/quickstart/">Quickstart</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">API Guide <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../../spiders/manifest/">manifest.yml</a>
+</li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#">Spiders</a>
+    <ul class="dropdown-menu">
+            
+<li >
+    <a href="../../spiders/web-spider/">1. Web Spider</a>
+</li>
+            
+<li >
+    <a href="../../spiders/feeds-spider/">2. Feeds Spider</a>
+</li>
+            
+<li >
+    <a href="../../spiders/api-spider/">3. API Spider</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#">Extractors</a>
+    <ul class="dropdown-menu">
+            
+<li class="active">
+    <a href="./">Standard Extractors</a>
+</li>
+            
+<li >
+    <a href="../custom-extractor/">Custom Extractor</a>
+</li>
+            
+<li >
+    <a href="../pythonic-extractor/">Pythonic Extractor</a>
+</li>
+            
+<li >
+    <a href="../advanced-usage/">Advanced Usage</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#">Transformations</a>
+    <ul class="dropdown-menu">
+            
+<li >
+    <a href="../../transformations/quickstart/">QuickStart</a>
+</li>
+            
+<li >
+    <a href="../../transformations/field-transformation/">1. Field Transformation</a>
+</li>
+            
+<li >
+    <a href="../../transformations/doc-transformation/">2. Doc Transformation</a>
+</li>
+            
+<li >
+    <a href="../../transformations/job-transformation/">3. Job Transformation</a>
+</li>
+    </ul>
+  </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topics <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../../topics/terminology/">Terminology</a>
+</li>
+                                    
+<li >
+    <a href="../../topics/write-own-data-storage/">Write own data storage</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li >
+                                <a rel="next" href="../../spiders/api-spider/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../custom-extractor/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#standard-extractor">Standard Extractor</a></li>
+            <li><a href="#paragraphsextractor">ParagraphsExtractor</a></li>
+            <li><a href="#tablecontentextractor">TableContentExtractor</a></li>
+            <li><a href="#metatagextractor">MetaTagExtractor</a></li>
+            <li><a href="#iconsextractor">IconsExtractor</a></li>
+            <li><a href="#jsonldextractor">JSONLDExtractor</a></li>
+            <li><a href="#plainhtmlcontentextractor">PlainHTMLContentExtractor</a></li>
+            <li><a href="#pageoverviewextractor">PageOverviewExtractor</a></li>
+            <li><a href="#feedurlextractor">FeedUrlExtractor</a></li>
+            <li><a href="#imagesextractor">ImagesExtractor</a></li>
+            <li><a href="#alllinksextractor">AllLinksExtractor</a></li>
+            <li><a href="#alllinksanalyticsextractor">AllLinksAnalyticsExtractor</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="standard-extractor">Standard Extractor</h1>
+<p>InvanaBot allows users to extract information while it crawls through the webpages. You can specify multiple
+extractors to a crawler, allowing you to organise the information you need into grouped/subdocument data.</p>
+<p>All the extractors are available at <code>invana_bot.extractors</code></p>
+<h2 id="paragraphsextractor">ParagraphsExtractor</h2>
+<p>Here is the configuration.</p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: ParagraphsExtractor
+    extractor_id: paragraphs_data
+</code></pre>
+
+<p>Here is the data extracted. This will return all the paragraphs as list.</p>
+<pre><code class="json">{
+  &quot;paragraphs_data&quot; :  [
+      &quot;Here is the first paragraph&quot;,
+      &quot;Here is the second paragraph&quot;
+    ]
+
+}
+</code></pre>
+
+<h2 id="tablecontentextractor">TableContentExtractor</h2>
+<p>Here is the configuration.</p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: TableContentExtractor
+    extractor_id: tables_data
+</code></pre>
+
+<p>Here is the data extracted. This will return all the tables as list.</p>
+<pre><code class="json">{  
+   &quot;tables_data&quot;:[  
+      [ // table 1
+         {  
+            &quot;Code&quot;:&quot;IN&quot;,
+            &quot;Country&quot;:&quot;India&quot;,
+            &quot;Last Checked&quot;:&quot;1 second ago&quot;
+         }
+      ],
+      [ // table 2
+        {
+            &quot;Code&quot;: &quot;DEL&quot;,
+            &quot;State&quot;: &quot;New Delhi&quot;
+        }
+      ]
+   ]
+} 
+</code></pre>
+
+<h2 id="metatagextractor">MetaTagExtractor</h2>
+<p>Here is the configuration. This will gather data of og, twitter and fb meta tags, pretty much any 
+<code>meta</code> element.</p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: MetaTagExtractor
+    extractor_id: meta_tag_data
+</code></pre>
+
+<p>Here is the data extracted. This will return all the <code>&lt;meta&gt;</code> tags data as dictionary.</p>
+<pre><code class="json">{
+  &quot;meta_tag_data&quot;:{  
+      &quot;meta__viewport&quot;:&quot;width=device-width,initial-scale=1,maximum-scale=1&quot;,
+      &quot;meta__referrer&quot;:&quot;origin&quot;,
+      &quot;meta__description&quot;:&quot;Here is the description of the site &quot;,
+      &quot;title&quot;:&quot;Example site | Homepage&quot;
+   }
+}
+</code></pre>
+
+<h2 id="iconsextractor">IconsExtractor</h2>
+<p>Here is the configuration.</p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: IconsExtractor
+    extractor_id: icon_data
+</code></pre>
+
+<p>Here is the data extracted. This will return all the <code>&lt;meta&gt;</code> tags data as dictionary.</p>
+<pre><code class="json">{
+  &quot;icon_data&quot;: {
+      &quot;32x32&quot;: &quot;https://example.com/2018/10/fav-icon.png?w=32&quot;,
+      &quot;192x192&quot;: &quot;https://example.com/2018/10/fav-icon.png?w=120&quot;
+    }
+}
+</code></pre>
+
+<h2 id="jsonldextractor">JSONLDExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: JSONLDExtractor
+    extractor_id: json_ld_data
+</code></pre>
+
+<p>Here is the data extracted. The returned data would be in list, as there can be multiple json+ld 
+descriptions in a single page. </p>
+<pre><code class="json">
+{
+  &quot;json_ld_data&quot;: [
+    {
+      &quot;@context&quot;: &quot;http://schema.org&quot;,
+      &quot;@type&quot;: &quot;NewsArticle&quot;,
+      &quot;mainEntityOfPage&quot;: {
+        &quot;@type&quot;: &quot;WebPage&quot;,
+        &quot;@id&quot;: &quot;https://example.com/article/technology/science/space-age/&quot;
+      },
+      &quot;url&quot;: &quot;https://example.com/article/technology/science/space-age/&quot;,
+      &quot;articleBody&quot;: &quot;Lorem ipusum, here is the article body.&quot;,
+      &quot;articleSection&quot;: &quot;technology&quot;,
+      &quot;keywords&quot;: &quot;Chandrayaan-2, Chandrayaan-2 launch, Chandrayaan-2 launch monday, Chandrayaan-2 launch timing, Chandrayaan-2 isro launch date time, Chandrayaan-2 launch july 15, isro moon, isro Chandrayaan-2, Chandrayaan-2 moon&quot;,
+      &quot;headline&quot;: &quot;Chandrayaan-2 to launch India into new space age&quot;,
+      &quot;description&quot;: &quot;The Chandrayaan-2, a moon-lander and rover mission, is designed to go where no spacecraft has gone before.&quot;,
+      &quot;datePublished&quot;: &quot;2019-07-14T09:29:56+05:30&quot;,
+      &quot;dateModified&quot;: &quot;2019-07-14T09:29:56+05:30&quot;,
+      &quot;publisher&quot;: {
+        &quot;@type&quot;: &quot;Organization&quot;,
+        &quot;name&quot;: &quot;MoonNews Publications&quot;,
+        &quot;logo&quot;: {
+          &quot;@type&quot;: &quot;ImageObject&quot;,
+          &quot;url&quot;: &quot;https://s2.wp.com/wp-content/themes/vip/example.com-v2/dist/images/ienewlogo3_new.png&quot;,
+          &quot;width&quot;: &quot;600&quot;,
+          &quot;height&quot;: &quot;60&quot;
+        }
+      },
+      &quot;author&quot;: {
+        &quot;@type&quot;: &quot;Person&quot;,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;sameAs&quot;: &quot;https://example.com/profile/author/john-doe/&quot;
+      },
+      &quot;image&quot;: {
+        &quot;@type&quot;: &quot;ImageObject&quot;,
+        &quot;url&quot;: &quot;https://images.example.com/2019/07/chandrayaan-2_759-1.jpg&quot;,
+        &quot;width&quot;: &quot;759&quot;,
+        &quot;height&quot;: &quot;422&quot;
+      }
+    },
+    {
+      &quot;@context&quot;: &quot;http://schema.org&quot;,
+      &quot;@type&quot;: &quot;Person&quot;,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;url&quot;: &quot;https://example.com/profile/author/john-doe/&quot;,
+      &quot;worksFor&quot;: {
+        &quot;@type&quot;: &quot;Organization&quot;,
+        &quot;name&quot;: &quot;MoonNews Publications&quot;,
+        &quot;url&quot;: &quot;https://example.com/&quot;
+      }
+    },
+    {
+      &quot;@context&quot;: &quot;http://schema.org&quot;,
+      &quot;@type&quot;: &quot;WebSite&quot;,
+      &quot;url&quot;: &quot;https://example.com/&quot;,
+      &quot;potentialAction&quot;: {
+        &quot;@type&quot;: &quot;SearchAction&quot;,
+        &quot;target&quot;: &quot;https://example.com/?s={search_term_string}&quot;,
+        &quot;query-input&quot;: &quot;required name=search_term_string&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+
+<h2 id="plainhtmlcontentextractor">PlainHTMLContentExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: PlainHTMLContentExtractor
+    extractor_id: html_content
+</code></pre>
+
+<p>Here is the data extracted. </p>
+<pre><code class="json">{
+  &quot;html_content&quot;: &quot;&lt;html&gt;&lt;/body&gt;Hello World!&lt;/body&gt;&lt;/html&gt;&quot;
+}
+
+</code></pre>
+
+<h2 id="pageoverviewextractor">PageOverviewExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: PageOverviewExtractor
+    extractor_id: overview
+</code></pre>
+
+<p>Here is the data extracted. </p>
+<pre><code class="json">
+
+{  
+   &quot;overview&quot;:{  
+      &quot;title&quot;:&quot;Welcome to the site.&quot;,
+      &quot;description&quot;:&quot;Our space mission is designed to go where no spacecraft has gone before.&quot;,
+      &quot;image&quot;:&quot;https://example.com/2019/07/image.jpg?w=759&quot;,
+      &quot;url&quot;:&quot;https://example.com/article/technology/science/space-age/&quot;,
+      &quot;page_type&quot;:&quot;article&quot;,
+      &quot;keywords&quot;:&quot;space launch, chandrayaan-2 launch&quot;,
+      &quot;domain&quot;:&quot;example.com&quot;,
+      &quot;first_paragraph&quot;:&quot;First Paragraph comes here.&quot;,
+      &quot;shortlink_url&quot;:&quot;https://example.com/?page=ok-me&quot;,
+      &quot;canonical_url&quot;:&quot;https://example.com/article/technology/science/space-age/&quot;
+   }
+}
+</code></pre>
+
+<h2 id="feedurlextractor">FeedUrlExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: FeedUrlExtractor
+    extractor_id: feeds_data
+</code></pre>
+
+<p>Here is the data extracted. </p>
+<pre><code class="json">{
+  &quot;feeds_data&quot;: {&quot;rss__xml&quot;: &quot;https://blog.scrapinghub.com/rss.xml&quot;, &quot;rss__atom&quot;: null}
+}
+
+</code></pre>
+
+<h2 id="imagesextractor">ImagesExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: ImagesExtractor
+    extractor_id: images
+</code></pre>
+
+<p>Here is the data extracted. </p>
+<pre><code class="json">{
+  &quot;images&quot;: [
+    &quot;https://example.com/image-1.png&quot;,
+    &quot;https://example.com/image-2.png&quot;,
+    &quot;https://example.com/image-3.png&quot;
+  ]
+}
+
+</code></pre>
+
+<h2 id="alllinksextractor">AllLinksExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: AllLinksExtractor
+    extractor_id: all_links
+</code></pre>
+
+<p>Here is the data extracted. This will contains all links </p>
+<pre><code class="json">{
+  &quot;all_links&quot;: [
+    &quot;https://example.com/page-1&quot;,
+    &quot;https://example.com/page-2&quot;,
+    &quot;https://example.com/page-3&quot;,
+    &quot;https://facebook.com/page-3&quot;,
+    &quot;https://twitter.com/page-3&quot;
+  ]
+}
+
+</code></pre>
+
+<h2 id="alllinksanalyticsextractor">AllLinksAnalyticsExtractor</h2>
+<p>Here is the configuration. </p>
+<pre><code class="yaml">spiders:
+- spider_id: default_crawler
+  extractors:
+  - extractor_type: AllLinksAnalyticsExtractor
+    extractor_id: all_links_analysed
+</code></pre>
+
+<p>Here is the data extracted. This will contains all links in the page, seperating them into 
+domain specific links.</p>
+<pre><code class="json">{  
+   &quot;links&quot;:[  
+      {  
+         &quot;domain&quot;:&quot;blog.scrapinghub.com&quot;,
+         &quot;links&quot;:[  
+            &quot;https://blog.scrapinghub.com&quot;,
+            &quot;https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python&quot;,
+            &quot;https://blog.scrapinghub.com/author/attila-tóth&quot;,
+            &quot;https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python#comments-listing&quot;,
+            &quot;https://blog.scrapinghub.com/spidermon-scrapy-spider-monitoring&quot;,
+            &quot;...&quot;,
+            &quot;https://blog.scrapinghub.com/alternative-financial-data-quality&quot;
+         ],
+         &quot;links_count&quot;:48
+      },
+      {  
+         &quot;domain&quot;:&quot;overthecap.com&quot;,
+         &quot;links&quot;:[  
+            &quot;https://overthecap.com/&quot;,
+            &quot;https://overthecap.com/position/quarterback/&quot;
+         ],
+         &quot;links_count&quot;:2
+      },
+      {  
+         &quot;domain&quot;:&quot;github.com&quot;,
+         &quot;links&quot;:[  
+            &quot;https://github.com/zseta/NFL-Contracts&quot;,
+            &quot;https://github.com/zseta/NFL-Contracts&quot;,
+            &quot;https://github.com/zseta/NFL-Contracts&quot;
+         ],
+         &quot;links_count&quot;:3
+      },
+      {  
+         &quot;domain&quot;:&quot;scrapingauthority.com&quot;,
+         &quot;links&quot;:[  
+            &quot;https://scrapingauthority.com/resources/&quot;
+         ],
+         &quot;links_count&quot;:1
+      },
+      {  
+         &quot;domain&quot;:&quot;twitter.com&quot;,
+         &quot;links&quot;:[  
+            &quot;https://twitter.com/share&quot;,
+            &quot;https://twitter.com/ScrapingHub&quot;
+         ],
+         &quot;links_count&quot;:2
+      }
+
+   ]
+
+}
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
