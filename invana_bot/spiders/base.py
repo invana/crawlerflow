@@ -11,6 +11,32 @@ class WebCrawlerBase(CrawlSpider):
 
     """
 
+    spider_id = None
+    spider_config = None
+    spider_data_storage = None
+    spiders = []
+
+    # @property
+    # def data_storage(self):
+    #     return self.spider_config.get("data_storage")
+
+    @staticmethod
+    def get_default_storage(settings=None, spider_config=None):
+        data_storages = settings.get("DATA_STORAGES", [])
+        default_storage = None
+        for data_storage in data_storages:
+            if data_storage.get("storage_id") == spider_config.get("storage_id", "default"):
+                return data_storage
+        return default_storage
+
+    @staticmethod
+    def yield_data(data=None, collection_name=None, storage_id="default"):
+        yield {
+            "_data_storage_id": storage_id,
+            "_data_storage_collection_name": collection_name,
+            "_data": data
+        }
+
     def _build_request(self, rule, link):
         headers = {}
         user_agent_header = os.environ.get("WCP_REQUEST_HEADERS_USER_AGENT")

@@ -3,14 +3,14 @@ from __future__ import print_function
 
 import os
 import argparse
-from invana_bot.jobs.cti import CTIJobGenerator
+from invana_bot.jobs.cti import InvanaBotJobGenerator
 from invana_bot.settings.default import DEFAULT_SETTINGS
 from invana_bot.manifests.cti import CTIManifestManager
 from invana_bot.spiders.web import InvanaBotSingleWebCrawler
 from invana_bot.spiders.xml import GenericXMLFeedSpider
 from invana_bot.spiders.api import GenericAPISpider
-from invana_bot.jobs.single import SingleCrawlJobGenerator
-from invana_bot.manifests.single import SingleCrawlerManifestManager
+# from invana_bot.jobs.single import SingleCrawlJobGenerator
+# from invana_bot.manifests.single import SingleCrawlerManifestManager
 
 
 def invana_bot_run():
@@ -49,10 +49,10 @@ def invana_bot_run():
         cti_config_path=path
     )
 
-    cti_manifest, errors = manifest_manager.get_manifest()
+    manifest, errors = manifest_manager.get_manifest()
     # print("cti_manifest", cti_manifest)
 
-    first_crawler = cti_manifest.get("spiders", [])[0]
+    first_crawler = manifest.get("spiders", [])[0]
 
     ignore_crawler_keys = ["spider_id", "allowed_domains", "extractors", "traversals"]
     extra_arguments = {}
@@ -60,18 +60,18 @@ def invana_bot_run():
         if k not in ignore_crawler_keys:
             extra_arguments[k] = v
     if len(errors) == 0:
-        crawler_job_generator = CTIJobGenerator(
+        spider_job_generator = InvanaBotJobGenerator(
             settings=DEFAULT_SETTINGS,
         )
-        context = cti_manifest.get("context")
-        job = crawler_job_generator.create_job(
-            cti_manifest=cti_manifest,
+        context = manifest.get("context")
+        job = spider_job_generator.create_job(
+            manifest=manifest,
             context=context,
-            crawler_cls=spider_cls,
+            spider_cls=spider_cls,
             extra_arguments=extra_arguments
 
         )
-        crawler_job_generator.start_job(job=job)
+        spider_job_generator.start_job(job=job)
     else:
         print("==============================================================")
         print("ERROR : ETI Job Failing with the errors :: {}".format(
@@ -85,15 +85,15 @@ def invana_bot_run():
         # )
         # cti_manifest, errors = manifest_manager.get_manifest()
         # if len(errors) == 0:
-        #     crawler_job_generator = CTIJobGenerator(
+        #     spider_job_generator = InvanaBotJobGenerator(
         #         settings=DEFAULT_SETTINGS,
         #     )
         #     context = cti_manifest.get("context")
-        #     job = crawler_job_generator.create_job(
+        #     job = spider_job_generator.create_job(
         #         cti_manifest=cti_manifest,
         #         context=context
         #     )
-        #     crawler_job_generator.start_job(job=job)
+        #     spider_job_generator.start_job(job=job)
         # else:
         #     print("==============================================================")
         #     print("ERROR : ETI Job Failing with the errors :: {}".format(
@@ -109,15 +109,15 @@ def invana_bot_run():
     #     )
     #     crawler_manifest, errors = manifest_manager.get_manifest()
     #     if len(errors) == 0:
-    #         crawler_job_generator = SingleCrawlJobGenerator(
+    #         spider_job_generator = SingleCrawlJobGenerator(
     #             settings=DEFAULT_SETTINGS
     #         )
     #         context = crawler_manifest.get("context")
-    #         job = crawler_job_generator.create_job(
-    #             current_spider=crawler_manifest,
+    #         job = spider_job_generator.create_job(
+    #             spider_config=crawler_manifest,
     #             context=context
     #         )
-    #         crawler_job_generator.start_job(job=job)
+    #         spider_job_generator.start_job(job=job)
     #     else:
     #         print("==============================================================")
     #         print("ERROR : ETI Job Failing with the errors :: {}".format(

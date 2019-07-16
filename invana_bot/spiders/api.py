@@ -54,11 +54,11 @@ class GenericAPISpider(WebCrawlerBase):
         This method must return either a BaseItem, a Request, or a list
         containing any of them.
         """
-        current_spider = response.meta.get("current_spider")
+        spider_config = response.meta.get("spider_config")
         spiders = response.meta.get("spiders")
         context = self.context or {}
-        if None in [current_spider]:
-            current_spider = self.current_spider
+        if None in [spider_config]:
+            spider_config = self.spider_config
             spiders = self.spiders
 
         try:
@@ -74,7 +74,7 @@ class GenericAPISpider(WebCrawlerBase):
 
         data = {"url": response.url, "domain": get_domain(response.url), "data": result_data}
 
-        context["spider_id"] = current_spider.get("spider_id")
+        context["spider_id"] = spider_config.get("spider_id")
         data['context'] = context
 
         """
@@ -93,9 +93,9 @@ class GenericAPISpider(WebCrawlerBase):
         Note on current_request_spider_id:
         This can never be none, including the ones that are started by start_urls .
         """
-        current_spider_id = current_spider.get("spider_id")
+        spider_config_id = spider_config.get("spider_id")
 
-        crawler_traversals = current_spider.get('traversals', [])
+        crawler_traversals = spider_config.get('traversals', [])
         for traversal in crawler_traversals:
             next_spider_id = traversal['next_spider_id']
             iter_param = traversal['iter_param']
@@ -173,7 +173,7 @@ class GenericAPISpider(WebCrawlerBase):
                         callback=self.parse,
                         errback=self.parse_error,
                         meta={
-                            "current_spider": next_crawler,
+                            "spider_config": next_crawler,
                             "spiders": spiders,
                             "current_request_traversal_id": traversal_id,
                             "current_request_traversal_page_count": current_request_traversal_page_count,
