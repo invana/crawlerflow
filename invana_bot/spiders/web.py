@@ -107,9 +107,10 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         # self.logger.info("======Parsing the url: {}".format(response.url))
         spider_config = response.meta.get("spider_config")
         spiders = response.meta.get("spiders")
-        default_storage = response.meta.get("default_storage")
-        default_storage = self.get_default_storage(settings=self.settings,
-                                                   spider_config=spider_config)
+        default_storage = self.get_default_storage(
+            settings=self.settings,
+            spider_config=spider_config
+        )
         print("==========<<<<<<<<<<<A>>>>>>>>")
         print(default_storage)
         print("==========<<<<<<<<<<<A>>>>>>>>")
@@ -128,10 +129,12 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             if extractor_data_storage.get("include_url") is True:
                 extracted_data['url'] = response.url
 
-            collection_name = extractor_data_storage.get("collection_name")
-            storage_id = extractor_data_storage.get("storage_id")
+            collection_name = extractor_data_storage.get("collection_name") or default_storage.get("collection_name")
+            storage_id = extractor_data_storage.get("storage_id") or default_storage.get("storage_id")
             if collection_name:
-                yield self.yield_data(data=extracted_data, storage_id=storage_id, collection_name=collection_name)
+                yield self.prepare_data_for_yield(data=extracted_data,
+                                                  storage_id=storage_id,
+                                                  collection_name=collection_name)
 
         """
         if crawler_traversal_id is None, it means this response originated from the 
@@ -234,8 +237,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         data['url'] = response.url
         data['domain'] = get_domain(response.url)
         data['context']['spider_id'] = spider_config['spider_id']
-
-        yield self.yield_data(
+        print("**>>**", data)
+        yield self.prepare_data_for_yield(
             data=data,
             storage_id=default_storage.get("storage_id"),
             collection_name=default_storage.get("collection_name")

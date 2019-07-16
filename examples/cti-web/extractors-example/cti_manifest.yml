@@ -8,15 +8,17 @@ spiders:
   allowed_domains:
     - "blog.scrapinghub.com"
   extractors:
-  - extractor_type: ParagraphsExtractor
-    extractor_id: paragraphs
+  - extractor_type: PageOverviewExtractor
+    extractor_id: overview
     data_storage:
       include_url: true
       collection_name: paragraphs
+      unique_key: null
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tag
     data_storage:
       include_url: true
+      include_domain: true
   storage_id: default
 settings:
   allowed_domains:
@@ -25,10 +27,11 @@ settings:
   default_storage_id: default
   data_storages:
   - storage_id: default
-    storage_type: mongodb
-    connection_uri: mongodb://127.0.0.1/spiders_data_index
+    storage_type: elasticsearch
+    connection_uri: localhost
     database_name: spiders_data_index
     collection_name: blog_list
+    unique_key: url
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes invanalabs xyz

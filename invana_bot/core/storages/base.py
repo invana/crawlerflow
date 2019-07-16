@@ -2,7 +2,8 @@ from datetime import datetime
 from scrapy.exceptions import DropItem
 from elasticsearch import Elasticsearch
 from pymongo import MongoClient
-
+from invana_bot.utils.storage import generate_random_id
+from slugify import slugify
 
 class InvanaDataPipeline(object):
 
@@ -53,15 +54,11 @@ class InvanaDataPipeline(object):
         :param spider:
         :return:
         """
-        print("====>>>>>>>>data_storage_conns", self.data_storage_conns)
-        print("************* items")
-        print(item)
-        print("#############")
         data_storage_id = item.get("_data_storage_id")
         data_storage = self.data_storage_conns.get(data_storage_id)
         data_storage_conn = data_storage.get("_connection")
-        data_storage_collection_name = data_storage.get("_data_storage_collection_name")
-
+        data_storage_collection_name = item.get("_data_storage_collection_name")
+        print("==data_storage_collection_name", data_storage_collection_name)
         data = item.get("_data")
         if None in [data_storage, data_storage_conn]:
             raise DropItem(
@@ -72,11 +69,19 @@ class InvanaDataPipeline(object):
             data['updated'] = datetime.now()
         data_storage_type = data_storage.get("_data_storage", {}).get("storage_type")
         if data_storage_type == "mongodb":
-            data_storage_conn.insert(data)
+            data_storage_conn[data_storage_collection_name].insert(data)
         elif data_storage_type == "elasticsearch":
-            data_storage_conn.index(index=data_storage.get("database_name"),
-                                    doc_type=data_storage_collection_name,
-                                    **data)
+
+            unique_key = data_storage.get("_data_storage", {}).get("unique_key")
+            if unique_key:
+                doc_id = slugify(data[unique_key])
+            else:
+                doc_id = generate_random_id()
+            data_storage_conn.index(
+                index=data_storage.get("_data_storage", {}).get("database_name"),
+                doc_type=data_storage_collection_name,
+                id=doc_id,
+                body=data)
 
         print("Item added to data_storage_type:{} with storage_id:{}".format(
             data_storage_type,
