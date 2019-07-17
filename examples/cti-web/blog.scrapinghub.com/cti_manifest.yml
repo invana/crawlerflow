@@ -7,30 +7,6 @@ spiders:
 - spider_id: blog_list
   allowed_domains:
     - "blog.scrapinghub.com"
-  extractors:
-  - extractor_type: MetaTagExtractor
-    extractor_id: meta_tags
-  - extractor_type: ParagraphsExtractor
-    extractor_id: paragraphs
-  - extractor_type: CustomContentExtractor
-    extractor_id: blog_list_parser
-    data_selectors:
-    - selector_id: blogs
-      selector: ".post-listing .post-item"
-      selector_attribute: element
-      data_type: ListDictField
-      child_selectors:
-      - selector_id: url
-        selector: ".post-header h2 a"
-        selector_type: css
-        selector_attribute: href
-        data_type: StringField
-        multiple: false
-      - selector_id: title
-        selector: ".post-header h2 a"
-        selector_type: css
-        selector_attribute: text
-        data_type: StringField
   traversals:
   - traversal_id: blog_list_traversal
     selector_type: css
@@ -40,38 +16,40 @@ spiders:
   - traversal_id: blog_detail_traversal
     selector_type: css
     selector_value: "h2 a"
-    max_pages: 1
+    max_pages: 1000
     next_spider_id: blog_detail
 - spider_id: blog_detail
   extractors:
+  - extractor_type: MetaTagExtractor
+    extractor_id: meta_tags
+  - extractor_type: ParagraphsExtractor
+    extractor_id: paragraphs
   - extractor_type: CustomContentExtractor
     extractor_id: blog_detail
     data_selectors:
-    - selector_id: blog_detail
-      selector: ".blog-section"
-      selector_attribute: element
-      data_type: DictField
-      child_selectors:
-      - selector_id: title
-        selector: h1 span
-        selector_type: css
-        selector_attribute: text
-        data_type: StringField
-      - selector_id: published_at
-        selector: ".date a"
-        selector_type: css
-        selector_attribute: text
-        data_type: StringField
-      - selector_id: author
-        selector: ".author a"
-        selector_type: css
-        selector_attribute: text
-        data_type: StringField
-      - selector_id: html_content
-        selector: ".post-body"
-        selector_type: css
-        selector_attribute: html
-        data_type: StringField
+    - selector_id: title
+      selector: .blog-section h1 span
+      selector_type: css
+      selector_attribute: text
+      data_type: StringField
+    - selector_id: published_at
+      selector: ".blog-section .date a"
+      selector_type: css
+      selector_attribute: text
+      data_type: StringField
+    - selector_id: author
+      selector: ".blog-section .author a"
+      selector_type: css
+      selector_attribute: text
+      data_type: StringField
+#      - selector_id: html_content
+#        selector: ".blog-section .post-body"
+#        selector_type: css
+#        selector_attribute: html
+#        data_type: StringField
+#  data_storage:
+#    collection_name: blogs
+#    storage_id: default
 settings:
   allowed_domains:
   - "blog.scrapinghub.com"
@@ -81,7 +59,7 @@ settings:
   - storage_id: default
     storage_type: elasticsearch
     connection_uri: localhost
-    database_name: scrapinghub
+    database_name: scrapinghub7
     collection_name: blog_list
     unique_key: url
 context:

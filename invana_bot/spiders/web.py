@@ -118,8 +118,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         context = self.context
 
         data = {}
-        # TODO - check if there is a reasnos , otherwise it will end up
-        for extractor in spider_config['extractors']:
+        # TODO - check if there is a reasons , otherwise it will end up
+        for extractor in spider_config.get('extractors', []):
             extracted_data = self.run_extractor(response=response, extractor=extractor)
             data.update(extracted_data)
 
@@ -127,7 +127,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             if extractor_data_storage.get("include_url") is True:
                 extracted_data['url'] = response.url
 
-            collection_name = extractor_data_storage.get("collection_name") or default_storage.get("collection_name")
+            collection_name = extractor_data_storage.get("collection_name")
             storage_id = extractor_data_storage.get("storage_id") or default_storage.get("storage_id")
             if collection_name:
                 yield self.prepare_data_for_yield(data=extracted_data,
@@ -217,7 +217,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                             callback=self.parse,
                             errback=self.parse_error,
                             meta={
-                                "spider_config": response.meta.get("spider_config"),
+                                "spider_config": next_spider,
                                 "manifest": response.meta.get("manifest"),
                                 "current_request_traversal_id": traversal_id,
                                 "current_request_traversal_page_count": current_request_traversal_page_count,
