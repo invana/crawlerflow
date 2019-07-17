@@ -10,13 +10,13 @@ DEFAULT_SETTINGS_BASE = {
     # 'INVANA_BOT_SETTINGS': {
     #     'HTTPCACHE_STORAGE_SETTINGS': {
     #         'CONNECTION_URI': "127.0.0.1",
-    #         'DATABASE_NAME': "crawler_cache_db",
+    #         'DATABASE_NAME': "spider_cache_db",
     #         'COLLECTION_NAME': "web_link",
     #         "EXPIRY_TIME": 3600
     #     },
     #     'ITEM_PIPELINES_SETTINGS': {
     #         'CONNECTION_URI': "127.0.0.1",
-    #         'DATABASE_NAME': "crawler_data",
+    #         'DATABASE_NAME': "spider_data",
     #         'COLLECTION_NAME': "website_data"
     #     }
     # }
@@ -30,13 +30,13 @@ DEFAULT_SETTINGS_BASE = {
 #     'INVANA_BOT_SETTINGS': {
 #         'HTTPCACHE_STORAGE_SETTINGS': {
 #             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "crawler_cache_db",
+#             'DATABASE_NAME': "spider_cache_db",
 #             'COLLECTION_NAME': "web_link",
 #             "EXPIRY_TIME": 3600
 #         },
 #         'ITEM_PIPELINES_SETTINGS': {
 #             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "crawler_data",
+#             'DATABASE_NAME': "spider_data",
 #             'COLLECTION_NAME': "website_data"
 #         }
 #     }
@@ -49,13 +49,13 @@ DEFAULT_SETTINGS_BASE = {
 #     'INVANA_BOT_SETTINGS': {
 #         'HTTPCACHE_STORAGE_SETTINGS': {
 #             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "crawler_cache_db",
+#             'DATABASE_NAME': "spider_cache_db",
 #             'COLLECTION_NAME': "web_link",
 #             "EXPIRY_TIME": 3600
 #         },
 #         'ITEM_PIPELINES_SETTINGS': {
 #             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "crawler_data",
+#             'DATABASE_NAME': "spider_data",
 #             'COLLECTION_NAME': "website_data"
 #         }
 #     }

@@ -14,7 +14,7 @@ class WebCrawlerBase(CrawlSpider):
     spider_id = None
     spider_config = None
     spider_data_storage = None
-    spiders = []
+    manifest = {}
 
     # @property
     # def data_storage(self):

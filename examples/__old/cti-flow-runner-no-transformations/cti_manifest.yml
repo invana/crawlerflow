@@ -1,5 +1,5 @@
 cti_id: scrapinghub_blogs
-init_crawler:
+init_spider:
   start_urls:
   - "https://blog.scrapinghub.com"
   spider_id: blog_list
@@ -8,7 +8,7 @@ spiders:
   extractors:
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tags
-  - extractor_type: ParagraphExtractor
+  - extractor_type: ParagraphsExtractor
     extractor_id: paragraphs
   - extractor_type: CustomContentExtractor
     extractor_id: blog_list_parser

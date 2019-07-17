@@ -62,7 +62,7 @@ class InvanaBotJobGeneratorBase(object):
 ==========================================================
 WARNING: callback_fn is {}
 ==========================================================
-Since start_job is called with callback_fn, make sure you end the reactor if you want the crawler process to
+Since start_job is called with callback_fn, make sure you end the reactor if you want the spider process to
 stop after the callback function is executed. By default callback_fn=None will close the reactor.
 
 To write a custom callback_fn
@@ -74,11 +74,11 @@ def callback_fn():
 ==========================================================
         """.format(callback_fn))
 
-        crawler = Crawler(spider_cls, Settings(spider_settings))
-        crawler.signals.connect(engine_stopped_callback, signals.engine_stopped)
-        self.runner.crawl(crawler, **spider_kwargs)
+        spider = Crawler(spider_cls, Settings(spider_settings))
+        spider.signals.connect(engine_stopped_callback, signals.engine_stopped)
+        self.runner.crawl(spider, **spider_kwargs)
         """
-        d = runner.crawl(crawler, **spider_kwargs)
+        d = runner.crawl(spider, **spider_kwargs)
         # d.addBoth(engine_stopped_callback)
         """
         reactor.run()

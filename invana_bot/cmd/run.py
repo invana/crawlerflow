@@ -14,13 +14,13 @@ from invana_bot.spiders.api import GenericAPISpider
 
 
 def invana_bot_run():
-    crawler_choices = (
+    spider_choices = (
         "web",
         "web-single",
         "xml",
         "api"
     )
-    parser = argparse.ArgumentParser(description='InvanaBot - A web crawler framework that can'
+    parser = argparse.ArgumentParser(description='InvanaBot - A web spider framework that can'
                                                  ' transform websites into datasets with Crawl, '
                                                  'Transform and Index workflow; just with the configuration.')
 
@@ -28,22 +28,22 @@ def invana_bot_run():
     parser.add_argument('--type', type=str,
                         default='web',
                         required=True,
-                        help='options are : {}'.format(",".join(crawler_choices)),
-                        choices=crawler_choices)
+                        help='options are : {}'.format(",".join(spider_choices)),
+                        choices=spider_choices)
 
     args = parser.parse_args()
     path = os.path.abspath(args.path)
-    crawler_type = args.type
+    spider_type = args.type
 
-    if crawler_type == "web":
+    if spider_type == "web":
         spider_cls = InvanaBotSingleWebCrawler
-    elif crawler_type == "xml":
+    elif spider_type == "xml":
         spider_cls = GenericXMLFeedSpider
-    elif crawler_type == "api":
+    elif spider_type == "api":
         spider_cls = GenericAPISpider
 
     else:
-        raise Exception("There is no crawling strategy designed for crawler type: '{}'".format(crawler_type))
+        raise Exception("There is no crawling strategy designed for spider type: '{}'".format(spider_type))
 
     manifest_manager = CTIManifestManager(
         cti_config_path=path
@@ -52,12 +52,12 @@ def invana_bot_run():
     manifest, errors = manifest_manager.get_manifest()
     # print("cti_manifest", cti_manifest)
 
-    first_crawler = manifest.get("spiders", [])[0]
+    first_spider = manifest.get("spiders", [])[0]
 
-    ignore_crawler_keys = ["spider_id", "allowed_domains", "extractors", "traversals"]
+    ignore_spider_keys = ["spider_id", "allowed_domains", "extractors", "traversals"]
     extra_arguments = {}
-    for k, v in first_crawler.items():
-        if k not in ignore_crawler_keys:
+    for k, v in first_spider.items():
+        if k not in ignore_spider_keys:
             extra_arguments[k] = v
     if len(errors) == 0:
         spider_job_generator = InvanaBotJobGenerator(
@@ -103,18 +103,18 @@ def invana_bot_run():
         #     print("==============================================================")
         #
     #
-    # if crawler_type == "web-single":
+    # if spider_type == "web-single":
     #     manifest_manager = SingleCrawlerManifestManager(
     #         config_path=path
     #     )
-    #     crawler_manifest, errors = manifest_manager.get_manifest()
+    #     spider_manifest, errors = manifest_manager.get_manifest()
     #     if len(errors) == 0:
     #         spider_job_generator = SingleCrawlJobGenerator(
     #             settings=DEFAULT_SETTINGS
     #         )
-    #         context = crawler_manifest.get("context")
+    #         context = spider_manifest.get("context")
     #         job = spider_job_generator.create_job(
-    #             spider_config=crawler_manifest,
+    #             spider_config=spider_manifest,
     #             context=context
     #         )
     #         spider_job_generator.start_job(job=job)

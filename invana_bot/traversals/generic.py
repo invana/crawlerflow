@@ -19,7 +19,7 @@ class GenericLinkExtractor(object):
         :param restrict_css: list of xpath for links extraction
         :param restrict_regex: list of regex patterns
         :param link_extractor_cls: defaults to scrapy link extractor
-        :param allow_domains: defaults to the allowed domains of crawler
+        :param allow_domains: defaults to the allowed domains of spider
         """
         self.restrict_xpaths = restrict_xpaths
         self.restrict_css = restrict_css

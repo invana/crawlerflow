@@ -25,15 +25,15 @@ class InvanaBotConfigValidator(object):
     }
     all_errors = []
 
-    def __init__(self, config=None, crawler_type="web"):
+    def __init__(self, config=None, spider_type="web"):
         self.config = config
-        self.crawler_type = crawler_type
+        self.spider_type = spider_type
 
     def log_error(self, error_text):
         self.all_errors.append(error_text)
 
     def validate_required_fields(self):
-        required_keys = ['cti_id', 'init_crawler', 'spiders']
+        required_keys = ['cti_id', 'init_spider', 'spiders']
         for key_ in required_keys:
             if key_ not in self.config.keys():
                 self.log_error(
@@ -73,7 +73,7 @@ class InvanaBotConfigValidator(object):
     def validate_spiders(self, spiders=None):
         # print(spiders)
 
-        crawler_required_fields = [
+        spider_required_fields = [
             {
                 "extractor_id": "spider_id",
                 "field_type": str
@@ -92,17 +92,17 @@ class InvanaBotConfigValidator(object):
             }
         ]
 
-        for crawler in spiders:
-            crawler_config_keys = crawler.keys()
+        for spider in spiders:
+            spider_config_keys = spider.keys()
             # check if all required keys where there.
-            for required_field in crawler_required_fields:
-                if required_field['extractor_id'] in crawler_config_keys:
+            for required_field in spider_required_fields:
+                if required_field['extractor_id'] in spider_config_keys:
                     pass
                 else:
                     self.log_error(
                         "required field '{}' in spiders data not found".format(required_field['extractor_id']))
 
-                if type(crawler[required_field['extractor_id']]) is not required_field['field_type']:
+                if type(spider[required_field['extractor_id']]) is not required_field['field_type']:
                     self.log_error(
                         "required field '{}' in spiders should of '{}' data type".format(required_field['extractor_id'],
                                                                                           required_field['field_type']))
@@ -111,7 +111,7 @@ class InvanaBotConfigValidator(object):
             making sure extractors data is correct
             """
             for required_field in required_extractors_fields:
-                for parser in crawler.get('extractors',[]):
+                for parser in spider.get('extractors',[]):
                     parser_config_keys = parser.keys()
                     if required_field['extractor_id'] in parser_config_keys:
                         pass
@@ -135,17 +135,17 @@ class InvanaBotConfigValidator(object):
                         pass  # TODO - implement data selector validations.
                         self.validate_selector(selector=selector)
 
-            traversals = crawler.get('traversals', [])
+            traversals = spider.get('traversals', [])
             if type(traversals) is not list:
                 self.log_error(
-                    "traversals data in the crawler '{}' should be of list type".format(crawler['spider_id']))
+                    "traversals data in the spider '{}' should be of list type".format(spider['spider_id']))
 
-            self.validate_traversals(traversals=traversals, crawler=crawler, all_spiders=spiders)
+            self.validate_traversals(traversals=traversals, spider=spider, all_spiders=spiders)
 
-    def validate_traversals(self, traversals=None, crawler=None, all_spiders=None):
+    def validate_traversals(self, traversals=None, spider=None, all_spiders=None):
 
         must_have_keys = ["traversal_id", "selector_type", "selector_value", ]
-        all_spiders_ids = [crawler['spider_id'] for crawler in all_spiders]
+        all_spiders_ids = [spider['spider_id'] for spider in all_spiders]
 
         for traversal in traversals:
             next_spider_id = traversal.get("next_spider_id")
@@ -282,7 +282,7 @@ Here are examples of traversal
 
 # def validate_cti_config(config=None):
 #     optional_keys = ['transformations', 'data_storages', 'callbacks']
-#     required_keys = ['cti_id', 'init_crawler', 'spiders']
+#     required_keys = ['cti_id', 'init_spider', 'spiders']
 #     for key_ in required_keys:
 #         if key_ not in config.keys():
 #             raise InvalidCrawlerConfig(
@@ -330,6 +330,6 @@ def validate_cti_config(cti_manifest):
     return errors
 
 
-def validate_crawler_config(crawler_config):
-    # TODO - fix this validations for crawler config later.
+def validate_spider_config(spider_config):
+    # TODO - fix this validations for spider config later.
     return []

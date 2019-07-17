@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from invana_bot.utils.storage import generate_random_id
 from slugify import slugify
 
+
 class InvanaDataPipeline(object):
 
     @staticmethod
@@ -38,9 +39,9 @@ class InvanaDataPipeline(object):
                 raise NotImplementedError("yet to implement elasticsearch pipeline")
 
     @classmethod
-    def from_crawler(cls, crawler):
+    def from_crawler(cls, spider):
         return cls(
-            data_storages=crawler.settings.get('DATA_STORAGES')
+            data_storages=spider.settings['DATA_STORAGES']
         )
 
     def process_item(self, item, spider):
@@ -73,7 +74,7 @@ class InvanaDataPipeline(object):
         elif data_storage_type == "elasticsearch":
 
             unique_key = data_storage.get("_data_storage", {}).get("unique_key")
-            if unique_key:
+            if unique_key and unique_key in data.items():
                 doc_id = slugify(data[unique_key])
             else:
                 doc_id = generate_random_id()

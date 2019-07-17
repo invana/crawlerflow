@@ -2,7 +2,7 @@
 
 
 InvanaBot allows users to extract information while it crawls through the webpages. You can specify multiple
-extractors to a crawler, allowing you to organise the information you need into grouped/subdocument data.
+extractors to a spider, allowing you to organise the information you need into grouped/subdocument data.
 
 
 All the extractors are available at `invana_bot.extractors`
@@ -15,7 +15,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: ParagraphsExtractor
     extractor_id: paragraphs_data
@@ -41,7 +41,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: TableContentExtractor
     extractor_id: tables_data
@@ -76,7 +76,7 @@ Here is the configuration. This will gather data of og, twitter and fb meta tags
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tag_data
@@ -102,7 +102,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: IconsExtractor
     extractor_id: icon_data
@@ -127,7 +127,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: JSONLDExtractor
     extractor_id: json_ld_data
@@ -208,7 +208,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: PlainHTMLContentExtractor
     extractor_id: html_content
@@ -231,7 +231,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: PageOverviewExtractor
     extractor_id: overview
@@ -264,7 +264,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: FeedUrlExtractor
     extractor_id: feeds_data
@@ -285,7 +285,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: ImagesExtractor
     extractor_id: images
@@ -311,7 +311,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: AllLinksExtractor
     extractor_id: all_links
@@ -341,7 +341,7 @@ Here is the configuration.
 
 ```yaml
 spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: AllLinksAnalyticsExtractor
     extractor_id: all_links_analysed

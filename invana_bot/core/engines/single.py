@@ -1,6 +1,6 @@
 from invana_bot.spiders.web import InvanaBotSingleWebCrawler
 from scrapy.spiders import Rule
-from invana_bot.utils.config import validate_crawler_config
+from invana_bot.utils.config import validate_spider_config
 from scrapy.linkextractors import LinkExtractor
 from .base import RunnerEngineBase
 
@@ -64,7 +64,7 @@ class InvanaBotSingleCrawlerRunnerEngine(RunnerEngineBase):
         # self.manifest_validator = manifest_validator
 
     def crawl(self):
-        errors = validate_crawler_config(self.manifest)
+        errors = validate_spider_config(self.manifest)
         if len(errors) == 0:
             cti_job = self.run()
             return cti_job, errors

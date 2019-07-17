@@ -1,5 +1,5 @@
 cti_id: scrapinghub_blogs
-init_crawler:
+init_spider:
   start_urls:
   - "https://blog.scrapinghub.com"
   spider_id: blog_list
@@ -10,7 +10,7 @@ spiders:
   extractors:
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tags
-  - extractor_type: ParagraphExtractor
+  - extractor_type: ParagraphsExtractor
     extractor_id: paragraphs
   - extractor_type: CustomContentExtractor
     extractor_id: blog_list_parser
@@ -32,12 +32,12 @@ spiders:
         selector_attribute: text
         data_type: StringField
   traversals:
-  - traversal_id: scrapinghub_pagination
+  - traversal_id: blog_list_traversal
     selector_type: css
     selector_value: ".next-posts-link"
     max_pages: 1
     next_spider_id: blog_list
-  - traversal_id: scrapinghub_detail
+  - traversal_id: blog_detail_traversal
     selector_type: css
     selector_value: "h2 a"
     max_pages: 1
@@ -67,32 +67,23 @@ spiders:
         selector_type: css
         selector_attribute: text
         data_type: StringField
-#      - selector_id: html_content
-#        selector: ".post-body"
-#        selector_type: css
-#        selector_attribute: html
-#        data_type: StringField
-transformations:
-- transformation_id: default
-  transformation_fn: transformation_fn
-data_storages:
-- data_storage_id: default
-  transformation_id: default
-  connection_uri: mongodb://127.0.0.1/spiders_data_index
-  collection_name: blog_list
-  unique_key: url
-callbacks:
-- callback_id: default
-  data_storage_id: default
-  url: http://localhost/api/callback
-  request_type: POST
-  payload: {}
-  headers:
-    X-TOKEN: abc123456789
+      - selector_id: html_content
+        selector: ".post-body"
+        selector_type: css
+        selector_attribute: html
+        data_type: StringField
 settings:
   allowed_domains:
   - "blog.scrapinghub.com"
   download_delay: 0
+  default_storage_id: default
+  data_storages:
+  - storage_id: default
+    storage_type: elasticsearch
+    connection_uri: localhost
+    database_name: scrapinghub
+    collection_name: blog_list
+    unique_key: url
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes invanalabs xyz

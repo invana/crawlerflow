@@ -1,5 +1,5 @@
 ---
-init_crawler:
+init_spider:
   start_urls:
   - https://www.bing.com/search?q=Indian+Agriculture
   - https://www.bing.com/search?q=Indian+Agriculture+trends
@@ -17,12 +17,12 @@ spiders:
     selector_type: css
     max_pages: 5
     next_spider_id: bing_search
-  - traversal_id: generic_crawler_traversal
+  - traversal_id: generic_spider_traversal
     selector_type: css
     selector_value: ".b_algo h2 a"
-    next_spider_id: generic_crawler
+    next_spider_id: generic_spider
     max_pages: 5
-- spider_id: generic_crawler
+- spider_id: generic_spider
   extractors:
   - extractor_type: CustomContentExtractor
     extractor_id: page-seo-data

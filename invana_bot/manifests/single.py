@@ -9,7 +9,7 @@ class SingleCrawlerManifestManager(object):
 
 
     """
-    required_files = ["crawler_manifest.json", "crawler_manifest.py"]
+    required_files = ["spider_manifest.json", "spider_manifest.py"]
 
     def __init__(self, config_path=None):
         print("Setting ETI path as: {}".format(config_path))
@@ -17,10 +17,10 @@ class SingleCrawlerManifestManager(object):
 
     def import_files(self):
         # print("self.cti_config_path", self.config_path)
-        self.spider_config = yaml.load(open("{}/crawler_manifest.yml".format(self.config_path)))
+        self.spider_config = yaml.load(open("{}/spider_manifest.yml".format(self.config_path)))
         sys.path.append(self.config_path)
-        import crawler_transformations
-        self.cti_transformations_module = crawler_transformations
+        import spider_transformations
+        self.cti_transformations_module = spider_transformations
         # print("cti_manifest is {}".format(self.spider_config))
         # print("cti_transformations_module is {}".format(self.cti_transformations_module))
 

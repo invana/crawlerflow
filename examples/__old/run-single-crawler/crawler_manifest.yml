@@ -5,7 +5,7 @@ start_urls:
 extractors:
 - extractor_type: MetaTagExtractor
   extractor_id: meta_tags
-- extractor_type: ParagraphExtractor
+- extractor_type: ParagraphsExtractor
   extractor_id: paragraphs
 - extractor_type: CustomContentExtractor
   extractor_id: blog_list_parser
