@@ -26,8 +26,8 @@ settings:
   - storage_id: default
     storage_type: elasticsearch
     connection_uri: localhost
-    database_name: github.com
-    collection_name: pages
+    database_name: github.com1
+    collection_name: pages_66
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes invanalabs xyz

@@ -24,11 +24,15 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         if extractor_type is None:
             return {}
         else:
-            extractor_object = driver_klass(response=response,
-                                            extractor=extractor,
-                                            extractor_id=extractor_id)
-        data = extractor_object.run()
-        return data
+            try:
+                extractor_object = driver_klass(response=response,
+                                                extractor=extractor,
+                                                extractor_id=extractor_id)
+                data = extractor_object.run()
+                return data
+            except Exception as e:
+                print(e)
+        return {}
 
     def parse(self, response=None):
         self.logger.info("======Parsing the url: {}".format(response.url))
