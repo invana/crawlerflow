@@ -46,7 +46,7 @@ def invana_bot_run():
         raise Exception("There is no crawling strategy designed for spider type: '{}'".format(spider_type))
 
     manifest_manager = CTIManifestManager(
-        cti_config_path=path
+        manifest_path=path
     )
 
     manifest, errors = manifest_manager.get_manifest()
@@ -75,13 +75,13 @@ def invana_bot_run():
     else:
         print("==============================================================")
         print("ERROR : ETI Job Failing with the errors :: {}".format(
-            manifest_manager.cti_config_path,
+            manifest_manager.manifest_path,
             errors
         ))
         print("==============================================================")
 
         # manifest_manager = CTIManifestManager(
-        #     cti_config_path=path
+        #     manifest_path=path
         # )
         # cti_manifest, errors = manifest_manager.get_manifest()
         # if len(errors) == 0:
@@ -97,7 +97,7 @@ def invana_bot_run():
         # else:
         #     print("==============================================================")
         #     print("ERROR : ETI Job Failing with the errors :: {}".format(
-        #         manifest_manager.cti_config_path,
+        #         manifest_manager.manifest_path,
         #         errors
         #     ))
         #     print("==============================================================")

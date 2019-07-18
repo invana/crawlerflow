@@ -1,4 +1,3 @@
-import json
 import sys
 import os
 import yaml
@@ -10,48 +9,58 @@ class CTIManifestManager(object):
 
 
     """
-    required_files = ["cti_manifest.json", "cti_transformations.py"]
+    ib_functions = None
+    required_files = ["manifest.yml", "ib_functions.py"]
+    manifest = None
 
-    def __init__(self, cti_config_path=None):
-        print("Setting ETI path as: {}".format(cti_config_path))
-        self.cti_config_path = cti_config_path
+    def __init__(self, manifest_path=None):
+        print("Setting ETI path as: {}".format(manifest_path))
+        self.manifest_path = manifest_path
 
     def import_files(self):
-        print("self.cti_config_path", self.cti_config_path)
-        self.cti_manifest = yaml.load(open("{}/cti_manifest.yml".format(self.cti_config_path)), Loader=yaml.FullLoader)
-        sys.path.append(self.cti_config_path)
+        print("self.manifest_path", self.manifest_path)
+        self.manifest = yaml.load(open("{}/manifest.yml".format(self.manifest_path)), Loader=yaml.FullLoader)
+        sys.path.append(self.manifest_path)
         """
         don't remove the import below, this will be the cti_transformations.py,
         which is one of the required file to run the job. This file will be provided by the 
         user during the run.
         """
         try:
-            import cti_transformations
+            import ib_functions
         except Exception as e:
-            cti_transformations = None
-        self.cti_transformations_module = cti_transformations
-        # print("cti_manifest is {}".format(self.cti_manifest))
-        # print("cti_transformations_module is {}".format(self.cti_transformations_module))
+            ib_functions = None
+        self.ib_functions = ib_functions
+        print ("self.ib_functions is {}".format(ib_functions))
+        # print("manifest is {}".format(self.manifest))
+        # print("ib_functions is {}".format(self.ib_functions))
 
     def validate_cti_path_and_files(self):
         errors = []
 
         try:
-            files_in_path = os.listdir(self.cti_config_path)
+            files_in_path = os.listdir(self.manifest_path)
         except Exception as e:
-            errors.append("No such path exist {}".format(self.cti_config_path))
+            errors.append("No such path exist {}".format(self.manifest_path))
             files_in_path = []
         if errors == 0:
             for required_file in self.required_files:
                 if required_file not in files_in_path:
-                    errors.append("{} file not in the path {}".format(required_file, self.cti_config_path))
+                    errors.append("{} file not in the path {}".format(required_file, self.manifest_path))
         return errors
 
     def import_cti_transformations(self):
-        if self.cti_transformations_module:
-            for transformation in self.cti_manifest.get("transformations", []):
-                method_to_call = getattr(self.cti_transformations_module, transformation.get("transformation_fn"))
+        if self.ib_functions:
+            for transformation in self.manifest.get("transformations", []):
+                method_to_call = getattr(self.ib_functions, transformation.get("transformation_fn"))
                 transformation['transformation_fn'] = method_to_call
+
+    def import_extractor_functions(self):
+        if self.ib_functions:
+            for spider in self.manifest.get("spiders", []):
+                for extractor in spider.get("extractors", []):
+                    method_to_call = getattr(self.ib_functions, extractor.get("extractor_fn"))
+                    extractor['extractor_fn'] = method_to_call
 
     def get_manifest(self):
         errors = self.validate_cti_path_and_files()
@@ -59,4 +68,6 @@ class CTIManifestManager(object):
             return None, errors
         self.import_files()
         self.import_cti_transformations()
-        return self.cti_manifest, errors
+        self.import_extractor_functions()
+        print ("=====+++++++++============")
+        return self.manifest, errors

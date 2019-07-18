@@ -1,0 +1,33 @@
+cti_id: github
+init_spider:
+  start_urls:
+  - "https://github.com"
+  spider_id: default_spider
+spiders:
+- spider_id: default_spider
+  allowed_domains:
+    - "github.com"
+  extractors:
+  - extractor_id: page_summary
+    extractor_type: PythonBasedExtractor
+    extractor_fn: default_extractor_fn
+  traversals:
+  - traversal_id: default_traversal
+    selector_type: css
+    selector_value: "a"
+    max_pages: 10
+    next_spider_id: default_spider
+settings:
+  allowed_domains:
+  - "github.com"
+  download_delay: 0
+  default_storage_id: default
+  data_storages:
+  - storage_id: default
+    storage_type: elasticsearch
+    connection_uri: localhost
+    database_name: github.com
+    collection_name: pages
+context:
+  author: https://github.com/rrmerugu
+  description: Crawler that scrapes invanalabs xyz

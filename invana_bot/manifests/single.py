@@ -16,7 +16,7 @@ class SingleCrawlerManifestManager(object):
         self.config_path = config_path
 
     def import_files(self):
-        # print("self.cti_config_path", self.config_path)
+        # print("self.manifest_path", self.config_path)
         self.spider_config = yaml.load(open("{}/spider_manifest.yml".format(self.config_path)))
         sys.path.append(self.config_path)
         import spider_transformations
