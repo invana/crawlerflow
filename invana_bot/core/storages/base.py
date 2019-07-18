@@ -59,7 +59,7 @@ class InvanaDataPipeline(object):
         data_storage = self.data_storage_conns.get(data_storage_id)
         data_storage_conn = data_storage.get("_connection")
         data_storage_collection_name = item.get("_data_storage_collection_name")
-        print("==data_storage_collection_name", data_storage_collection_name)
+        # print("==data_storage_collection_name", data_storage_collection_name)
         data = item.get("_data")
         if None in [data_storage, data_storage_conn]:
             raise DropItem(
