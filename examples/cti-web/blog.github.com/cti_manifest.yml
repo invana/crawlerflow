@@ -1,44 +1,42 @@
-cti_id: scrapinghub_blogs
+cti_id: github_blogs
 init_spider:
   start_urls:
-  - "https://blog.scrapinghub.com"
+  - "https://github.blog"
   spider_id: blog_list
 spiders:
 - spider_id: blog_list
   allowed_domains:
-    - "blog.scrapinghub.com"
+    - "github.blog"
   traversals:
   - traversal_id: blog_list_traversal
     selector_type: css
-    selector_value: ".next-posts-link"
+    selector_value: ".all-posts__view-more,.next_page"
     max_pages: 1
     next_spider_id: blog_list
   - traversal_id: blog_detail_traversal
     selector_type: css
-    selector_value: "h2 a"
-    max_pages: 1000
+    selector_value: "#homepage-hero .mb-3 a , .mb-4 a"
+    max_pages: 10000
     next_spider_id: blog_detail
 - spider_id: blog_detail
   extractors:
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tags
-  - extractor_type: ParagraphsExtractor
-    extractor_id: paragraphs
   - extractor_type: CustomContentExtractor
     extractor_id: blog_detail
     data_selectors:
     - selector_id: title
-      selector: .blog-section h1 span
+      selector: "#main .lh-condensed"
       selector_type: css
       selector_attribute: text
       data_type: StringField
     - selector_id: published_at
-      selector: ".blog-section .date a"
+      selector: ".f5 time"
       selector_type: css
       selector_attribute: text
       data_type: StringField
     - selector_id: author
-      selector: ".blog-section .author a"
+      selector: ".post__header-content .hero-post__author-name"
       selector_type: css
       selector_attribute: text
       data_type: StringField
@@ -52,15 +50,15 @@ spiders:
 #    storage_id: default
 settings:
   allowed_domains:
-  - "blog.scrapinghub.com"
+  - "github.blog"
   download_delay: 0
   default_storage_id: default
   data_storages:
   - storage_id: default
     storage_type: elasticsearch
     connection_uri: localhost
-    database_name: invanalabs
-    collection_name: scrapinghub_blogs
+    database_name: org
+    collection_name: blogs
     unique_key: url
 context:
   author: https://github.com/rrmerugu
