@@ -6,9 +6,6 @@ from invana_bot.utils.url import get_domain
 from invana_bot.utils.spiders import get_spider_from_list
 from invana_bot.traversals.generic import GenericLinkExtractor
 
-TRAVERSAL_LINK_FROM_FIELD = "link_from_field"
-TRAVERSAL_SAME_DOMAIN_FIELD = "same_domain"
-
 
 class InvanaBotSingleWebCrawler(WebCrawlerBase):
     """
@@ -123,16 +120,6 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
             extracted_data = self.run_extractor(response=response, extractor=extractor)
             data.update(extracted_data)
 
-            extractor_data_storage = extractor.get("data_storage") or default_storage
-            if extractor_data_storage.get("include_url") is True:
-                extracted_data['url'] = response.url
-
-            collection_name = extractor_data_storage.get("collection_name")
-            storage_id = extractor_data_storage.get("storage_id") or default_storage.get("storage_id")
-            if collection_name:
-                yield self.prepare_data_for_yield(data=extracted_data,
-                                                  storage_id=storage_id,
-                                                  collection_name=collection_name)
 
         """
         if spider_traversal_id is None, it means this response originated from the 
