@@ -91,16 +91,17 @@ class WebCrawlerBase(CrawlSpider):
     @staticmethod
     def run_traversal(response=None, traversal=None, **kwargs):
 
-        selector_type = traversal.get("selector_type")
+        selector_type = traversal.get("selector_type", "css")
         kwargs = {}
         if selector_type == "css":
             kwargs['restrict_css'] = (traversal.get("selector_value"),)
         elif selector_type == "xpath":
             kwargs['restrict_xpaths'] = (traversal.get("selector_value"),)
-        elif selector_type == "css":
-            kwargs['restrict_regex'] = (traversal.get("selector_value"),)
 
-        kwargs['allow_domains'] = traversal.get("allow_domains", [])
+        if traversal.get("allow_domains", []) == ["*"]:
+            kwargs['allow_domains'] = ()
+        else:
+            kwargs['allow_domains'] = traversal.get("allow_domains", [])
         return GenericLinkExtractor(**kwargs).extract_links(response=response)
 
     def run_traversals(self, spider_config=None, response=None):
