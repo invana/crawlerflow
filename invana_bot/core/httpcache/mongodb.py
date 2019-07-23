@@ -23,14 +23,14 @@ class MongoDBCacheStorage(object):
         'INVANA_BOT_SETTINGS': {
             'HTTPCACHE_STORAGE_SETTINGS': {
                 'CONNECTION_URI': "mongodb://127.0.0.1",
-                'DATABASE_NAME': "crawler_cache_db",
+                'DATABASE_NAME': "spider_cache_db",
                 'COLLECTION_NAME': "web_link",
                 "EXPIRY_TIME": 3600
             },
             'ITEM_PIPELINES_SETTINGS': {
                 'CONNECTION_URI': "mongodb://127.0.0.1",
-                'DATABASE_NAME': "crawler_data",
-                'COLLECTION_NAME': "crawler_feeds_data"
+                'DATABASE_NAME': "spider_data",
+                'COLLECTION_NAME': "spider_feeds_data"
             }
         }
     }

@@ -1,5 +1,5 @@
 cti_id: scrapinghub_blogs
-init_crawler:
+init_spider:
   start_urls:
   - "https://blog.scrapinghub.com/web-data-analysis-exposing-nfl-player-salaries-with-python"
   spider_id: blog_list
@@ -8,12 +8,30 @@ spiders:
   allowed_domains:
     - "blog.scrapinghub.com"
   extractors:
-  - extractor_type: ParagraphsExtractor
-    extractor_id: paragraphs
+  - extractor_type: PageOverviewExtractor
+    extractor_id: overview
+    data_storage:
+      include_url: true
+      collection_name: paragraphs
+      unique_key: null
+  - extractor_type: MetaTagExtractor
+    extractor_id: meta_tag
+    data_storage:
+      include_url: true
+      include_domain: true
+  storage_id: default
 settings:
   allowed_domains:
   - "blog.scrapinghub.com"
   download_delay: 0
+  default_storage_id: default
+  data_storages:
+  - storage_id: default
+    storage_type: elasticsearch
+    connection_uri: localhost
+    database_name: spiders_data_index
+    collection_name: blog_list
+    unique_key: url
 context:
   author: https://github.com/rrmerugu
   description: Crawler that scrapes invanalabs xyz

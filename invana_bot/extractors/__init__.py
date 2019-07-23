@@ -3,3 +3,4 @@ from .content import ParagraphsExtractor, TableContentExtractor, MetaTagExtracto
     PageOverviewExtractor, FeedUrlExtractor
 from .images import ImagesExtractor
 from .links import AllLinksExtractor, AllLinksAnalyticsExtractor
+from .python import PythonBasedExtractor

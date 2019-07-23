@@ -8,30 +8,30 @@ Either crawling urls or traversing through pagination. But defined to only one w
 
 
 ```bash
-# path should have crawler_manifest.yml with the settings and crawler_transformations.py
-# you need to create crawler_transformations.py even though you are not performing any transformation.
-# refer examples/run-single-crawler/ folder for reference files that should exist in path.
+# path should have spider_manifest.yml with the settings and spider_transformations.py
+# you need to create spider_transformations.py even though you are not performing any transformation.
+# refer examples/run-single-spider/ folder for reference files that should exist in path.
 
 invana-bot --path . --type=single
 ```
 
 ## Single Crawler with traversal
 
-In this example crawler `blog_list` is paginated for 2 times and extracted the data using 
-the extractors `MetaTagExtractor`, `ParagraphExtractor`, `CustomContentExtractor`.
+In this example spider `blog_list` is paginated for 2 times and extracted the data using 
+the extractors `MetaTagExtractor`, `ParagraphsExtractor`, `CustomContentExtractor`.
 
 `extra_settings` tells few extra settings that will help the crawling run as expected without
 any block from the site.
 
 ```yaml
-# crawler_manifest.yml 
+# spider_manifest.yml 
 spider_id: blog_list
 start_urls:
 - https://blog.scrapinghub.com
 extractors:
 - extractor_type: MetaTagExtractor
   extractor_id: meta_tags
-- extractor_type: ParagraphExtractor
+- extractor_type: ParagraphsExtractor
   extractor_id: paragraphs
 - extractor_type: CustomContentExtractor
   extractor_id: blog_list_parser

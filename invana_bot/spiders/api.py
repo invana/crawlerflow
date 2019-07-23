@@ -1,7 +1,7 @@
 from .base import WebCrawlerBase
 from invana_bot.utils.url import get_domain, get_absolute_url
 from scrapy.utils.spider import iterate_spider_output
-from invana_bot.utils.spiders import get_crawler_from_list
+from invana_bot.utils.spiders import get_spider_from_list
 import scrapy
 import json
 
@@ -54,11 +54,11 @@ class GenericAPISpider(WebCrawlerBase):
         This method must return either a BaseItem, a Request, or a list
         containing any of them.
         """
-        current_crawler = response.meta.get("current_crawler")
+        spider_config = response.meta.get("spider_config")
         spiders = response.meta.get("spiders")
         context = self.context or {}
-        if None in [current_crawler]:
-            current_crawler = self.current_crawler
+        if None in [spider_config]:
+            spider_config = self.spider_config
             spiders = self.spiders
 
         try:
@@ -74,11 +74,11 @@ class GenericAPISpider(WebCrawlerBase):
 
         data = {"url": response.url, "domain": get_domain(response.url), "data": result_data}
 
-        context["spider_id"] = current_crawler.get("spider_id")
+        context["spider_id"] = spider_config.get("spider_id")
         data['context'] = context
 
         """
-        if crawler_traversal_id is None, it means this response originated from the 
+        if spider_traversal_id is None, it means this response originated from the 
         request raised by the start urls. 
 
         If it is Not None, the request/response is raised some traversal strategy.
@@ -93,16 +93,16 @@ class GenericAPISpider(WebCrawlerBase):
         Note on current_request_spider_id:
         This can never be none, including the ones that are started by start_urls .
         """
-        current_spider_id = current_crawler.get("spider_id")
+        spider_config_id = spider_config.get("spider_id")
 
-        crawler_traversals = current_crawler.get('traversals', [])
-        for traversal in crawler_traversals:
+        spider_traversals = spider_config.get('traversals', [])
+        for traversal in spider_traversals:
             next_spider_id = traversal['next_spider_id']
             iter_param = traversal['iter_param']
 
-            next_crawler = get_crawler_from_list(spider_id=next_spider_id, spiders=spiders)
+            next_spider = get_spider_from_list(spider_id=next_spider_id, spiders=spiders)
 
-            traversal['allow_domains'] = next_crawler.get("allowed_domains", [])
+            traversal['allow_domains'] = next_spider.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
             traversal_max_pages = traversal.get('max_pages', 1)
 
@@ -123,7 +123,7 @@ class GenericAPISpider(WebCrawlerBase):
 
             elif is_this_request_from_same_traversal and current_request_traversal_page_count <= traversal_max_pages:
                 """
-                This block will be valid for the traversals from same spider_id, ie., pagination of a crawler 
+                This block will be valid for the traversals from same spider_id, ie., pagination of a spider 
                 """
 
                 shall_traverse = True
@@ -136,7 +136,7 @@ class GenericAPISpider(WebCrawlerBase):
             elif is_this_request_from_same_traversal is False and current_request_traversal_page_count <= \
                     traversal_max_pages:
                 """
-                This for the crawler_a traversing to crawler_b, this is not pagination, but trsversing between 
+                This for the spider_a traversing to spider_b, this is not pagination, but trsversing between 
                 spiders.
                 """
                 shall_traverse = True
@@ -173,7 +173,7 @@ class GenericAPISpider(WebCrawlerBase):
                         callback=self.parse,
                         errback=self.parse_error,
                         meta={
-                            "current_crawler": next_crawler,
+                            "spider_config": next_spider,
                             "spiders": spiders,
                             "current_request_traversal_id": traversal_id,
                             "current_request_traversal_page_count": current_request_traversal_page_count,

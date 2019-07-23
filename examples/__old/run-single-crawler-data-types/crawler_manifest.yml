@@ -1,5 +1,5 @@
 ---
-spider_id: ecommerce_crawler
+spider_id: ecommerce_spider
 start_urls:
 - "https://colorlib.com/preview/theme/dealers/"
 extractors:
@@ -55,7 +55,7 @@ data_storages:
 - data_storage_id: default
   transformation_id: default
   connection_uri: mongodb://127.0.0.1/spiders_data_index
-  collection_name: ecommerce_crawler
+  collection_name: ecommerce_spider
   unique_key: url
 settings:
   allowed_domains:

@@ -5,7 +5,7 @@
 ## Crawl, Traverse and Index
 
 ```yaml
-# crawler_manifest.yml
+# spider_manifest.yml
 spider_id: blog_list
 whitelisted_domains:
 - blog.scrapinghub.com
@@ -14,7 +14,7 @@ start_urls:
 extractors:
 - extractor_type: MetaTagExtractor
   extractor_id: meta_tags
-- extractor_type: ParagraphExtractor
+- extractor_type: ParagraphsExtractor
   extractor_id: paragraphs
 - extractor_type: CustomContentExtractor
   extractor_id: blog_list_parser
