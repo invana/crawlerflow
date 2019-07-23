@@ -182,9 +182,9 @@ trasnformation would contain two things:</p>
 <ol>
 <li>transformation_id : name of the transformation(sluggified version is the only right way now )</li>
 <li>transformation_fn : name of the python function in the <code>cti_transformations.py</code>(for cti flow) or
- <code>crawler_transformations.py</code>(for single crawler)</li>
+ <code>spider_transformations.py</code>(for single spider)</li>
 </ol>
-<pre><code class="yaml"># cti_manifest.yml or crawler_manifest.yml
+<pre><code class="yaml"># cti_manifest.yml or spider_manifest.yml
 
 transformations:
 - transformation_id: default
@@ -197,12 +197,12 @@ transformations:
   unique_key: url
 </code></pre>
 
-<pre><code class="python"># cti_transformations.py or crawler_transformations.py
+<pre><code class="python"># cti_transformations.py or spider_transformations.py
 
 
 def transformation_fn(results):
     &quot;&quot;&quot;
-    results will contain all the documents that are stored in the database during a given cti/crawler job.
+    results will contain all the documents that are stored in the database during a given cti/spider job.
     if you want to identify the data of a parser data with in the results. You can use the example below.
 
     &quot;&quot;&quot;

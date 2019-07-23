@@ -178,7 +178,7 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="quickstart">Quickstart</h1>
-<p>We're going to create a simple single domain crawler to get the extract the blogs and save to MongoDB and 
+<p>We're going to create a simple single domain spider to get the extract the blogs and save to MongoDB and 
 Elasticsearch.</p>
 <h2 id="1-installation">1. Installation</h2>
 <pre><code class="bash">
@@ -201,7 +201,7 @@ pip3 install invana-bot
 <pre><code class="bash"># Setup a new spider
 cat &gt; cti_manifest.yml &lt;&lt;EOF
 cti_id: scrapinghub_blogs
-init_crawler:
+init_spider:
   start_urls:
   - &quot;https://blog.scrapinghub.com&quot;
   spider_id: blog_list

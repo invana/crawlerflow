@@ -187,12 +187,12 @@
 
 <h1 id="standard-extractor">Standard Extractor</h1>
 <p>InvanaBot allows users to extract information while it crawls through the webpages. You can specify multiple
-extractors to a crawler, allowing you to organise the information you need into grouped/subdocument data.</p>
+extractors to a spider, allowing you to organise the information you need into grouped/subdocument data.</p>
 <p>All the extractors are available at <code>invana_bot.extractors</code></p>
 <h2 id="paragraphsextractor">ParagraphsExtractor</h2>
 <p>Here is the configuration.</p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: ParagraphsExtractor
     extractor_id: paragraphs_data
@@ -211,7 +211,7 @@ extractors to a crawler, allowing you to organise the information you need into 
 <h2 id="tablecontentextractor">TableContentExtractor</h2>
 <p>Here is the configuration.</p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: TableContentExtractor
     extractor_id: tables_data
@@ -241,7 +241,7 @@ extractors to a crawler, allowing you to organise the information you need into 
 <p>Here is the configuration. This will gather data of og, twitter and fb meta tags, pretty much any 
 <code>meta</code> element.</p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: MetaTagExtractor
     extractor_id: meta_tag_data
@@ -261,7 +261,7 @@ extractors to a crawler, allowing you to organise the information you need into 
 <h2 id="iconsextractor">IconsExtractor</h2>
 <p>Here is the configuration.</p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: IconsExtractor
     extractor_id: icon_data
@@ -279,7 +279,7 @@ extractors to a crawler, allowing you to organise the information you need into 
 <h2 id="jsonldextractor">JSONLDExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: JSONLDExtractor
     extractor_id: json_ld_data
@@ -355,7 +355,7 @@ descriptions in a single page. </p>
 <h2 id="plainhtmlcontentextractor">PlainHTMLContentExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: PlainHTMLContentExtractor
     extractor_id: html_content
@@ -371,7 +371,7 @@ descriptions in a single page. </p>
 <h2 id="pageoverviewextractor">PageOverviewExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: PageOverviewExtractor
     extractor_id: overview
@@ -399,7 +399,7 @@ descriptions in a single page. </p>
 <h2 id="feedurlextractor">FeedUrlExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: FeedUrlExtractor
     extractor_id: feeds_data
@@ -415,7 +415,7 @@ descriptions in a single page. </p>
 <h2 id="imagesextractor">ImagesExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: ImagesExtractor
     extractor_id: images
@@ -435,7 +435,7 @@ descriptions in a single page. </p>
 <h2 id="alllinksextractor">AllLinksExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: AllLinksExtractor
     extractor_id: all_links
@@ -457,7 +457,7 @@ descriptions in a single page. </p>
 <h2 id="alllinksanalyticsextractor">AllLinksAnalyticsExtractor</h2>
 <p>Here is the configuration. </p>
 <pre><code class="yaml">spiders:
-- spider_id: default_crawler
+- spider_id: default_spider
   extractors:
   - extractor_type: AllLinksAnalyticsExtractor
     extractor_id: all_links_analysed

@@ -178,10 +178,10 @@
 <h1 id="api-spider">API Spider</h1>
 <p>Create a manifest.yml and run the spider.</p>
 <pre><code class="yaml">cti_id: localhost-auditlogs
-init_crawler:
+init_spider:
   spider_id: default
   start_urls:
-    - http://localhost:8000/api/index/crawler/data?page=1&amp;crawled_id=bing_search&amp;extractor_id=bing-search-result&amp;job_id=5d25d414b7ba3e4972172913&amp;token=b1d0801131a542d98a492916da362612
+    - http://localhost:8000/api/index/spider/data?page=1&amp;crawled_id=bing_search&amp;extractor_id=bing-search-result&amp;job_id=5d25d414b7ba3e4972172913&amp;token=b1d0801131a542d98a492916da362612
 spiders:
 - spider_id: default
   allowed_domains:

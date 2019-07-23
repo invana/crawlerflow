@@ -168,26 +168,26 @@
 <h1 id="single-domain-crawler">Single Domain Crawler</h1>
 <p>This is the simple form of crawling, this only requires crawling one website of a single structure.
 Either crawling urls or traversing through pagination. But defined to only one website of single structure.</p>
-<pre><code class="bash"># path should have crawler_manifest.yml with the settings and crawler_transformations.py
-# you need to create crawler_transformations.py even though you are not performing any transformation.
-# refer examples/run-single-crawler/ folder for reference files that should exist in path.
+<pre><code class="bash"># path should have spider_manifest.yml with the settings and spider_transformations.py
+# you need to create spider_transformations.py even though you are not performing any transformation.
+# refer examples/run-single-spider/ folder for reference files that should exist in path.
 
 invana-bot --path . --type=single
 </code></pre>
 
 <h2 id="single-crawler-with-traversal">Single Crawler with traversal</h2>
-<p>In this example crawler <code>blog_list</code> is paginated for 2 times and extracted the data using 
-the extractors <code>MetaTagExtractor</code>, <code>ParagraphExtractor</code>, <code>CustomContentExtractor</code>.</p>
+<p>In this example spider <code>blog_list</code> is paginated for 2 times and extracted the data using 
+the extractors <code>MetaTagExtractor</code>, <code>ParagraphsExtractor</code>, <code>CustomContentExtractor</code>.</p>
 <p><code>extra_settings</code> tells few extra settings that will help the crawling run as expected without
 any block from the site.</p>
-<pre><code class="yaml"># crawler_manifest.yml 
+<pre><code class="yaml"># spider_manifest.yml 
 spider_id: blog_list
 start_urls:
 - https://blog.scrapinghub.com
 extractors:
 - extractor_type: MetaTagExtractor
   extractor_id: meta_tags
-- extractor_type: ParagraphExtractor
+- extractor_type: ParagraphsExtractor
   extractor_id: paragraphs
 - extractor_type: CustomContentExtractor
   extractor_id: blog_list_parser

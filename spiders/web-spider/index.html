@@ -179,7 +179,7 @@
 <h1 id="web-spider">Web Spider</h1>
 <p>Create a manifest.yml and run the spider.</p>
 <h2 id="creating-the-manifestyml">Creating the manifest.yml</h2>
-<pre><code class="yaml">init_crawler:
+<pre><code class="yaml">init_spider:
   start_urls:
   - &quot;https://www.bing.com/search?q=amazon.com:moto g5&quot;
   spider_id: bing_search
@@ -191,12 +191,12 @@ spiders:
   - extractor_type: MetaTagExtractor
     extractor_id: bing_search_result
   traversals:
-  - traversal_id: amazon_crawler_traversal
+  - traversal_id: amazon_spider_traversal
     selector_type: css
     selector_value: &quot;.b_algo h2 a&quot;
-    next_spider_id: amazon_crawler
+    next_spider_id: amazon_spider
     max_pages: 1
-- spider_id: amazon_crawler
+- spider_id: amazon_spider
   allowed_domains:
     - amazon.in
     - amazon.com

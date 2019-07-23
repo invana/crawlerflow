@@ -175,15 +175,15 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="terminology">Terminology</h1>
-<p><strong>spiders</strong> : single unit of CTI flow. A crawler has extractors, traversals.</p>
-<p><strong>traversal</strong>: definition of how one crawler will navigate to another one. </p>
+<p><strong>spiders</strong> : single unit of CTI flow. A spider has extractors, traversals.</p>
+<p><strong>traversal</strong>: definition of how one spider will navigate to another one. </p>
 <p><strong>extractor</strong> : Definition of what data to extract from the web page and how it should be saved in to 
 the database. Extractor will have a definition of multiple selectors that should be extracted.</p>
 <p><strong>selector</strong> : Definition of a unit data that will be extracted by extractor.</p>
 <p><strong>transformation</strong> : Instructions that tells how to convert crawled data into a final data. This is the step 
 where user can clean or convert the data into the desired formats.</p>
 <p><strong>callbacks</strong> : Callbacks that should be pinged once the job is done, so that other jobs can be triggered by integrations.</p>
-<p><strong>context</strong> : This data will added to each entry that is saved by the crawler. This data is something you might want
+<p><strong>context</strong> : This data will added to each entry that is saved by the spider. This data is something you might want
 to carry forward to all the crawling jobs and saved entries. </p>
 <p>Example: <code>context = {"author" : "rrmerugu", "project_id": "alien-data"}</code> will save this in all the crawl extracted data.</p></div>
         </div>
