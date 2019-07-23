@@ -6,7 +6,7 @@ Create a manifest.yml and run the spider.
 
 ```yaml
 cti_id: news.ycombinator.com
-init_crawler:
+init_spider:
   spider_id: default
   start_urls:
     - https://news.ycombinator.com/rss

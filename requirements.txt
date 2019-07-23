@@ -8,7 +8,6 @@ constantly==15.1.0
 cryptography==2.5
 cssselect==1.0.3
 elasticsearch==6.1.1
-elasticsearch-dsl==6.1.0
 feedparser==5.2.1
 hyperlink==18.0.0
 idna==2.6
@@ -35,3 +34,4 @@ twine==1.10.0
 w3lib==1.19.0
 zope.interface==4.4.3
 pyyaml==5.1
+python-slugify

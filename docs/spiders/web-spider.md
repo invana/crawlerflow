@@ -5,7 +5,7 @@ Create a manifest.yml and run the spider.
 
 ## Creating the manifest.yml
 ```yaml
-init_crawler:
+init_spider:
   start_urls:
   - "https://www.bing.com/search?q=amazon.com:moto g5"
   spider_id: bing_search
@@ -17,12 +17,12 @@ spiders:
   - extractor_type: MetaTagExtractor
     extractor_id: bing_search_result
   traversals:
-  - traversal_id: amazon_crawler_traversal
+  - traversal_id: amazon_spider_traversal
     selector_type: css
     selector_value: ".b_algo h2 a"
-    next_spider_id: amazon_crawler
+    next_spider_id: amazon_spider
     max_pages: 1
-- spider_id: amazon_crawler
+- spider_id: amazon_spider
   allowed_domains:
     - amazon.in
     - amazon.com

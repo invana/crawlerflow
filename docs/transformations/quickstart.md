@@ -10,11 +10,11 @@ trasnformation would contain two things:
 
 1. transformation_id : name of the transformation(sluggified version is the only right way now )
 2. transformation_fn : name of the python function in the `cti_transformations.py`(for cti flow) or
- `crawler_transformations.py`(for single crawler)
+ `spider_transformations.py`(for single spider)
 
 
 ```yaml
-# cti_manifest.yml or crawler_manifest.yml
+# cti_manifest.yml or spider_manifest.yml
 
 transformations:
 - transformation_id: default
@@ -28,12 +28,12 @@ transformations:
 ```
 
 ```python
-# cti_transformations.py or crawler_transformations.py
+# cti_transformations.py or spider_transformations.py
 
   
 def transformation_fn(results):
     """
-    results will contain all the documents that are stored in the database during a given cti/crawler job.
+    results will contain all the documents that are stored in the database during a given cti/spider job.
     if you want to identify the data of a parser data with in the results. You can use the example below.
     
     """

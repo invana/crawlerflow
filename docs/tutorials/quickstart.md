@@ -1,6 +1,6 @@
 # Quickstart
 
-We're going to create a simple single domain crawler to get the extract the blogs and save to MongoDB and 
+We're going to create a simple single domain spider to get the extract the blogs and save to MongoDB and 
 Elasticsearch.
 
 ## 1. Installation
@@ -27,7 +27,7 @@ pip3 install invana-bot
 # Setup a new spider
 cat > cti_manifest.yml <<EOF
 cti_id: scrapinghub_blogs
-init_crawler:
+init_spider:
   start_urls:
   - "https://blog.scrapinghub.com"
   spider_id: blog_list

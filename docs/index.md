@@ -1,6 +1,6 @@
 # InvanaBot
 
-A crawler cum data aggregation framework that can transform Websites, Feeds, APIs into Datasets with Crawl,
+A spider cum data aggregation framework that can transform Websites, Feeds, APIs into Datasets with Crawl,
 Transform and Index strategy; with configurations instead of code.
  
 The framework comes with standard extractors that comes handy for most of the usecases. And gives you a way to 
@@ -44,7 +44,7 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 ## Quickstart
 
-Can't wait to get started? The [quickstart](tutorials/quickstart.md) guide is the fastest way to setup a crawler up and running.
+Can't wait to get started? The [quickstart](tutorials/quickstart.md) guide is the fastest way to setup a spider up and running.
  
  
 ## Support

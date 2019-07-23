@@ -1,6 +1,6 @@
 # Invana Bot
 
-A web crawler framework that can transform websites into datasets using Crawl, 
+A web spider framework that can transform websites into datasets using Crawl, 
 Transform and Index strategy. The best part is you don't need to code, you just need 
  to define the extraction and traversal configurations in yaml. 
 
@@ -46,10 +46,10 @@ pip install git+https://github.com/invanalabs/invana-bot#egg=invana_bot
 
 ## Usage
 
-To run a single website crawler, to extract information from one website only.
+To run a single website spider, to extract information from one website only.
 
 ```bash
-python3 bin/bot.py --path ./examples/run-single-crawler/ --type=single
+python3 bin/bot.py --path ./examples/run-single-spider/ --type=single
 ```
 
 To run a complex crawling strategy where crawling and data extraction happenings through multiple 

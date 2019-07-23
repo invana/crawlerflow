@@ -16,13 +16,13 @@ class MongoDBPipeline(object):
         self.collection = self.db[collection_name]
 
     @classmethod
-    def from_crawler(cls, crawler):
+    def from_spider(cls, spider):
         return cls(
-            connection_uri=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+            connection_uri=spider.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'CONNECTION_URI', None),
-            database_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+            database_name=spider.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'DATABASE_NAME', None),
-            collection_name=crawler.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
+            collection_name=spider.settings.get('INVANA_BOT_SETTINGS').get('ITEM_PIPELINES_SETTINGS').get(
                 'COLLECTION_NAME', None),
         )
 
