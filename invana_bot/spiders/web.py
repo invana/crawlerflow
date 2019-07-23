@@ -1,6 +1,7 @@
 from .base import WebCrawlerBase
 from importlib import import_module
 from invana_bot.utils.url import get_domain
+import scrapy
 
 
 class InvanaBotSingleWebCrawler(WebCrawlerBase):
