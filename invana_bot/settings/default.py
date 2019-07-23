@@ -3,7 +3,7 @@ DEFAULT_SETTINGS_BASE = {
     'HTTPCACHE_ENABLED': True,
     'TELNETCONSOLE_PORT': [6023, 6073],
     'ITEM_PIPELINES': {
-        'invana_bot.core.storages.base.InvanaDataPipeline': 1,
+        'invana_bot.core.storages.default.InvanaDataPipeline': 1,
         # 'invana_bot.core.storages.elasticsearch.ElasticSearchPipeline': 1,
         # 'invana_bot.core.storages.mongodb.MongoDBPipeline': 1
     },
