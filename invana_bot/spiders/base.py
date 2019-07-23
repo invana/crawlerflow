@@ -42,8 +42,10 @@ class WebCrawlerBase(CrawlSpider):
     def get_default_storage(settings=None, spider_config=None):
         data_storages = settings.get("DATA_STORAGES", [])
         default_storage = None
+        spider_storage_id = "default"
         for data_storage in data_storages:
-            if data_storage.get("storage_id") == spider_config.get("storage_id", "default"):
+            __storage_id = data_storage.get("storage_id") or data_storage.get("STORAGE_ID")
+            if __storage_id == spider_storage_id:
                 return data_storage
         return default_storage
 
@@ -76,10 +78,8 @@ class WebCrawlerBase(CrawlSpider):
         return current_request_traversal_id == traversal_id
 
     def make_traversal_requests(self, to_traverse_links_list=None):
-        print(">>>>>>>>>>do_traverse", to_traverse_links_list)
         traversal_requests = []
         for to_traverse_link in to_traverse_links_list:
-            print(to_traverse_link)
             traversal_requests.append(scrapy.Request(
                 to_traverse_link.get("link"),
                 callback=self.parse,

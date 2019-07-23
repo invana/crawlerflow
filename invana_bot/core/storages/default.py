@@ -10,33 +10,35 @@ class InvanaDataPipeline(object):
 
     @staticmethod
     def create_mongodb_connection(data_storage=None):
-        db_client = MongoClient(data_storage.get("connection_uri"))
-        db_conn = db_client[data_storage.get("database_name")]
+        db_client = MongoClient(data_storage.get("connection_uri") or data_storage.get("CONNECTION_URI"))
+        db_conn = db_client[data_storage.get("database_name") or data_storage.get("DATABASE_NAME")]
         return db_conn
 
     @staticmethod
     def create_elasticsearch_connection(data_storage=None):
 
-        db_conn = Elasticsearch([{'host': data_storage.get("connection_uri"), 'port': 9200}])
+        db_conn = Elasticsearch(
+            [{'host': data_storage.get("connection_uri") or data_storage.get("CONNECTION_URI"), 'port': 9200}])
         return db_conn
 
     def __init__(self, data_storages=None):
 
         self.data_storage_conns = {}
         for data_storage in data_storages:
-            storage_type = data_storage.get("storage_type")
+            storage_type = data_storage.get("storage_type") or data_storage.get("STORAGE_TYPE")
+            storage_id = data_storage.get("storage_id") or data_storage.get("STORAGE_ID") or "default"
             if storage_type == "mongodb":
-                self.data_storage_conns[data_storage.get("storage_id")] = {
+                self.data_storage_conns[storage_id] = {
                     "_connection": self.create_mongodb_connection(data_storage=data_storage),
                     "_data_storage": data_storage
                 }
             elif storage_type == "elasticsearch":
-                self.data_storage_conns[data_storage.get("storage_id")] = {
+                self.data_storage_conns[storage_id] = {
                     "_connection": self.create_elasticsearch_connection(data_storage=data_storage),
                     "_data_storage": data_storage
                 }
             else:
-                raise NotImplementedError("yet to implement elasticsearch pipeline")
+                raise NotImplementedError("yet to implement '{}' pipeline".format(storage_type))
 
     @classmethod
     def from_crawler(cls, spider):
@@ -55,11 +57,16 @@ class InvanaDataPipeline(object):
         :param spider:
         :return:
         """
+        """
+        comes handy during the custom data saving.
+
         data_storage_id = item.get("_data_storage_id")
+
+        """
+        data_storage_id = "default"
         data_storage = self.data_storage_conns.get(data_storage_id)
         data_storage_conn = data_storage.get("_connection")
         data_storage_collection_name = item.get("_data_storage_collection_name")
-        # print("==data_storage_collection_name", data_storage_collection_name)
         data = item.get("_data")
         if None in [data_storage, data_storage_conn]:
             raise DropItem(
@@ -83,8 +90,4 @@ class InvanaDataPipeline(object):
                 doc_type=data_storage_collection_name,
                 id=doc_id,
                 body=data)
-
-        print("Item added to data_storage_type:{} with storage_id:{}".format(
-            data_storage_type,
-            data_storage_id), data)
         return item

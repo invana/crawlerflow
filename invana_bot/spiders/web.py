@@ -1,7 +1,6 @@
 from .base import WebCrawlerBase
 from importlib import import_module
 from invana_bot.utils.url import get_domain
-import scrapy
 
 
 class InvanaBotSingleWebCrawler(WebCrawlerBase):
@@ -37,10 +36,14 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
     def parse(self, response=None):
         self.logger.info("======Parsing the url: {}".format(response.url))
         spider_config = response.meta.get("spider_config")
+        """
+        Use this when multiple databases concept is implemented
+
         default_storage = self.get_default_storage(
             settings=self.settings,
             spider_config=spider_config
         )
+        """
 
         data = {}
         for extractor in spider_config.get('extractors', []):
@@ -59,8 +62,8 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         # This will save the data
         yield self.prepare_data_for_yield(
             data=data,
-            storage_id=default_storage.get("storage_id"),
-            collection_name=default_storage.get("collection_name")
+            # storage_id=default_storage.get("storage_id"),
+            # collection_name=default_storage.get("collection_name")
         )
 
         # This will initiate new traversals
