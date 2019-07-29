@@ -38,6 +38,12 @@ class WebCrawlerBase(CrawlSpider):
                 }
             )
 
+    def get_spider_config(self, response=None):
+        if response.meta.get("spider_config"):
+            return response.meta.get("spider_config")
+        else:
+            return self.spider_config
+
     @staticmethod
     def get_default_storage(settings=None, spider_config=None):
         data_storages = settings.get("DATA_STORAGES", [])
