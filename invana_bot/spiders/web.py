@@ -22,7 +22,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         driver_klass = getattr(driver_klass_module, extractor_type)
 
         if extractor_type is None:
-            return {"extractor_id": None}
+            return {extractor_id: None}
         else:
             try:
                 extractor_object = driver_klass(response=response,
@@ -34,7 +34,7 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
                 print("Failed to run the extractor_id {} on url {} with error:".format(extractor_id,
                                                                                        response.url,
                                                                                        e))
-        return {"extractor_id": None}
+        return {extractor_id: None}
 
     def parse(self, response=None):
         self.logger.info("======Parsing the url: {}".format(response.url))

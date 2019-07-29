@@ -4,7 +4,7 @@ from setuptools import setup, find_packages, __version__ as setuptools_version
 
 
 setup(name='invana-bot',
-      version='0.1.34',
+      version='0.1.35',
       description='A web spider framework that can transform websites into datasets'
                   ' with Crawl, Transform and Index workflow.',
       author='Ravi Raja Merugu',
