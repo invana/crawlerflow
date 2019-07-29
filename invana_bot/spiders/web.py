@@ -48,9 +48,11 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         )
         """
         data = {}
+
+        all_extracted_data = {}
         for extractor in spider_config.get('extractors', []):
             extracted_data = self.run_extractor(response=response, extractor=extractor)
-            data.update(extracted_data)
+            all_extracted_data.update(extracted_data)
 
         context = self.manifest.get("context")
         if context is not None:
@@ -60,8 +62,11 @@ class InvanaBotSingleWebCrawler(WebCrawlerBase):
         data['domain'] = get_domain(response.url)
         data['context']['spider_id'] = spider_config['spider_id']
         traversal_data, to_traverse_links_list = self.run_traversals(spider_config=spider_config, response=response)
-        data.update(traversal_data)
         # This will save the data
+
+        data['extracted_data'] = all_extracted_data
+        data['traversal_data'] = traversal_data
+
         yield self.prepare_data_for_yield(
             data=data,
             # storage_id=default_storage.get("storage_id"),
