@@ -110,6 +110,9 @@ class WebCrawlerBase(CrawlSpider):
             kwargs['allow_domains'] = traversal.get("allow_domains", [])
         return GenericLinkExtractor(**kwargs).extract_links(response=response)
 
+    def get_traversal_max_pages(self, traversal=None):
+        return traversal.get('max_pages', 1)
+
     def run_traversals(self, spider_config=None, response=None):
         """
         if spider_traversal_id is None, it means this response originated from the
@@ -135,7 +138,7 @@ class WebCrawlerBase(CrawlSpider):
 
             traversal['allow_domains'] = next_spider.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
-            traversal_max_pages = traversal.get('max_pages', 1)
+            traversal_max_pages = self.get_traversal_max_pages(traversal=traversal)
 
             traversal_links = []
             is_this_request_from_same_traversal = self.is_this_request_from_same_traversal(response, traversal)
@@ -178,7 +181,7 @@ class WebCrawlerBase(CrawlSpider):
                 Then validate for max_pages logic if traversal_id's traversal has any!.
                 This is where the further traversal for this traversal_id  is decided 
                 """
-                max_pages = traversal.get("max_pages", 1)
+                max_pages = self.get_traversal_max_pages(traversal=traversal)
                 for link in traversal_links:
 
                     """

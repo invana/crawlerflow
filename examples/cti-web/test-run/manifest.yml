@@ -1,0 +1,72 @@
+context:
+  topic_name: Agriculture
+cti_id: 4
+init_spider:
+  spider_id: bing_search
+  start_urls:
+  - https://www.bing.com/search?q=Indian+Agriculture
+settings:
+  allowed_domains:
+  - bing.com
+  download_delay: 0
+spiders:
+- allowed_domains:
+  - bing.com
+  extractors:
+  - extractor_id: bing-search-result
+    extractor_type: MetaTagExtractor
+  spider_id: bing_search
+  traversals:
+  - max_pages: 1
+    next_spider_id: bing_search
+    selector_type: css
+    selector_value: a.sb_pagN
+    traversal_id: bing_pagination
+  - max_pages: 2
+    next_spider_id: generic_spider
+    selector_type: css
+    selector_value: .b_algo h2 a
+    traversal_id: generic_spider_traversal
+- extractors:
+  - data_selectors:
+    - multiple: false
+      selector: title
+      selector_attribute: text
+      selector_id: title
+      selector_type: css
+    - multiple: false
+      selector: //meta[@name='description']
+      selector_attribute: '@content'
+      selector_id: description
+      selector_type: xpath
+    - multiple: false
+      selector: //meta[@name='og:description']
+      selector_attribute: '@content'
+      selector_id: og_description
+      selector_type: xpath
+    extractor_id: page-seo-data
+    extractor_type: CustomContentExtractor
+  spider_id: generic_spider
+transformations:
+- transformation_fn: transformation_fn
+  transformation_id: 6
+  index_id: curated_index
+  transformation_logic: "\"\"\"\r\nchange this logic according to your requirements.\r\
+    \n\r\nYou can access the parser data using context['parser_1']\r\n\"\"\"    \r\
+    \ndef transformation_fn(context):\r\n    print(\"=======>>>> product review extractor\
+    \ <<<<========\")\r\n    cleaned_data = []\r\n    for res in context:\r\n    \
+    \    item = res.get(\"page-seo-data\", None)\r\n        item_context = res.get(\"\
+    context\", {})\r\n        if item:\r\n            item['url'] = res['url']\r\n\
+    \            item['context'] = item_context\r\n            cleaned_data.append(item)\r\
+    \n    return cleaned_data"
+indexes:
+- collection_name: f998b99c6c23461d9449c2554b76ca95
+  connection_uri: mongodb://127.0.0.1
+  database_name: spider_data
+  index_id: default
+  unique_key: url
+- collection_name: curated_data
+  connection_uri: mongodb://127.0.0.1
+  database_name: spider_data
+  index_id: curated_index
+  unique_key: url

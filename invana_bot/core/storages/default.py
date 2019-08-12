@@ -43,7 +43,7 @@ class InvanaDataPipeline(object):
     @classmethod
     def from_crawler(cls, spider):
         return cls(
-            data_storages=spider.settings['DATA_STORAGES']
+            data_storages=spider.spider.manifest.get("indexes")
         )
 
     def process_item(self, item, spider):
