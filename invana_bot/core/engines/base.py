@@ -104,11 +104,12 @@ class RunnerEngineBase(object):
             storage_id = transformation.get('storage_id')
 
             transformation_index_config = self.get_index(storage_id=storage_id)
-            print ("transformation_index_config", transformation_index_config)
+            default_storage = self.get_index(storage_id="default")
+            print("transformation_index_config", transformation_index_config)
             mongo_executor = ReadFromMongo(
-                transformation_index_config['connection_uri'],
-                transformation_index_config['database_name'],
-                transformation_index_config['collection_name'],
+                default_storage['connection_uri'],
+                default_storage['database_name'],
+                default_storage['collection_name'],
                 query={"context.job_id": self.job_id}
             )
             mongo_executor.connect()
