@@ -20,12 +20,12 @@ class RunnerEngineBase(object):
 
         data_storages = self.manifest.get('indexes', [])
         for _index in data_storages:
-            if _index['index_id'] == storage_id:
+            if _index['storage_id'] == storage_id:
                 return _index
 
     def get_default_index(self, data_storages=None):
         for _index in data_storages:
-            if _index['index_id'] == "default":
+            if _index['storage_id'] == "default":
                 return _index
 
     def index_transformed_data(self, index=None, results_cleaned=None):
@@ -101,7 +101,7 @@ class RunnerEngineBase(object):
             print("transformation", transformation)
             transformation_id = transformation['transformation_id']
             transformation_fn = transformation.get('transformation_fn')
-            storage_id = transformation.get('index_id')
+            storage_id = transformation.get('storage_id')
 
             transformation_index_config = self.get_index(storage_id=storage_id)
             print ("transformation_index_config", transformation_index_config)

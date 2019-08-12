@@ -50,23 +50,15 @@ spiders:
 transformations:
 - transformation_fn: transformation_fn
   transformation_id: 6
-  index_id: curated_index
-  transformation_logic: "\"\"\"\r\nchange this logic according to your requirements.\r\
-    \n\r\nYou can access the parser data using context['parser_1']\r\n\"\"\"    \r\
-    \ndef transformation_fn(context):\r\n    print(\"=======>>>> product review extractor\
-    \ <<<<========\")\r\n    cleaned_data = []\r\n    for res in context:\r\n    \
-    \    item = res.get(\"page-seo-data\", None)\r\n        item_context = res.get(\"\
-    context\", {})\r\n        if item:\r\n            item['url'] = res['url']\r\n\
-    \            item['context'] = item_context\r\n            cleaned_data.append(item)\r\
-    \n    return cleaned_data"
+  storage_id: curated_index
 indexes:
 - collection_name: f998b99c6c23461d9449c2554b76ca95
   connection_uri: mongodb://127.0.0.1
   database_name: spider_data
-  index_id: default
+  storage_id: default
   unique_key: url
 - collection_name: curated_data
   connection_uri: mongodb://127.0.0.1
   database_name: spider_data
-  index_id: curated_index
+  storage_id: curated_index
   unique_key: url

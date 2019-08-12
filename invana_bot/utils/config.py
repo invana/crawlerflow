@@ -209,7 +209,7 @@ Here are examples of traversal
                                    "'{}' doesn't have transformation_fn set".format(transformation_id))
 
             example_index = {
-                "index_id": "default",
+                "storage_id": "default",
                 "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
                 "collection_name": "blogs_list",
                 "unique_key": "url"
