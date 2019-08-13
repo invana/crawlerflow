@@ -18,7 +18,7 @@ class RunnerEngineBase(object):
 
     def get_index(self, storage_id=None, data_storages=None):
 
-        data_storages = self.manifest.get('indexes', [])
+        data_storages = self.manifest.get('datasets', [])
         for _index in data_storages:
             if _index['storage_id'] == storage_id:
                 return _index
@@ -58,7 +58,7 @@ class RunnerEngineBase(object):
             print("Triggered callback successfully and callback responded with message :{}".format(response))
 
     def callback(self, callback_fn=None):
-        all_data_storages = self.manifest.get('indexes', [])
+        all_data_storages = self.manifest.get('datasets', [])
         if len(all_data_storages) == 0:
             print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
         else:
@@ -106,6 +106,7 @@ class RunnerEngineBase(object):
             transformation_index_config = self.get_index(storage_id=storage_id)
             default_storage = self.get_index(storage_id="default")
             print("transformation_index_config", transformation_index_config)
+            # read data from default storage
             mongo_executor = ReadFromMongo(
                 default_storage['connection_uri'],
                 default_storage['database_name'],

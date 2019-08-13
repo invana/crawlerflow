@@ -51,7 +51,7 @@ transformations:
 - transformation_fn: transformation_fn
   transformation_id: 6
   storage_id: curated_index
-indexes:
+datasets:
 - collection_name: f998b99c6c23461d9449c2554b76ca95
   connection_uri: mongodb://127.0.0.1
   database_name: spider_data

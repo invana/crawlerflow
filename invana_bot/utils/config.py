@@ -194,9 +194,9 @@ Here are examples of traversal
 
     def validate_transformations_and_data_storages(self):
         transformations = self.config.get('transformations', [])
-        indexes = self.config.get('indexes', [])
-        if len(indexes) == 0 and len(transformations) > 0:
-            self.log_error("transformations cannot be applied if indexes is not defined.")
+        datasets = self.config.get('datasets', [])
+        if len(datasets) == 0 and len(transformations) > 0:
+            self.log_error("transformations cannot be applied if datasets is not defined.")
         # print("Ignoring the transformation if index")
         else:
             transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
@@ -216,7 +216,7 @@ Here are examples of traversal
             }
             # transformation_ids_in_data_storages = [index.get('transformation_id') for index in data_storages]
             index_required_fields = example_index.keys()
-            for index in indexes:
+            for index in datasets:
                 transformation_id = index.get("transformation_id")
                 for required_field in index_required_fields:
                     if index.get(required_field) is None:
