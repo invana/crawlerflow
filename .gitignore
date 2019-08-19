@@ -10,3 +10,4 @@ dist/
 ./__playground
 .DS_Store
 site/
+examples/scripts/*
