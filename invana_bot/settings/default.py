@@ -4,6 +4,10 @@ DEFAULT_SETTINGS_BASE = {
     'TELNETCONSOLE_PORT': [6023, 6073],
     'ITEM_PIPELINES': {
         'invana_bot.core.storages.default.InvanaDataPipeline': 1,
+    },
+    'DOWNLOADER_MIDDLEWARES': {
+        "invana_bot.core.downloaders.spider_analytics.IndividualSpiderRequestStats": 121,
+        "invana_bot.core.downloaders.spider_analytics.IndividualSpiderResponseStats": 999,
     }
 }
 DEFAULT_SETTINGS = {}
