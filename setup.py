@@ -16,7 +16,7 @@ setup(name='invana-bot',
       install_requires=[
           'elasticsearch==6.1.1',
           'feedparser==5.2.1',
-          'lxml==4.1.1',
+          'lxml==4.6.3',
           'pymongo==3.7.2',
           'requests==2.21.0',
           'Scrapy==1.6.0',
