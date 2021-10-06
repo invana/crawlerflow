@@ -26,7 +26,7 @@ python-dateutil==2.6.1
 queuelib==1.4.2
 requests==2.21.0
 requests-toolbelt==0.8.0
-Scrapy==1.6.0
+Scrapy==1.8.1
 service-identity==17.0.0
 six==1.11.0
 tqdm==4.19.8
