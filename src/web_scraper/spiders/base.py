@@ -41,7 +41,7 @@ class SpiderBase(scrapy.Spider):
 
     def get_request_metadata(self, response):
         metadata = {}
-        metadata['meta__request'] = {
+        metadata['spider_meta__request'] = {
             "url": response.request.url,
             "domain": get_domain(response.request.url),
             "urn": get_urn(response.request.url),
@@ -49,10 +49,10 @@ class SpiderBase(scrapy.Spider):
             "job_id": self.job_id,
             "meta": response.request.meta
         }
-        metadata['meta__response'] = {
+        metadata['spider_meta__response'] = {
             "scraped_at": datetime.datetime.now()
         }
-        metadata['meta__extra_data'] = self.extra_data
+        metadata['spider_meta__extra_data'] = self.extra_data
         return metadata
 
     @abc.abstractclassmethod

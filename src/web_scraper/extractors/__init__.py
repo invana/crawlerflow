@@ -1,1 +1,1 @@
-from .content import HTMLExtractor
+from .content import HTMLExtractor, MetaExtractor

@@ -22,3 +22,5 @@ fields:
         selector: "img::attr(src)"
   post_content_html:
     selector: ".post__content"
+  page_meta:
+    extractor_type: MetaExtractor
