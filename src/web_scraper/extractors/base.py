@@ -21,20 +21,16 @@ class ExtractorBase:
         self.extractor_fields = extractor_fields or {}
         self.extractor_fn = extractor_fn
 
-    def get_elem_by_css(self, html_element, selector_string, attribute=None):
-        # if attribute:
-        # el =  
-        return html_element.css(selector_string).xpath(f"@{attribute}") if attribute \
-            else html_element.css(f"{selector_string}").xpath("/text()")
-            # else html_element.css(f"{selector_string}::text") #el.xpath("/text()")
-      
-    def get_value_by_css(self, html_element, selector_string, attribute=None, fetch_multiple_values=False):
-        el = self.get_elem_by_css(html_element, selector_string, attribute=attribute)
-        # if attribute:
-        #     el = el.xpath(f"@{attribute}")
-        return el.get() if fetch_multiple_values is False else el.getall()
-    
-
+    def get_elem_by_css(self, html_element, selector_string ):
+        return html_element.css(selector_string)
+ 
+    def get_value_by_css(self, html_element, selector_string, fetch_multiple_values=False):
+        try:
+            el = self.get_elem_by_css(html_element, selector_string )
+            # el = el.xpath(f"@{attribute}") if attribute else  el  
+            return el.get() if fetch_multiple_values is False else el.getall()
+        except Exception as e:
+            return None
     def get_data_type(self, type_string_raw):
         # type_string ;
         # examples usages: StringField; for list of StringField: [StringField]
@@ -61,7 +57,7 @@ class ExtractorBase:
                 data[field_name] = self.extract_from_multiple_element(nested_fields, child_html_element) if is_multiple is True \
                             else  self.extract_from_single_element(nested_fields, html_element=child_html_element)
             else:
-                extracted_data = self.get_value_by_css(html, field_config['selector'], attribute=field_config.get("attribute"), fetch_multiple_values=is_multiple)
+                extracted_data = self.get_value_by_css(html, field_config['selector'], fetch_multiple_values=is_multiple)
                 data[field_name] = self.convert_to_data_type(extracted_data, type_string=type_string, is_multiple=is_multiple)
         return data
     

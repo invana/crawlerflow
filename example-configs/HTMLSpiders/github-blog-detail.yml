@@ -12,27 +12,21 @@ default_extractor:
   extractor_type: CustomContentExtractor
   fields:
     title:
-      selector: "h1"
+      selector: "h1::text"
     cover_pic:
-      selector: ".col-lg-10 .cover-image"
-      attribute: "src"
+      selector: ".col-lg-10 .cover-image::attr(src)"
     categories:
-      selector: ".post-hero__categories li a"
-      # attribute: "href"
+      selector: ".post-hero__categories li a::text"
       type: [StringField]
     author:
       type: DictField
       selector: ".p-responsive-blog .mr-lg-5"
       fields:
         name:
-          selector: "img"
-          attribute: alt
+          selector: "img::attr(alt)"
         profile_link:
-          selector: ".mr-lg-5"
-          attribute: href
+          selector: ".mr-lg-5::attr(href)"
         profile_pic:
-          selector: ".mr-lg-5 img"
-          attribute: "src"
-    
-# traversals:
-#   id: "detail-view"
+          selector: "img::attr(src)"
+    post_content_html:
+      selector: ".post__content"
