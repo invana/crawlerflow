@@ -1,0 +1,19 @@
+
+spider_type: "HTMLSpider"
+name: "Github Data"
+custom_settings:
+  USER_AGENT : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+  BOT_NAME: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+start_urls:
+  - https://github.blog/category/engineering/
+extra_data:
+  domain : github.com
+default_extractor:
+  extractor_type: CustomContentExtractor
+  fields:
+    blogs:
+      selector: ".mb-12px .Link--primary"
+      attribute: "href"
+      type: [StringField]
+# traversals:
+#   id: "detail-view"

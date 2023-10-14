@@ -1,0 +1,38 @@
+
+spider_type: "HTMLSpider"
+name: "Github Blog Detail"
+custom_settings:
+  USER_AGENT : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+  BOT_NAME: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+start_urls:
+  - https://github.blog/2023-08-03-introducing-code-referencing-for-github-copilot/
+extra_data:
+  domain : github.com
+default_extractor:
+  extractor_type: CustomContentExtractor
+  fields:
+    title:
+      selector: "h1"
+    cover_pic:
+      selector: ".col-lg-10 .cover-image"
+      attribute: "src"
+    categories:
+      selector: ".post-hero__categories li a"
+      # attribute: "href"
+      type: [StringField]
+    author:
+      type: DictField
+      selector: ".p-responsive-blog .mr-lg-5"
+      fields:
+        name:
+          selector: "img"
+          attribute: alt
+        profile_link:
+          selector: ".mr-lg-5"
+          attribute: href
+        profile_pic:
+          selector: ".mr-lg-5 img"
+          attribute: "src"
+    
+# traversals:
+#   id: "detail-view"
