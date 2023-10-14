@@ -11,6 +11,28 @@ scrape data from web with no code (just YAML configs)
 - [ ] Custom Python Parser
 
 
+## Usage
+
+### HTMLScraper
+
+```python
+html_text = """
+<html>
+    <body>
+        <h1>Hello, Parsel!</h1>
+        <ul class="header">
+            <li><a href="http://example.com">Link 1</a></li>
+            <li><a href="http://scrapy.org">Link 2</a></li>
+        </ul>
+        <main>Main text here</main>
+    </body>
+</html>
+"""
+
+```
+
+
+
 ## Usage 
 
 ```python
@@ -18,9 +40,6 @@ from WebScraper.runner import WebScraper
 import yaml
 
 scraper_config_file =   "example-configs/HTMLSpiders/github-blog-detail.yml"
-
-
-
 web_scraper = WebScraper()
 
 # settings_overrides={

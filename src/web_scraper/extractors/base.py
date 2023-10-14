@@ -1,4 +1,4 @@
-
+from parsel import Selector
 
 
 class ExtractorBase:
@@ -9,17 +9,17 @@ class ExtractorBase:
         "FloatField": float,
         "DictField": dict
     }
+    
     DEFAULT_DATA_TYPE = "StringField"
 
-    def __init__(self, html,  extractor_fields, extractor_fn=None):
+    def __init__(self, html,  extractor_fields):
         """
         :param html: html html of the request
         :param extractor_fields: extractor configuration in json; this is optional in most cases.
-        :param extractor_fn: extractor python lambda; this is optional in most cases.
         """
-        self.html = html
+        self.html = html if isinstance(html, Selector) else Selector(text=html)
         self.extractor_fields = extractor_fields or {}
-        self.extractor_fn = extractor_fn
+
 
     def get_elem_by_css(self, html_element, selector_string ):
         return html_element.css(selector_string)
