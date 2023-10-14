@@ -1,4 +1,5 @@
 from parsel import Selector
+from scrapy.http.response.html import HtmlResponse
 
 
 class ExtractorBase:
@@ -17,7 +18,7 @@ class ExtractorBase:
         :param html: html html of the request
         :param extractor_fields: extractor configuration in json; this is optional in most cases.
         """
-        self.html = html if isinstance(html, Selector) else Selector(text=html)
+        self.html = html if isinstance(html, Selector) or isinstance(html, HtmlResponse) else Selector(text=html)
         self.extractor_fields = extractor_fields or {}
 
 

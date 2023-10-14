@@ -10,6 +10,23 @@ scrape data from web with no code (just YAML configs)
 - [ ] Next traversal (Pagination)
 - [ ] Custom Python Parser
 
+## Concepts
+
+### WebCrawler
+
+```
+from web_scraper import WebCrawler
+
+# specify BOT_NAME, USER_AGENT, Downloader, 
+
+
+```
+ 
+### DataScraper
+
+```
+
+```
 
 ## Usage
 

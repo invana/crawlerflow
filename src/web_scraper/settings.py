@@ -17,7 +17,8 @@ DEFAULT_SETTINGS_OVERRIDES = {
     'DOWNLOADER_MIDDLEWARES': {
         "web_scraper.downloaders.RequestsDownloaderMiddleware": 501,
     },
-    'MONGO_URI': "mongodb://root:example@localhost:27017",
-    'MONGO_DATABASE': "web_scraper",
-    'MONGO_DEFAULT_COLLECTION': 'scraped_items'
+    
+    'STORAGE_MONGO_URI': "mongodb://root:example@localhost:27017",
+    'STORAGE_MONGO_DATABASE': "web_scraper",
+    'STORAGE_MONGO_DEFAULT_COLLECTION': 'scraped_items'
 }

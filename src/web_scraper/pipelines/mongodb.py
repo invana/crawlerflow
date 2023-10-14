@@ -15,9 +15,9 @@ class MongoDBPipeline(object):
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            crawler.settings.get("MONGO_URI"),
-            crawler.settings.get("MONGO_DATABASE"),
-            default_collection_name = crawler.settings["MONGO_DEFAULT_COLLECTION"]            
+            crawler.settings.get("STORAGE_MONGO_URI"),
+            crawler.settings.get("STORAGE_MONGO_DATABASE"),
+            default_collection_name = crawler.settings["STORAGE_MONGO_DEFAULT_COLLECTION"]            
         )
 
     def open_spider(self, spider):
