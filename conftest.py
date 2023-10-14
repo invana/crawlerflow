@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from web_scraper.extractors import CustomContentExtractor
+from web_scraper.extractors import HTMLExtractor
 import yaml
 
 html_text = """
@@ -39,4 +39,4 @@ post_content_html:
 @pytest.fixture(scope="function")
 def html_extractor() -> str:
     extractor_config_json = yaml.safe_load(extractor_config)
-    return CustomContentExtractor(html_text, extractor_config_json)
+    return HTMLExtractor(html_text, extractor_config_json)

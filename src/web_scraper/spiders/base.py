@@ -5,12 +5,13 @@ from slugify import slugify
 from web_scraper.utils import get_domain, get_urn, generate_uuid
 import requests
 import logging
-
+from ..request import CrawlRequest
 
 class SpiderBase(scrapy.Spider):
 
     name: str = "default-spider-name"
     start_urls: list = []
+    crawl_requests: list[CrawlRequest] = []
     downloader: str = "default"
     spider_type: str = "Spider"
     custom_settings: dict = {}
@@ -19,6 +20,20 @@ class SpiderBase(scrapy.Spider):
     extra_data: dict = {}  # this will added to all the scraped items
     callback_urls: list = []
     job_id: str = lambda x: generate_uuid()
+
+    def start_requests(self):
+        if self.start_urls.__len__() > 0 and self.crawl_requests.__len__() > 0:
+            raise Exception("Both start_urls and crawl_requests should not be set")
+        elif self.start_urls.__len__() == 0 and self.crawl_requests.__len__() == 0:
+            raise Exception("Both start_urls and crawl_requests cannot be None")
+        elif self.start_urls.__len__() > 0:
+            for start_url in self.start_urls:
+                yield start_url
+        else:
+            for crawl_request in self.crawl_requests:
+                yield scrapy.Request(crawl_request.url, self.parse, meta = crawl_request.meta)
+ 
+
 
     @property
     def spider_name(self):
@@ -31,7 +46,8 @@ class SpiderBase(scrapy.Spider):
             "meta__urn": get_urn(response.request.url),
             "meta__scraped_at": datetime.datetime.now(),
             "meta__scraper_name": self.spider_name,
-            "meta__job_id": self.job_id
+            "meta__job_id": self.job_id,
+            "meta__request_meta": response.request.meta
         }
         if self.extra_data:
             for k, v in self.extra_data.items():

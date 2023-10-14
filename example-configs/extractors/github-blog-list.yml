@@ -1,7 +1,7 @@
 id: github-blog-list
 test_urls:
   - https://github.blog/category/engineering/
-type: HTMLExtractor
+extractor_type: HTMLExtractor
 fields:
   blog_links:
     selector: ".mb-12px .Link--primary::attr(href)"

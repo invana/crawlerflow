@@ -1,0 +1,6 @@
+
+
+
+
+class DefaultExtractorRequired(Exception):
+    pass

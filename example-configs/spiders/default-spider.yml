@@ -6,6 +6,7 @@ custom_settings:
   BOT_NAME: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
   STORAGE_MONGO_URI: mongodb://root:example@localhost:27017
   STORAGE_MONGO_DATABASE: web_scraper
+  # by default, collection_name would be generated based on spider name. 
   STORAGE_MONGO_DEFAULT_COLLECTION: scraped_items
 extra_data:
   client: client1

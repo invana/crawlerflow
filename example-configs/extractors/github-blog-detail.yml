@@ -1,7 +1,7 @@
 id: github-blog-detail
 test_urls:
   - https://github.blog/2023-08-03-introducing-code-referencing-for-github-copilot/
-type: HTMLExtractor
+extractor_type: HTMLExtractor
 fields:
   title:
     selector: "h1::text"

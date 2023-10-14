@@ -9,7 +9,7 @@ start_urls:
 extra_data:
   domain : github.com
 default_extractor:
-  extractor_type: CustomContentExtractor
+  extractor_type: HTMLExtractor
   fields:
     title:
       selector: "h1::text"

@@ -59,10 +59,10 @@ import yaml
 scraper_config_file =   "example-configs/HTMLSpiders/github-blog-detail.yml"
 web_scraper = WebScraper()
 
-# settings_overrides={
+# custom_settings={
 #     'BOT_NAME' = 'You bot Name' # if you dont specify, it will defaults to Scrapy bot name   
 # }
-# web_scraper = WebScraper(settings_overrides=settings_overrides)
+# web_scraper = WebScraper(custom_settings=custom_settings)
 
 
 scraper_config = yaml.safe_load(open(scraper_config_file))

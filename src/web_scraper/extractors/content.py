@@ -1,7 +1,7 @@
 from .base import ExtractorBase
 
 
-class CustomContentExtractor(ExtractorBase):
+class HTMLExtractor(ExtractorBase):
 
     def extract(self):
         return self.extract_fields(self.extractor_fields)

@@ -1,7 +1,9 @@
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from .settings import DEFAULT_SETTINGS_OVERRIDES
+from .exceptions import DefaultExtractorRequired
 from .utils import generate_uuid
+from slugify import slugify
 from .request import CrawlRequest
 import importlib
 import scrapy
@@ -10,8 +12,8 @@ import scrapy
 class WebScraperBase:
 
 
-    def __init__(self,  settings_overrides=None, job_id=None) -> None:
-        self.settings_overrides = settings_overrides or {}
+    def __init__(self,  custom_settings=None, job_id=None) -> None:
+        self.custom_settings = custom_settings or {}
         self.job_id = generate_uuid() if job_id is None else job_id
         self._process = None
 
@@ -20,7 +22,7 @@ class WebScraperBase:
         settings = dict(get_project_settings())
         for k, v in DEFAULT_SETTINGS_OVERRIDES.items():
             settings[k] = v
-        for k, v in self.settings_overrides.items():
+        for k, v in self.custom_settings.items():
             settings[k] = v
         return settings
 
@@ -70,8 +72,16 @@ class Crawlerflow(WebScraperBase):
     
     """
 
-    def add_spider_with_config(self, request_urls,  spider_config):
-        request_urls = [CrawlRequest(**req) for req in  request_urls]
+    def add_spider_with_config(self, crawl_requests,  spider_config, default_extractor=None):
+
+        spider_config['name'] = slugify(spider_config['name'])
+        if spider_config['spider_type'] == "HTMLSpider":
+            if default_extractor is None:
+                raise DefaultExtractorRequired()
+            spider_config['default_extractor'] = default_extractor
+        crawl_requests = [CrawlRequest(**req) for req in crawl_requests]
+
+        spider_config['crawl_requests'] = crawl_requests
         spider_cls = getattr(importlib.import_module(
             f"web_scraper.spiders"), spider_config['spider_type'])
-        self.process.crawl(spider_cls, **self.add_job_id(spider_config))
+        self.add_spider(spider_cls, **self.add_job_id(spider_config) )

@@ -9,7 +9,7 @@ start_urls:
 extra_data:
   domain : github.com
 default_extractor:
-  extractor_type: CustomContentExtractor
+  extractor_type: HTMLExtractor
   fields:
     blogs:
       selector: ".mb-12px .Link--primary::attr(href)"

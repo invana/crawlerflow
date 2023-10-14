@@ -1,1 +1,1 @@
-from .content import CustomContentExtractor
+from .content import HTMLExtractor
