@@ -1,3 +1,6 @@
+import pytest
+import os
+
 from web_scraper.extractors import CustomContentExtractor
 import yaml
 
@@ -15,21 +18,25 @@ html_text = """
 </html>
 """
 extractor_config ="""
+---
 title:
-    selector: "h1::text"
+  selector: h1::text
 cover_pic:
-    selector: ".col-lg-10 .cover-image::attr(src)"
+  selector: .banner-pic::attr(src)
 header_links:
-    selector: ".header li a"
-    type: [DictField]
-    fields:
-        link:
-            selector: "::attr(href)"
-        text:
-            selector: "::text"
+  selector: .header li a
+  type:
+    - DictField
+  fields:
+    link:
+      selector: ::attr(href)
+    text:
+      selector: ::text
 post_content_html:
-    selector: "main"
+  selector: main
 """
-extractor_config_json = yaml.safe_load(open(extractor_config))
 
-extractor = CustomContentExtractor(html_text, extractor_config_json)
+@pytest.fixture(scope="function")
+def html_extractor() -> str:
+    extractor_config_json = yaml.safe_load(extractor_config)
+    return CustomContentExtractor(html_text, extractor_config_json)

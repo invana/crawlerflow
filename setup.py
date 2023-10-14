@@ -10,6 +10,7 @@ setup(
     author_email='ravi@invana.io',
     url='https://github.com/invana/web-scraper',
     packages=find_packages(
+        where="src",
         exclude=("dist", "docs", "examples", "tests", "examples-configs")
     ),
     install_requires=[
