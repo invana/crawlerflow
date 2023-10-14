@@ -28,7 +28,7 @@ class SpiderBase(scrapy.Spider):
             raise Exception("Both start_urls and crawl_requests cannot be None")
         elif self.start_urls.__len__() > 0:
             for start_url in self.start_urls:
-                yield start_url
+                yield scrapy.Request(start_url, self.parse)
         else:
             for crawl_request in self.crawl_requests:
                 yield scrapy.Request(crawl_request.url, self.parse, meta = crawl_request.meta)
@@ -40,18 +40,19 @@ class SpiderBase(scrapy.Spider):
         return slugify(self.name)
 
     def get_request_metadata(self, response):
-        metadata = {
-            "meta__url": response.request.url,
-            "meta__domain": get_domain(response.request.url),
-            "meta__urn": get_urn(response.request.url),
-            "meta__scraped_at": datetime.datetime.now(),
-            "meta__scraper_name": self.spider_name,
-            "meta__job_id": self.job_id,
-            "meta__request_meta": response.request.meta
+        metadata = {}
+        metadata['meta__request'] = {
+            "url": response.request.url,
+            "domain": get_domain(response.request.url),
+            "urn": get_urn(response.request.url),
+            "spider_name": self.spider_name,
+            "job_id": self.job_id,
+            "meta": response.request.meta
         }
-        if self.extra_data:
-            for k, v in self.extra_data.items():
-                metadata[f"meta__{k}"] = v
+        metadata['meta__response'] = {
+            "scraped_at": datetime.datetime.now()
+        }
+        metadata['meta__extra_data'] = self.extra_data
         return metadata
 
     @abc.abstractclassmethod
