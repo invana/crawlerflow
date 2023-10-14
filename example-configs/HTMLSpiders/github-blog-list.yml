@@ -12,8 +12,7 @@ default_extractor:
   extractor_type: CustomContentExtractor
   fields:
     blogs:
-      selector: ".mb-12px .Link--primary"
-      attribute: "href"
+      selector: ".mb-12px .Link--primary::attr(href)"
       type: [StringField]
 # traversals:
 #   id: "detail-view"

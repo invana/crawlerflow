@@ -5,8 +5,8 @@ import yaml
 
  
 scraper_config_files = [
-    # "example-configs/APISpiders/api-publicapis-org.yml",
-    # "example-configs/HTMLSpiders/github-blog-list.yml",
+    "example-configs/APISpiders/api-publicapis-org.yml",
+    "example-configs/HTMLSpiders/github-blog-list.yml",
     "example-configs/HTMLSpiders/github-blog-detail.yml"
 
 ]
