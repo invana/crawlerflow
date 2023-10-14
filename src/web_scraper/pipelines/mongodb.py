@@ -32,7 +32,7 @@ class MongoDBPipeline(object):
         return self.db[self.default_collection_name]
 
     def process_item(self, item, spider):
-        meta__scraper_name =  item.get("meta__scraper_name")
+        meta__scraper_name =  item.get("meta__request", {}).get("spider_name")
         collection = self.db[meta__scraper_name] if meta__scraper_name else self.default_collection
         collection.insert_one(item)        
         logging.debug("Item added to MongoDB database!")
