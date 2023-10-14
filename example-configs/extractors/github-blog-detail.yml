@@ -1,0 +1,24 @@
+id: github-blog-detail
+test_urls:
+  - https://github.blog/2023-08-03-introducing-code-referencing-for-github-copilot/
+type: HTMLExtractor
+fields:
+  title:
+    selector: "h1::text"
+  cover_pic:
+    selector: ".col-lg-10 .cover-image::attr(src)"
+  categories:
+    selector: ".post-hero__categories li a::text"
+    type: [StringField]
+  author:
+    type: DictField
+    selector: ".p-responsive-blog .mr-lg-5"
+    fields:
+      name:
+        selector: "img::attr(alt)"
+      profile_link:
+        selector: ".mr-lg-5::attr(href)"
+      profile_pic:
+        selector: "img::attr(src)"
+  post_content_html:
+    selector: ".post__content"

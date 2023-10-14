@@ -1,0 +1,14 @@
+name: "default-spider"
+spider_type: HTMLSpider # HTMLSpider|APISpider
+downloader: default # default|requests
+custom_settings:
+  USER_AGENT : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+  BOT_NAME: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+  STORAGE_MONGO_URI: mongodb://root:example@localhost:27017
+  STORAGE_MONGO_DATABASE: web_scraper
+  STORAGE_MONGO_DEFAULT_COLLECTION: scraped_items
+extra_data:
+  client: client1
+callback_urls:
+  - http://example.com/callback
+
