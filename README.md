@@ -1,17 +1,25 @@
 # CrawlerFlow 
 
-scrape data from web with no code (just YAML configs)
+Web Crawlers orchestration framework that lets you create datasets from multiple web sources using yaml configurations.
 
 ## Features
 
-- [*] Extract structured data from HTML.  
-- [*] Scrape API  
-- [ ] Scrape XML feeds.
-- [ ] Next traversal (Pagination)
-- [ ] Custom Python Parser
-- [ ] JMESPath Parser for extractors
+Features
+- [*] Write spiders in the YAML configs.
+- [*] Create extractors to scrape data using YAML configs (HTML, API, RSS)
+- [*] Define multiple extractors per spider.
+- [*] Use standard extractors to scrape data like Tables, Paragraphs, Meta tags, JSON+LD of the page.
+- [ ] Traverse between multiple websites.
+- [ ] Write Python Extractors for advanced extraction strategy
+<!-- - [ ] JMESPath integration for JSON trasnformations -->
 
- 
+
+ ## Installation
+
+```
+pip install git+https://github.com/invana/crawlerflow#egg=crawlerflow
+```
+
 ## Usage
 
 ### Scraping with CrawlerFlow
