@@ -23,4 +23,8 @@ fields:
   post_content_html:
     selector: ".post__content"
   page_meta:
-    extractor_type: MetaExtractor
+    extractor_type: MetaTagExtractor
+  icons:
+    extractor_type: IconsExtractor
+  json_ld:
+    extractor_type: JSONLDExtractor

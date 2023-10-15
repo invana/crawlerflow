@@ -1,1 +1,1 @@
-from .content import HTMLExtractor, MetaExtractor
+from .content import HTMLExtractor, MetaTagExtractor, JSONLDExtractor, TableContentExtractor, IconsExtractor
