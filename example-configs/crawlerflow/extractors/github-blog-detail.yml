@@ -28,3 +28,5 @@ fields:
     extractor_type: IconsExtractor
   json_ld:
     extractor_type: JSONLDExtractor
+  feed_urls:
+    extractor_type: FeedUrlsExtractor

@@ -84,5 +84,14 @@ class IconsExtractor(ExtractorBase):
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
         return meta_data_dict
 
-"""
-"""
+ 
+class FeedUrlsExtractor(ExtractorBase):
+    
+    def extract(self):
+        data = {}
+ 
+        data['rss__xml'] = self.html.xpath('//link[@type="application/rss+xml"]').xpath(
+            "@href").extract()
+        data['rss__atom'] = self.html.xpath('//link[@type="application/atom+xml"]').xpath(
+            "@href").extract()
+        return data
