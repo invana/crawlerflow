@@ -1,6 +1,7 @@
 from .base import ExtractorBase
 import json
 
+
 class HTMLExtractor(ExtractorBase):
 
     def extract(self):
@@ -9,25 +10,27 @@ class HTMLExtractor(ExtractorBase):
 
 class MetaTagExtractor(ExtractorBase):
 
-
     def extract(self):
         # TODO - make this extractor with YAML later
         data = {}
         elements = self.get_elem_by_css(self.html, "meta")
         for element in elements:
             # for open graph type of meta tags
-            meta_property = element.xpath("@{0}".format('property')).extract_first()
-            meta_content = element.xpath("@{0}".format('content')).extract_first() 
+            meta_property = element.xpath(
+                "@{0}".format('property')).extract_first()
+            meta_content = element.xpath(
+                "@{0}".format('content')).extract_first()
             meta_name = element.xpath("@{0}".format('name')).extract_first()
             if meta_property:
                 data[meta_property] = meta_content
             if meta_name:
                 data[meta_name] = meta_content
-        data["shortlink_url"] = self.html.xpath('//link[@rel="shortlink"]').xpath("@href").extract_first()
-        data["canonical_url"] = self.html.xpath('//link[@rel="canonical"]').xpath("@href").extract_first()
+        data["shortlink_url"] = self.html.xpath(
+            '//link[@rel="shortlink"]').xpath("@href").extract_first()
+        data["canonical_url"] = self.html.xpath(
+            '//link[@rel="canonical"]').xpath("@href").extract_first()
 
-        data =  dict(sorted(data.items(), key=lambda x: x[0]))
-
+        data = dict(sorted(data.items(), key=lambda x: x[0]))
 
         data["title"] = self.get_value_by_css(self.html, 'title::text')
         return data
@@ -37,23 +40,25 @@ class TableContentExtractor(ExtractorBase):
 
     def extract(self):
 
-        table_el  = self.get_elem_by_css(self.html, "table")
+        table_el = self.get_elem_by_css(self.html, "table")
         table_data = []
         if table_el is None:
             return table_data
-        table_headers = [th.extract() for th in table_el.css("thead tr th::text")]
+        table_headers = [th.extract()
+                         for th in table_el.css("thead tr th::text")]
         for row in table_el.css("tbody tr"):
             row_data = [td.extract() for td in row.css("td::text")]
             row_dict = dict(zip(table_headers, row_data))
             table_data.append(row_dict)
         return table_data
-    
+
 
 class JSONLDExtractor(ExtractorBase):
 
     def extract(self):
         extracted_data = []
-        elements = self.html.xpath('//script[@type="application/ld+json"]/text()').extract()
+        elements = self.html.xpath(
+            '//script[@type="application/ld+json"]/text()').extract()
         for element in elements:
             # for open graph type of meta tags
             try:
@@ -71,32 +76,34 @@ class IconsExtractor(ExtractorBase):
     def extract(self):
         meta_data_dict = {}
 
-        favicon = self.html.xpath('//link[@rel="shortcut icon"]').xpath("@href").get()
+        favicon = self.html.xpath(
+            '//link[@rel="shortcut icon"]').xpath("@href").get()
         if favicon:
             meta_data_dict['favicon'] = favicon
 
-        elements = self.html.xpath('//link[@rel="icon" or @rel="apple-touch-icon-precomposed"]')
+        elements = self.html.xpath(
+            '//link[@rel="icon" or @rel="apple-touch-icon-precomposed"]')
         for element in elements:
             # for open graph type of meta tags
             meta_property = element.xpath("@sizes").extract_first()
             if meta_property:
-                meta_property = meta_property.replace(":", "__").replace(".", "__")
-                meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
+                meta_property = meta_property.replace(
+                    ":", "__").replace(".", "__")
+                meta_data_dict[meta_property] = element.xpath(
+                    "@{0}".format('href')).extract_first()
         return meta_data_dict
 
- 
+
 class FeedUrlsExtractor(ExtractorBase):
-    
+
     def extract(self):
         data = {}
- 
+
         data['rss__xml'] = self.html.xpath('//link[@type="application/rss+xml"]').xpath(
             "@href").extract()
         data['rss__atom'] = self.html.xpath('//link[@type="application/atom+xml"]').xpath(
             "@href").extract()
         return data
-
-
 
 
 class ImagesExtractor(ExtractorBase):

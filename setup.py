@@ -17,6 +17,7 @@ setup(
         'Scrapy==2.11.0',
         'PyYAML==6.0.1',
         'pymongo==4.5.0',
-        'python-slugify==8.0.1' 
+        'python-slugify==8.0.1',
+        'lxml2json'
     ]
 )

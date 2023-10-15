@@ -8,6 +8,7 @@ scrapy = "*"
 pyyaml = "*"
 pymongo = "*"
 python-slugify = "*"
+feedparser = "*"
 
 [dev-packages]
 ipykernel = "*"

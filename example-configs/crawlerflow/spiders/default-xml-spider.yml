@@ -1,5 +1,5 @@
-name: "default-html-spider"
-spider_type: HTMLSpider # HTMLSpider|APISpider|XMLFeedSpider
+name: "default-xml-spider"
+spider_type: XMLFeedSpider # HTMLSpider|APISpider|XMLFeedSpider
 downloader: default # default|requests
 custom_settings:
   USER_AGENT : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
