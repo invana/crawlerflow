@@ -30,3 +30,5 @@ fields:
     extractor_type: JSONLDExtractor
   feed_urls:
     extractor_type: FeedUrlsExtractor
+  image_urls:
+    extractor_type: ImagesExtractor

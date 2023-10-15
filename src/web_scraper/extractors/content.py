@@ -95,3 +95,15 @@ class FeedUrlsExtractor(ExtractorBase):
         data['rss__atom'] = self.html.xpath('//link[@type="application/atom+xml"]').xpath(
             "@href").extract()
         return data
+
+
+
+
+class ImagesExtractor(ExtractorBase):
+
+    def extract(self):
+        image_urls = []
+        images_selector = self.html.xpath('//img/@src').extract()
+        for selector in images_selector:
+            image_urls.append(selector)
+        return image_urls
