@@ -40,14 +40,6 @@ spiders:
       selector_type: css
       selector_attribute: text
       data_type: StringField
-#      - selector_id: html_content
-#        selector: ".blog-section .post-body"
-#        selector_type: css
-#        selector_attribute: html
-#        data_type: StringField
-#  data_storage:
-#    collection_name: blogs
-#    storage_id: default
 settings:
   allowed_domains:
   - "github.blog"

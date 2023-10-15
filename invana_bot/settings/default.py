@@ -3,64 +3,12 @@ DEFAULT_SETTINGS_BASE = {
     'HTTPCACHE_ENABLED': True,
     'TELNETCONSOLE_PORT': [6023, 6073],
     'ITEM_PIPELINES': {
-        'invana_bot.core.storages.base.InvanaDataPipeline': 1,
-        # 'invana_bot.core.storages.elasticsearch.ElasticSearchPipeline': 1,
-        # 'invana_bot.core.storages.mongodb.MongoDBPipeline': 1
+        'invana_bot.core.storages.default.InvanaDataPipeline': 1,
     },
-    # 'INVANA_BOT_SETTINGS': {
-    #     'HTTPCACHE_STORAGE_SETTINGS': {
-    #         'CONNECTION_URI': "127.0.0.1",
-    #         'DATABASE_NAME': "spider_cache_db",
-    #         'COLLECTION_NAME': "web_link",
-    #         "EXPIRY_TIME": 3600
-    #     },
-    #     'ITEM_PIPELINES_SETTINGS': {
-    #         'CONNECTION_URI': "127.0.0.1",
-    #         'DATABASE_NAME': "spider_data",
-    #         'COLLECTION_NAME': "website_data"
-    #     }
-    # }
-
+    'DOWNLOADER_MIDDLEWARES': {
+        "invana_bot.core.downloaders.spider_analytics.IndividualSpiderRequestStats": 121,
+        "invana_bot.core.downloaders.spider_analytics.IndividualSpiderResponseStats": 999,
+    }
 }
-
-# MONGODB_SETTINGS = {
-#     'ITEM_PIPELINES': {'invana_bot.core.storages.mongodb.MongoDBPipeline': 1},
-#     # 'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.mongodb.MongoDBCacheStorage",
-#
-#     'INVANA_BOT_SETTINGS': {
-#         'HTTPCACHE_STORAGE_SETTINGS': {
-#             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "spider_cache_db",
-#             'COLLECTION_NAME': "web_link",
-#             "EXPIRY_TIME": 3600
-#         },
-#         'ITEM_PIPELINES_SETTINGS': {
-#             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "spider_data",
-#             'COLLECTION_NAME': "website_data"
-#         }
-#     }
-# }
-#
-# ELASTICSEARCH_SETTINGS = {
-#     'ITEM_PIPELINES': {'invana_bot.core.storages.elasticsearch.ElasticSearchPipeline': 1},
-#     # 'HTTPCACHE_STORAGE': "invana_bot.core.httpcache.elasticsearch.ESCacheStorage",
-#
-#     'INVANA_BOT_SETTINGS': {
-#         'HTTPCACHE_STORAGE_SETTINGS': {
-#             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "spider_cache_db",
-#             'COLLECTION_NAME': "web_link",
-#             "EXPIRY_TIME": 3600
-#         },
-#         'ITEM_PIPELINES_SETTINGS': {
-#             'CONNECTION_URI': "127.0.0.1",
-#             'DATABASE_NAME': "spider_data",
-#             'COLLECTION_NAME': "website_data"
-#         }
-#     }
-# }
-
 DEFAULT_SETTINGS = {}
 DEFAULT_SETTINGS.update(DEFAULT_SETTINGS_BASE)
-# DEFAULT_SETTINGS.update(MONGODB_SETTINGS)

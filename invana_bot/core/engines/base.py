@@ -16,18 +16,25 @@ class RunnerEngineBase(object):
     def run(self):
         return self.crawl()
 
-    @staticmethod
-    def get_index(transformation_id=None, data_storages=None):
+    def get_index(self, storage_id=None, data_storages=None):
+
+        data_storages = self.manifest.get('datasets', [])
         for _index in data_storages:
-            if _index['transformation_id'] == transformation_id:
+            if _index['storage_id'] == storage_id:
                 return _index
 
-    def index_data(self, index=None, results_cleaned=None):
+    def get_default_index(self, data_storages=None):
+        for _index in data_storages:
+            if _index['storage_id'] == "default":
+                return _index
+
+    def index_transformed_data(self, index=None, results_cleaned=None):
         collection_name = index['collection_name']
         unique_key_field = index['unique_key']
+
         mongo_executor = WriteToMongoDB(
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
-            self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
+            index['connection_uri'],
+            index['database_name'],
             collection_name,
             unique_key_field,
             docs=results_cleaned)
@@ -51,7 +58,7 @@ class RunnerEngineBase(object):
             print("Triggered callback successfully and callback responded with message :{}".format(response))
 
     def callback(self, callback_fn=None):
-        all_data_storages = self.manifest.get('data_storages', [])
+        all_data_storages = self.manifest.get('datasets', [])
         if len(all_data_storages) == 0:
             print("There are no callback notifications associated with the indexing jobs. So we are Done here.")
         else:
@@ -94,13 +101,16 @@ class RunnerEngineBase(object):
             print("transformation", transformation)
             transformation_id = transformation['transformation_id']
             transformation_fn = transformation.get('transformation_fn')
+            storage_id = transformation.get('storage_id')
 
-            transformation_index_config = self.get_index(transformation_id=transformation_id,
-                                                         data_storages=self.manifest['data_storages'])
+            transformation_index_config = self.get_index(storage_id=storage_id)
+            default_storage = self.get_index(storage_id="default")
+            print("transformation_index_config", transformation_index_config)
+            # read data from default storage
             mongo_executor = ReadFromMongo(
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['CONNECTION_URI'],
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['DATABASE_NAME'],
-                self.settings['INVANA_BOT_SETTINGS']['ITEM_PIPELINES_SETTINGS']['COLLECTION_NAME'],
+                default_storage['connection_uri'],
+                default_storage['database_name'],
+                default_storage['collection_name'],
                 query={"context.job_id": self.job_id}
             )
             mongo_executor.connect()
@@ -125,7 +135,7 @@ class RunnerEngineBase(object):
                     result['context'] = {'job_id': self.job_id}
 
                 results_cleaned.append(result)
-            self.index_data(index=transformation_index_config, results_cleaned=results_cleaned)
+            self.index_transformed_data(index=transformation_index_config, results_cleaned=results_cleaned)
 
             print("Total results_cleaned count of job {} is {}".format(self.job_id, results_cleaned.__len__()))
 

@@ -12,7 +12,6 @@ def validate_config(config=None):
 
 
 class InvanaBotConfigValidator(object):
-
     CRAWLER_EXAMPLE = {
         "spider_id": "blogs_list",
         "extractors": [],
@@ -105,13 +104,13 @@ class InvanaBotConfigValidator(object):
                 if type(spider[required_field['extractor_id']]) is not required_field['field_type']:
                     self.log_error(
                         "required field '{}' in spiders should of '{}' data type".format(required_field['extractor_id'],
-                                                                                          required_field['field_type']))
+                                                                                         required_field['field_type']))
 
             """
             making sure extractors data is correct
             """
             for required_field in required_extractors_fields:
-                for parser in spider.get('extractors',[]):
+                for parser in spider.get('extractors', []):
                     parser_config_keys = parser.keys()
                     if required_field['extractor_id'] in parser_config_keys:
                         pass
@@ -190,16 +189,15 @@ Here are examples of traversal
                 self.log_error("You are using next_spider_id '{}' "
                                "but it is not defined in the spiders."
                                " Available spider_id in the config are {} {}".format(next_spider_id,
-                                                                                      all_spiders_ids,
-                                                                                      traversal_example))
+                                                                                     all_spiders_ids,
+                                                                                     traversal_example))
 
     def validate_transformations_and_data_storages(self):
         transformations = self.config.get('transformations', [])
-        data_storages = self.config.get('data_storages', [])
-        if len(data_storages) == 0:
-            if len(transformations) > 0:
-                self.log_error("transformations cannot be applied if data_storages is not defined.")
-            # print("Ignoring the transformation if index")
+        datasets = self.config.get('datasets', [])
+        if len(datasets) == 0 and len(transformations) > 0:
+            self.log_error("transformations cannot be applied if datasets is not defined.")
+        # print("Ignoring the transformation if index")
         else:
             transformation_ids = [transformation.get('transformation_id') for transformation in transformations]
 
@@ -211,14 +209,14 @@ Here are examples of traversal
                                    "'{}' doesn't have transformation_fn set".format(transformation_id))
 
             example_index = {
-                "transformation_id": "default",
+                "storage_id": "default",
                 "connection_uri": "mongodb://127.0.0.1/spiders_data_index",
                 "collection_name": "blogs_list",
                 "unique_key": "url"
             }
             # transformation_ids_in_data_storages = [index.get('transformation_id') for index in data_storages]
             index_required_fields = example_index.keys()
-            for index in data_storages:
+            for index in datasets:
                 transformation_id = index.get("transformation_id")
                 for required_field in index_required_fields:
                     if index.get(required_field) is None:
@@ -265,7 +263,7 @@ Here are examples of traversal
 
     def validate_settings(self):
         settings = self.config.get("settings", {})
-        required_keys = [ 'allowed_domains']
+        required_keys = ['allowed_domains']
         for required_key in required_keys:
             if required_key not in settings.keys():
                 self.log_error(
@@ -274,7 +272,7 @@ Here are examples of traversal
     def validate(self):
         self.validate_required_fields()
         self.validate_spiders(spiders=self.config['spiders'])
-        self.validate_transformations_and_data_storages()
+        # self.validate_transformations_and_data_storages()
         self.validate_callback()
         self.validate_settings()
         return self.all_errors

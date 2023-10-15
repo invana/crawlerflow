@@ -38,12 +38,20 @@ class WebCrawlerBase(CrawlSpider):
                 }
             )
 
+    def get_spider_config(self, response=None):
+        if response.meta.get("spider_config"):
+            return response.meta.get("spider_config")
+        else:
+            return self.spider_config
+
     @staticmethod
     def get_default_storage(settings=None, spider_config=None):
         data_storages = settings.get("DATA_STORAGES", [])
         default_storage = None
+        spider_storage_id = "default"
         for data_storage in data_storages:
-            if data_storage.get("storage_id") == spider_config.get("storage_id", "default"):
+            __storage_id = data_storage.get("storage_id") or data_storage.get("STORAGE_ID")
+            if __storage_id == spider_storage_id:
                 return data_storage
         return default_storage
 
@@ -76,10 +84,8 @@ class WebCrawlerBase(CrawlSpider):
         return current_request_traversal_id == traversal_id
 
     def make_traversal_requests(self, to_traverse_links_list=None):
-        print(">>>>>>>>>>do_traverse", to_traverse_links_list)
         traversal_requests = []
         for to_traverse_link in to_traverse_links_list:
-            print(to_traverse_link)
             traversal_requests.append(scrapy.Request(
                 to_traverse_link.get("link"),
                 callback=self.parse,
@@ -91,17 +97,21 @@ class WebCrawlerBase(CrawlSpider):
     @staticmethod
     def run_traversal(response=None, traversal=None, **kwargs):
 
-        selector_type = traversal.get("selector_type")
+        selector_type = traversal.get("selector_type", "css")
         kwargs = {}
         if selector_type == "css":
             kwargs['restrict_css'] = (traversal.get("selector_value"),)
         elif selector_type == "xpath":
             kwargs['restrict_xpaths'] = (traversal.get("selector_value"),)
-        elif selector_type == "css":
-            kwargs['restrict_regex'] = (traversal.get("selector_value"),)
 
-        kwargs['allow_domains'] = traversal.get("allow_domains", [])
+        if traversal.get("allow_domains", []) == ["*"]:
+            kwargs['allow_domains'] = ()
+        else:
+            kwargs['allow_domains'] = traversal.get("allow_domains", [])
         return GenericLinkExtractor(**kwargs).extract_links(response=response)
+
+    def get_traversal_max_pages(self, traversal=None):
+        return traversal.get('max_pages', 1)
 
     def run_traversals(self, spider_config=None, response=None):
         """
@@ -128,7 +138,7 @@ class WebCrawlerBase(CrawlSpider):
 
             traversal['allow_domains'] = next_spider.get("allowed_domains", [])
             traversal_id = traversal['traversal_id']
-            traversal_max_pages = traversal.get('max_pages', 1)
+            traversal_max_pages = self.get_traversal_max_pages(traversal=traversal)
 
             traversal_links = []
             is_this_request_from_same_traversal = self.is_this_request_from_same_traversal(response, traversal)
@@ -171,7 +181,7 @@ class WebCrawlerBase(CrawlSpider):
                 Then validate for max_pages logic if traversal_id's traversal has any!.
                 This is where the further traversal for this traversal_id  is decided 
                 """
-                max_pages = traversal.get("max_pages", 1)
+                max_pages = self.get_traversal_max_pages(traversal=traversal)
                 for link in traversal_links:
 
                     """

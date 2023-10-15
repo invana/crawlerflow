@@ -84,11 +84,10 @@ class InvanaBotInitSpider(InvanaBotManifestItemBase):
 class InvanaBotSettings(object):
     allowed_domains = []
     download_delay = 0
-    default_storage_id = "default"
-    data_storages = []
+    data_storage = []
 
     def get_data_storages(self):
-        return self.data_storages
+        return self.data_storage
 
 
 class InvanaBotSpider(InvanaBotManifestItemBase):

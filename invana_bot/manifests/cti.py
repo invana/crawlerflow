@@ -31,7 +31,7 @@ class CTIManifestManager(object):
         except Exception as e:
             ib_functions = None
         self.ib_functions = ib_functions
-        print ("self.ib_functions is {}".format(ib_functions))
+        print("self.ib_functions is {}".format(ib_functions))
         # print("manifest is {}".format(self.manifest))
         # print("ib_functions is {}".format(self.ib_functions))
 
@@ -52,15 +52,17 @@ class CTIManifestManager(object):
     def import_cti_transformations(self):
         if self.ib_functions:
             for transformation in self.manifest.get("transformations", []):
-                method_to_call = getattr(self.ib_functions, transformation.get("transformation_fn"))
-                transformation['transformation_fn'] = method_to_call
+                if transformation.get("transformation_fn"):
+                    method_to_call = getattr(self.ib_functions, transformation.get("transformation_fn"))
+                    transformation['transformation_fn'] = method_to_call
 
     def import_extractor_functions(self):
         if self.ib_functions:
             for spider in self.manifest.get("spiders", []):
                 for extractor in spider.get("extractors", []):
-                    method_to_call = getattr(self.ib_functions, extractor.get("extractor_fn"))
-                    extractor['extractor_fn'] = method_to_call
+                    if extractor.get("extractor_fn"):
+                        method_to_call = getattr(self.ib_functions, extractor.get("extractor_fn"))
+                        extractor['extractor_fn'] = method_to_call
 
     def get_manifest(self):
         errors = self.validate_cti_path_and_files()
@@ -69,5 +71,5 @@ class CTIManifestManager(object):
         self.import_files()
         self.import_cti_transformations()
         self.import_extractor_functions()
-        print ("=====+++++++++============")
+        print("=====+++++++++============")
         return self.manifest, errors

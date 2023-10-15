@@ -24,8 +24,7 @@ settings:
   allowed_domains:
   - "blog.scrapinghub.com"
   download_delay: 0
-  default_storage_id: default
-  data_storages:
+  data_storage:
   - storage_id: default
     storage_type: elasticsearch
     connection_uri: localhost
