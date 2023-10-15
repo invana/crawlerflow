@@ -48,11 +48,11 @@ class WebScraperBase:
         self._start()
 
 
-class WebScraper(WebScraperBase):
+class WebCrawler(WebScraperBase):
 
     """
     config_file =  "example-configs/HTMLSpiders/github-blog-detail.yml"
-    web_scraper = WebScraper()
+    web_scraper = WebCrawler()
 
     scraper_config = yaml.safe_load(open(config_file))
      web_scraper.add_spider_with_config(scraper_config)

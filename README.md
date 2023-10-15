@@ -1,4 +1,4 @@
-# WebScraper 
+# CrawlerFlow 
 
 scrape data from web with no code (just YAML configs)
 
@@ -9,64 +9,56 @@ scrape data from web with no code (just YAML configs)
 - [ ] Scrape XML feeds.
 - [ ] Next traversal (Pagination)
 - [ ] Custom Python Parser
+- [ ] JMESPath Parser for extractors
 
-## Concepts
-
-### WebCrawler
-
-```
-from web_scraper import WebCrawler
-
-# specify BOT_NAME, USER_AGENT, Downloader, 
-
-
-```
  
-### DataScraper
-
-```
-
-```
-
 ## Usage
 
-### HTMLScraper
-
+### Scraping with CrawlerFlow
 ```python
-html_text = """
-<html>
-    <body>
-        <h1>Hello, Parsel!</h1>
-        <ul class="header">
-            <li><a href="http://example.com">Link 1</a></li>
-            <li><a href="http://scrapy.org">Link 2</a></li>
-        </ul>
-        <main>Main text here</main>
-    </body>
-</html>
-"""
+from web_scraper.runner import Crawlerflow
+from web_scraper.utils import yaml_to_json
 
+
+crawl_requests = yaml_to_json(open("example-configs/crawlerflow/requests/github-detail-urls.yml"))
+spider_config = yaml_to_json(open("example-configs/crawlerflow/spiders/default-spider.yml"))
+github_default_extractor = yaml_to_json(open("example-configs/crawlerflow/extractors/github-blog-detail.yml"))
+
+flow = Crawlerflow()
+flow.add_spider_with_config(crawl_requests, spider_config, default_extractor=github_default_extractor)
+flow.start()
 ```
 
-
-
-## Usage 
+### Scraping with WebCrawler
 
 ```python
-from WebScraper.runner import WebScraper
-import yaml
+from web_scraper.runner import WebCrawler
+from web_scraper.utils import yaml_to_json
 
-scraper_config_file =   "example-configs/HTMLSpiders/github-blog-detail.yml"
-web_scraper = WebScraper()
+ 
+scraper_config_files = [
+    "example-configs/webcrawler/APISpiders/api-publicapis-org.yml",
+    "example-configs/webcrawler/HTMLSpiders/github-blog-list.yml",
+    "example-configs/webcrawler/HTMLSpiders/github-blog-detail.yml"
+]
 
-# custom_settings={
-#     'BOT_NAME' = 'You bot Name' # if you dont specify, it will defaults to Scrapy bot name   
-# }
-# web_scraper = WebScraper(custom_settings=custom_settings)
+web_scraper = WebCrawler()
 
-
-scraper_config = yaml.safe_load(open(scraper_config_file))
-web_scraper.add_spider_with_config(scraper_config)
+for scraper_config_file in scraper_config_files:
+    scraper_config = yaml_to_json(open(scraper_config_file))
+    web_scraper.add_spider_with_config(scraper_config)
 web_scraper.start()
 ```
+
+Refer `examples-configs/` folder for example configs.
+
+
+## Available Extractors
+
+- [*] HTMLExtractor
+- [*] MetaTagExtractor
+- [*] JSONLDExtractor
+- [*] TableContentExtractor
+- [*] IconsExtractor
+ 
  
