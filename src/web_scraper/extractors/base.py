@@ -1,5 +1,6 @@
 from parsel import Selector
 from scrapy.http.response.html import HtmlResponse
+import importlib
 
 
 class ExtractorBase:
@@ -13,7 +14,7 @@ class ExtractorBase:
     
     DEFAULT_DATA_TYPE = "StringField"
 
-    def __init__(self, html,  extractor_fields):
+    def __init__(self, html,  extractor_fields=None):
         """
         :param html: html html of the request
         :param extractor_fields: extractor configuration in json; this is optional in most cases.
@@ -51,15 +52,28 @@ class ExtractorBase:
         data = {}
         html = html_element if html_element else self.html
         for field_name, field_config in fields.items():
-            type_string, is_multiple = self.get_data_type(field_config.get('type', self.DEFAULT_DATA_TYPE)) 
-            if type_string == "DictField":                   
-                nested_fields =  field_config.get("fields", {})
-                child_html_element = self.get_elem_by_css(html, field_config['selector'])                
-                data[field_name] = self.extract_from_multiple_element(nested_fields, child_html_element) if is_multiple is True \
-                            else  self.extract_from_single_element(nested_fields, html_element=child_html_element)
-            else:
-                extracted_data = self.get_value_by_css(html, field_config['selector'], fetch_multiple_values=is_multiple)
-                data[field_name] = self.convert_to_data_type(extracted_data, type_string=type_string, is_multiple=is_multiple)
+            css_selector = field_config.get("selector")
+            extractor_type = field_config.get("extractor_type")
+
+
+            if css_selector is None and extractor_type is None:
+                raise Exception("Field extractor should have `selector` or `extractor_type` type specified")
+
+
+            elif css_selector:
+                type_string, is_multiple = self.get_data_type(field_config.get('type', self.DEFAULT_DATA_TYPE))
+                if type_string == "DictField":                   
+                    nested_fields =  field_config.get("fields", {})
+                    child_html_element = self.get_elem_by_css(html, css_selector)                
+                    data[field_name] = self.extract_from_multiple_element(nested_fields, child_html_element) if is_multiple is True \
+                                else  self.extract_from_single_element(nested_fields, html_element=child_html_element)
+                else:
+                    extracted_data = self.get_value_by_css(html, css_selector, fetch_multiple_values=is_multiple)
+                    data[field_name] = self.convert_to_data_type(extracted_data, type_string=type_string, is_multiple=is_multiple)
+            elif extractor_type:
+                extractor_cls = getattr(importlib.import_module(f"web_scraper.extractors"), extractor_type)
+                extractor = extractor_cls(html, extractor_fields=field_config.get("fields"))
+                data[field_name] = extractor.extract()
         return data
     
     def extract_from_multiple_element(self, fields, html_elements):
