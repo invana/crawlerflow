@@ -24,8 +24,8 @@ pip install git+https://github.com/invana/crawlerflow#egg=crawlerflow
 
 ### Scraping with CrawlerFlow
 ```python
-from web_scraper.runner import Crawlerflow
-from web_scraper.utils import yaml_to_json
+from crawlerflow.runner import Crawlerflow
+from crawlerflow.utils import yaml_to_json
 
 
 crawl_requests = yaml_to_json(open("example-configs/crawlerflow/requests/github-detail-urls.yml"))
@@ -40,8 +40,8 @@ flow.start()
 ### Scraping with WebCrawler
 
 ```python
-from web_scraper.runner import WebCrawler
-from web_scraper.utils import yaml_to_json
+from crawlerflow.runner import WebCrawler
+from crawlerflow.utils import yaml_to_json
 
  
 scraper_config_files = [
@@ -50,12 +50,12 @@ scraper_config_files = [
     "example-configs/webcrawler/HTMLSpiders/github-blog-detail.yml"
 ]
 
-web_scraper = WebCrawler()
+crawlerflow = WebCrawler()
 
 for scraper_config_file in scraper_config_files:
     scraper_config = yaml_to_json(open(scraper_config_file))
-    web_scraper.add_spider_with_config(scraper_config)
-web_scraper.start()
+    crawlerflow.add_spider_with_config(scraper_config)
+crawlerflow.start()
 ```
 
 Refer `examples-configs/` folder for example configs.

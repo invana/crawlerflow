@@ -71,7 +71,7 @@ class ExtractorBase:
                     extracted_data = self.get_value_by_css(html, css_selector, fetch_multiple_values=is_multiple)
                     data[field_name] = self.convert_to_data_type(extracted_data, type_string=type_string, is_multiple=is_multiple)
             elif extractor_type:
-                extractor_cls = getattr(importlib.import_module(f"web_scraper.extractors"), extractor_type)
+                extractor_cls = getattr(importlib.import_module(f"crawlerflow.extractors"), extractor_type)
                 extractor = extractor_cls(html, extractor_fields=field_config.get("fields"))
                 data[field_name] = extractor.extract()
         return data

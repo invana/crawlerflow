@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from web_scraper.extractors import HTMLExtractor
+from crawlerflow.extractors import HTMLExtractor
 import yaml
 
 html_text = """

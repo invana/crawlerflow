@@ -1,7 +1,7 @@
 import sys
 sys.path.append("src")
-from web_scraper.runner import Crawlerflow
-from web_scraper.utils import yaml_to_json
+from crawlerflow.runner import Crawlerflow
+from crawlerflow.utils import yaml_to_json
 
 
 crawl_requests = yaml_to_json(open("example-configs/crawlerflow/requests/github-detail-urls.yml"))

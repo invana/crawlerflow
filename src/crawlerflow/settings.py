@@ -10,15 +10,15 @@ DEFAULT_SETTINGS_OVERRIDES = {
     'USER_AGENT' : DEFAULT_USER_AGENT,
  
     'ITEM_PIPELINES': {
-        'web_scraper.pipelines.MetadataPipeline': 0,
-        'web_scraper.pipelines.MongoDBPipeline': 1,
-        # 'web_scraper.pipelines.JsonWriterPipeline': 2,
+        'crawlerflow.pipelines.MetadataPipeline': 0,
+        'crawlerflow.pipelines.MongoDBPipeline': 1,
+        # 'crawlerflow.pipelines.JsonWriterPipeline': 2,
     },
     'DOWNLOADER_MIDDLEWARES': {
-        "web_scraper.downloaders.RequestsDownloaderMiddleware": 501,
+        "crawlerflow.downloaders.RequestsDownloaderMiddleware": 501,
     },
     
     'STORAGE_MONGO_URI': "mongodb://root:example@localhost:27017",
-    'STORAGE_MONGO_DATABASE': "web_scraper",
+    'STORAGE_MONGO_DATABASE': "crawlerflow",
     'STORAGE_MONGO_DEFAULT_COLLECTION': 'scraped_items'
 }

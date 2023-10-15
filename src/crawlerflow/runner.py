@@ -52,16 +52,16 @@ class WebCrawler(WebScraperBase):
 
     """
     config_file =  "example-configs/HTMLSpiders/github-blog-detail.yml"
-    web_scraper = WebCrawler()
+    crawlerflow = WebCrawler()
 
     scraper_config = yaml.safe_load(open(config_file))
-     web_scraper.add_spider_with_config(scraper_config)
-    web_scraper.start()
+     crawlerflow.add_spider_with_config(scraper_config)
+    crawlerflow.start()
     """
 
     def add_spider_with_config(self, spider_config):
         spider_cls = getattr(importlib.import_module(
-            f"web_scraper.spiders"), spider_config['spider_type'])
+            f"crawlerflow.spiders"), spider_config['spider_type'])
         self.process.crawl(spider_cls, **self.add_job_id(spider_config))
 
 
@@ -83,5 +83,5 @@ class Crawlerflow(WebScraperBase):
 
         spider_config['crawl_requests'] = crawl_requests
         spider_cls = getattr(importlib.import_module(
-            f"web_scraper.spiders"), spider_config['spider_type'])
+            f"crawlerflow.spiders"), spider_config['spider_type'])
         self.add_spider(spider_cls, **self.add_job_id(spider_config) )

@@ -2,7 +2,7 @@ import scrapy
 import datetime
 import abc
 from slugify import slugify
-from web_scraper.utils import get_domain, get_urn, generate_uuid
+from crawlerflow.utils import get_domain, get_urn, generate_uuid
 import requests
 import logging
 from ..request import CrawlRequest
