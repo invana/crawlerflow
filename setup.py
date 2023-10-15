@@ -18,7 +18,7 @@ setup(name='invana-bot',
           'feedparser==5.2.1',
           'lxml==4.1.1',
           'pymongo==3.7.2',
-          'requests==2.21.0',
+          'requests==2.31.0',
           'Scrapy==1.6.0',
           'pyyaml==5.1',
           'python-slugify '
