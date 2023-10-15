@@ -23,7 +23,12 @@ class MetaTagExtractor(ExtractorBase):
                 data[meta_property] = meta_content
             if meta_name:
                 data[meta_name] = meta_content
+        data["shortlink_url"] = self.html.xpath('//link[@rel="shortlink"]').xpath("@href").extract_first()
+        data["canonical_url"] = self.html.xpath('//link[@rel="canonical"]').xpath("@href").extract_first()
+
         data =  dict(sorted(data.items(), key=lambda x: x[0]))
+
+
         data["title"] = self.get_value_by_css(self.html, 'title::text')
         return data
 
@@ -79,3 +84,5 @@ class IconsExtractor(ExtractorBase):
                 meta_data_dict[meta_property] = element.xpath("@{0}".format('href')).extract_first()
         return meta_data_dict
 
+"""
+"""
