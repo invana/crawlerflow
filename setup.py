@@ -19,7 +19,7 @@ setup(name='invana-bot',
           'lxml==4.1.1',
           'pymongo==3.7.2',
           'requests==2.21.0',
-          'Scrapy==1.6.0',
+          'Scrapy==2.10.1',
           'pyyaml==5.1',
           'python-slugify '
       ],
